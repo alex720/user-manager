@@ -126,8 +126,8 @@
 			 char *tempData = new char[dataSize + dwBytesRead];
 			 memcpy(tempData, data, dataSize);
 			 memcpy(tempData + dataSize, buffer, dwBytesRead);
-			 delete[] data;
 			 data = tempData;
+			 delete[] tempData;
 			 dataSize += dwBytesRead;
 		 } while (dwBytesRead);
 		 InternetCloseHandle(hFile);
