@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'UserWidget.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.3
+** Created by: Qt User Interface Compiler version 5.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -290,20 +290,20 @@ public:
 
     void retranslateUi(QWidget *UserWidget)
     {
-        UserWidget->setWindowTitle(QApplication::translate("UserWidget", "Form", Q_NULLPTR));
-        btn_buddynamesave->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
-        chk_BuddyAutoOperator->setText(QApplication::translate("UserWidget", "AutoOperator", Q_NULLPTR));
-        chk_BuddyAutoTalkpower->setText(QApplication::translate("UserWidget", "AutoTalkpower", Q_NULLPTR));
-        chk_BuddyAntiChannelBan->setText(QApplication::translate("UserWidget", "AntiChannelBan", Q_NULLPTR));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("UserWidget", "Buddys", Q_NULLPTR));
-        btn_blocknamesave->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
-        chk_BlockedAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
-        chk_BlockedAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
-        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("UserWidget", "Blocked", Q_NULLPTR));
-        btn_buddynamesave_2->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
-        chk_BlockedNameAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
-        chk_BlockedNameAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
-        tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("UserWidget", "Names", Q_NULLPTR));
+        UserWidget->setWindowTitle(QApplication::translate("UserWidget", "Form", 0));
+        btn_buddynamesave->setText(QApplication::translate("UserWidget", "save", 0));
+        chk_BuddyAutoOperator->setText(QApplication::translate("UserWidget", "AutoOperator", 0));
+        chk_BuddyAutoTalkpower->setText(QApplication::translate("UserWidget", "AutoTalkpower", 0));
+        chk_BuddyAntiChannelBan->setText(QApplication::translate("UserWidget", "AntiChannelBan", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("UserWidget", "Buddys", 0));
+        btn_blocknamesave->setText(QApplication::translate("UserWidget", "save", 0));
+        chk_BlockedAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", 0));
+        chk_BlockedAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("UserWidget", "Blocked", 0));
+        btn_buddynamesave_2->setText(QApplication::translate("UserWidget", "save", 0));
+        chk_BlockedNameAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", 0));
+        chk_BlockedNameAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("UserWidget", "Names", 0));
     } // retranslateUi
 
 };

@@ -99,9 +99,6 @@
 	 }
 
 
-	
-
-
 
 	 char* DownloadBytes(LPCSTR szUrl) {
 		 HINTERNET hOpen = NULL;

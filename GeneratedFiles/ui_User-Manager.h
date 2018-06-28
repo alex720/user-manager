@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'User-Manager.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.3
+** Created by: Qt User Interface Compiler version 5.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -328,56 +328,56 @@ public:
 
     void retranslateUi(QDialog *ConfigDialog)
     {
-        ConfigDialog->setWindowTitle(QApplication::translate("ConfigDialog", "Configuration - User-Manger", Q_NULLPTR));
-        groupBox1->setTitle(QApplication::translate("ConfigDialog", "Current Server", Q_NULLPTR));
-        chkcurrent_server->setText(QApplication::translate("ConfigDialog", "For Current Server enabled", Q_NULLPTR));
-        label_5->setText(QApplication::translate("ConfigDialog", "Current Servername:", Q_NULLPTR));
-        L_NAME->setText(QApplication::translate("ConfigDialog", "No Server", Q_NULLPTR));
-        label_3->setText(QApplication::translate("ConfigDialog", "Current Server UID:", Q_NULLPTR));
-        L_UID->setText(QApplication::translate("ConfigDialog", "No Server", Q_NULLPTR));
-        label_4->setText(QApplication::translate("ConfigDialog", "Channel Admin Group:", Q_NULLPTR));
-        lb_special->setText(QApplication::translate("ConfigDialog", "Operator Group:", Q_NULLPTR));
-        label_2->setText(QApplication::translate("ConfigDialog", "Channel Ban Group :", Q_NULLPTR));
-        groupBox2->setTitle(QApplication::translate("ConfigDialog", "Global Settings", Q_NULLPTR));
-        label_6->setText(QApplication::translate("ConfigDialog", "Custom Kick Message:", Q_NULLPTR));
-        groupBox3->setTitle(QApplication::translate("ConfigDialog", "Default Options for new User:", Q_NULLPTR));
+        ConfigDialog->setWindowTitle(QApplication::translate("ConfigDialog", "Configuration - User-Manger", 0));
+        groupBox1->setTitle(QApplication::translate("ConfigDialog", "Current Server", 0));
+        chkcurrent_server->setText(QApplication::translate("ConfigDialog", "For Current Server enabled", 0));
+        label_5->setText(QApplication::translate("ConfigDialog", "Current Servername:", 0));
+        L_NAME->setText(QApplication::translate("ConfigDialog", "No Server", 0));
+        label_3->setText(QApplication::translate("ConfigDialog", "Current Server UID:", 0));
+        L_UID->setText(QApplication::translate("ConfigDialog", "No Server", 0));
+        label_4->setText(QApplication::translate("ConfigDialog", "Channel Admin Group:", 0));
+        lb_special->setText(QApplication::translate("ConfigDialog", "Operator Group:", 0));
+        label_2->setText(QApplication::translate("ConfigDialog", "Channel Ban Group :", 0));
+        groupBox2->setTitle(QApplication::translate("ConfigDialog", "Global Settings", 0));
+        label_6->setText(QApplication::translate("ConfigDialog", "Custom Kick Message:", 0));
+        groupBox3->setTitle(QApplication::translate("ConfigDialog", "Default Options for new User:", 0));
 #ifndef QT_NO_TOOLTIP
-        chkAutoBan->setToolTip(QApplication::translate("ConfigDialog", "Automatically bans blocked users from your channel", Q_NULLPTR));
+        chkAutoBan->setToolTip(QApplication::translate("ConfigDialog", "Automatically bans blocked users from your channel", 0));
 #endif // QT_NO_TOOLTIP
-        chkAutoBan->setText(QApplication::translate("ConfigDialog", "Auto ban blocked users", Q_NULLPTR));
-        chkAutoKick->setText(QApplication::translate("ConfigDialog", "Auto kick blocked Users from your channel", Q_NULLPTR));
+        chkAutoBan->setText(QApplication::translate("ConfigDialog", "Auto ban blocked users", 0));
+        chkAutoKick->setText(QApplication::translate("ConfigDialog", "Auto kick blocked Users from your channel", 0));
 #ifndef QT_NO_TOOLTIP
-        chkAutoMute->setToolTip(QApplication::translate("ConfigDialog", "Automatically mutes users when you block them with this plugin", Q_NULLPTR));
+        chkAutoMute->setToolTip(QApplication::translate("ConfigDialog", "Automatically mutes users when you block them with this plugin", 0));
 #endif // QT_NO_TOOLTIP
-        chkAutoMute->setText(QApplication::translate("ConfigDialog", "Auto mute blocked users", Q_NULLPTR));
+        chkAutoMute->setText(QApplication::translate("ConfigDialog", "Auto mute blocked users", 0));
 #ifndef QT_NO_TOOLTIP
-        chkAntiChannelBan->setToolTip(QApplication::translate("ConfigDialog", "Automatically removes channel ban from plugin buddies (If you're the channel admin)", Q_NULLPTR));
+        chkAntiChannelBan->setToolTip(QApplication::translate("ConfigDialog", "Automatically removes channel ban from plugin buddies (If you're the channel admin)", 0));
 #endif // QT_NO_TOOLTIP
-        chkAntiChannelBan->setText(QApplication::translate("ConfigDialog", "Remove channel ban from buddies", Q_NULLPTR));
+        chkAntiChannelBan->setText(QApplication::translate("ConfigDialog", "Remove channel ban from buddies", 0));
 #ifndef QT_NO_TOOLTIP
-        chkAutoOperator->setToolTip(QApplication::translate("ConfigDialog", "Automatically gives channel operator to your plugin buddies when you're channel admin", Q_NULLPTR));
+        chkAutoOperator->setToolTip(QApplication::translate("ConfigDialog", "Automatically gives channel operator to your plugin buddies when you're channel admin", 0));
 #endif // QT_NO_TOOLTIP
-        chkAutoOperator->setText(QApplication::translate("ConfigDialog", "Buddys Auto Operator ", Q_NULLPTR));
+        chkAutoOperator->setText(QApplication::translate("ConfigDialog", "Buddys Auto Operator ", 0));
 #ifndef QT_NO_TOOLTIP
-        chkAutoTalkpower->setToolTip(QApplication::translate("ConfigDialog", "Automatically grants talk power to your plugin buddies when you're operator", Q_NULLPTR));
+        chkAutoTalkpower->setToolTip(QApplication::translate("ConfigDialog", "Automatically grants talk power to your plugin buddies when you're operator", 0));
 #endif // QT_NO_TOOLTIP
-        chkAutoTalkpower->setText(QApplication::translate("ConfigDialog", "Buddys Auto Talkpower", Q_NULLPTR));
+        chkAutoTalkpower->setText(QApplication::translate("ConfigDialog", "Buddys Auto Talkpower", 0));
 #ifndef QT_NO_TOOLTIP
-        chkLog->setToolTip(QApplication::translate("ConfigDialog", "Toggles debug logging to console", Q_NULLPTR));
+        chkLog->setToolTip(QApplication::translate("ConfigDialog", "Toggles debug logging to console", 0));
 #endif // QT_NO_TOOLTIP
-        chkLog->setText(QApplication::translate("ConfigDialog", "Logging", Q_NULLPTR));
+        chkLog->setText(QApplication::translate("ConfigDialog", "Logging", 0));
 #ifndef QT_NO_TOOLTIP
-        chkNotifikations->setToolTip(QApplication::translate("ConfigDialog", "Adds informational messages to your current chat tab", Q_NULLPTR));
+        chkNotifikations->setToolTip(QApplication::translate("ConfigDialog", "Adds informational messages to your current chat tab", 0));
 #endif // QT_NO_TOOLTIP
-        chkNotifikations->setText(QApplication::translate("ConfigDialog", "Notifications", Q_NULLPTR));
-        chkUseTSList->setText(QApplication::translate("ConfigDialog", "Use Teamspeak List", Q_NULLPTR));
+        chkNotifikations->setText(QApplication::translate("ConfigDialog", "Notifications", 0));
+        chkUseTSList->setText(QApplication::translate("ConfigDialog", "Use Teamspeak List", 0));
 #ifndef QT_NO_TOOLTIP
-        chkWorking->setToolTip(QApplication::translate("ConfigDialog", "If this Option is false no User would get any new channel Group ( like the Plugin is deactivated)", Q_NULLPTR));
+        chkWorking->setToolTip(QApplication::translate("ConfigDialog", "If this Option is false no User would get any new channel Group ( like the Plugin is deactivated)", 0));
 #endif // QT_NO_TOOLTIP
-        chkWorking->setText(QApplication::translate("ConfigDialog", "Plugin Active", Q_NULLPTR));
-        btnSave->setText(QApplication::translate("ConfigDialog", "Save && Apply", Q_NULLPTR));
-        btnImport_Buddys->setText(QApplication::translate("ConfigDialog", "Import Teamspeak buddies to User Manager", Q_NULLPTR));
-        btnImport_Blocked->setText(QApplication::translate("ConfigDialog", "Import Teamspeak blocked users to User Manager", Q_NULLPTR));
+        chkWorking->setText(QApplication::translate("ConfigDialog", "Plugin Active", 0));
+        btnSave->setText(QApplication::translate("ConfigDialog", "Save && Apply", 0));
+        btnImport_Buddys->setText(QApplication::translate("ConfigDialog", "Import Teamspeak buddies to User Manager", 0));
+        btnImport_Blocked->setText(QApplication::translate("ConfigDialog", "Import Teamspeak blocked users to User Manager", 0));
     } // retranslateUi
 
 };
