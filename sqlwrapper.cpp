@@ -390,7 +390,7 @@ BuddyUser sqlw::isBuddy(const std::string &UID) {
 			cache.AutoOperator = true;
 			cache.AutoTalkpower = true;
 			cache.UID = UID.c_str();
-			cache.SavedName = "one of the coolest guy ever";
+			cache.SavedName = "one of the coolest guys ever";
 			cache.dummy_Return = true;
 			return cache;
 		}
@@ -399,8 +399,9 @@ BuddyUser sqlw::isBuddy(const std::string &UID) {
 	for (auto it = buddyList.begin(); it != buddyList.end(); ++it)
 	{
 		if (it->compare(UID) == 0) {
-			it->dummy_Return = true;
-			return *it;
+			BuddyUser cache = *it;
+			cache.dummy_Return = true;
+			return cache;
 		}	
 	}
 	if (Datas->getuseTSList()) {
@@ -451,8 +452,9 @@ BlockedName sqlw::isNameBlocked(const std::string &name) {
 	for (auto it = nameBlockList.begin(); it != nameBlockList.end(); ++it)
 	{
 		if (it->compare(name) == 0) {
-			it->dummy_Return = true;
-			return *it;
+			BlockedName cache = *it;
+			cache.dummy_Return = true;
+			return cache;
 		}
 	}
 	BlockedName cache;
@@ -500,8 +502,9 @@ BlockedUser sqlw::isBlocked(const std::string &UID) {
 	for (auto it = blockList.begin(); it != blockList.end(); ++it)
 	{
 		if (it->compare(UID) == 0) {
-			it->dummy_Return = true;
-			return *it;
+			BlockedUser cache = *it;
+			cache.dummy_Return = true;
+			return cache;
 		}
 	}
 
