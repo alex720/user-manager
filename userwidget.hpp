@@ -7,6 +7,7 @@
 #include <qdesktopwidget.h>
 #include "help_functions.h"
 #include <string>
+#include <qlineedit.h>
 
 
 namespace Ui {
@@ -29,7 +30,10 @@ public:
 	void on_chk_BlockedAutoKick_stateChanged(int state);
 	void on_chk_BlockedNameAutoBan_stateChanged(int state);
 	void on_chk_BlockedNameAutoKick_stateChanged(int state);
-	
+	void on_btn_buddynamesave_clicked();
+	void on_btn_blocknamesave_clicked();
+	void on_btn_blocknameNamesave_clicked();
+
 	void buddyItemClicked(int row, int column);
 	void blockedItemClicked(int row, int column);
 	void blockedNameItemClicked(int row, int column);

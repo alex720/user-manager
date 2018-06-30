@@ -5,7 +5,6 @@
 
 
 struct BuddyUser {
-
 	QString UID = "";
 	QString SavedName = "";
 	bool AntiChannelBan = false;
@@ -18,6 +17,7 @@ struct BuddyUser {
 		if (this->UID.compare(toComp.c_str())) return true;
 		return false;
 	}
+
 	bool operator==(BuddyUser vgl) {
 		if (UID == vgl.UID) return true;
 		return false;
@@ -31,7 +31,7 @@ struct BlockedUser {
 	QString SavedName = "";
 	bool AutoBan = false;;
 	bool AutoKick = false;;
-	bool dummy_Return = false;;
+	bool dummy_Return = false;
 
 	
 	bool compare(std::string toComp) {
@@ -65,7 +65,7 @@ struct BlockedName {
 
 /*
 
-TODOLSIT
+TODOLIST
 - write infos to database
 - write name in infodata
 

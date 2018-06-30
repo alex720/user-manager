@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'UserWidget.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.2
+** Created by: Qt User Interface Compiler version 5.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -16,11 +16,11 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTableWidget>
-#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -36,7 +36,7 @@ public:
     QTableWidget *TW_BUDDY;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_2;
-    QTextEdit *textbox_buddyname;
+    QLineEdit *textbox_buddyname;
     QPushButton *btn_buddynamesave;
     QCheckBox *chk_BuddyAutoOperator;
     QCheckBox *chk_BuddyAutoTalkpower;
@@ -49,7 +49,7 @@ public:
     QTableWidget *TW_BLOCKED;
     QVBoxLayout *verticalLayout_2;
     QHBoxLayout *horizontalLayout_5;
-    QTextEdit *textbox_blockname;
+    QLineEdit *textbox_blockname;
     QPushButton *btn_blocknamesave;
     QCheckBox *chk_BlockedAutoBan;
     QCheckBox *chk_BlockedAutoKick;
@@ -61,7 +61,7 @@ public:
     QTableWidget *TW_NAMES;
     QVBoxLayout *verticalLayout_3;
     QHBoxLayout *horizontalLayout_8;
-    QTextEdit *textbox_blockedname;
+    QLineEdit *textbox_blockedname;
     QPushButton *btn_buddynamesave_2;
     QCheckBox *chk_BlockedNameAutoBan;
     QCheckBox *chk_BlockedNameAutoKick;
@@ -87,6 +87,7 @@ public:
         if (TW_BUDDY->columnCount() < 2)
             TW_BUDDY->setColumnCount(2);
         TW_BUDDY->setObjectName(QStringLiteral("TW_BUDDY"));
+        TW_BUDDY->setSortingEnabled(true);
         TW_BUDDY->setRowCount(0);
         TW_BUDDY->setColumnCount(2);
         TW_BUDDY->horizontalHeader()->setVisible(false);
@@ -98,16 +99,8 @@ public:
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        textbox_buddyname = new QTextEdit(tab);
+        textbox_buddyname = new QLineEdit(tab);
         textbox_buddyname->setObjectName(QStringLiteral("textbox_buddyname"));
-        textbox_buddyname->setMaximumSize(QSize(200, 23));
-        textbox_buddyname->setLayoutDirection(Qt::LeftToRight);
-        textbox_buddyname->setAutoFillBackground(false);
-        textbox_buddyname->setInputMethodHints(Qt::ImhNone);
-        textbox_buddyname->setFrameShadow(QFrame::Sunken);
-        textbox_buddyname->setLineWidth(1);
-        textbox_buddyname->setLineWrapMode(QTextEdit::NoWrap);
-        textbox_buddyname->setAcceptRichText(false);
 
         horizontalLayout_2->addWidget(textbox_buddyname);
 
@@ -171,9 +164,8 @@ public:
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
-        textbox_blockname = new QTextEdit(tab_2);
+        textbox_blockname = new QLineEdit(tab_2);
         textbox_blockname->setObjectName(QStringLiteral("textbox_blockname"));
-        textbox_blockname->setMaximumSize(QSize(200, 23));
 
         horizontalLayout_5->addWidget(textbox_blockname);
 
@@ -231,16 +223,8 @@ public:
         verticalLayout_3->setObjectName(QStringLiteral("verticalLayout_3"));
         horizontalLayout_8 = new QHBoxLayout();
         horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
-        textbox_blockedname = new QTextEdit(tab_3);
+        textbox_blockedname = new QLineEdit(tab_3);
         textbox_blockedname->setObjectName(QStringLiteral("textbox_blockedname"));
-        textbox_blockedname->setMaximumSize(QSize(200, 23));
-        textbox_blockedname->setLayoutDirection(Qt::LeftToRight);
-        textbox_blockedname->setAutoFillBackground(false);
-        textbox_blockedname->setInputMethodHints(Qt::ImhNone);
-        textbox_blockedname->setFrameShadow(QFrame::Sunken);
-        textbox_blockedname->setLineWidth(1);
-        textbox_blockedname->setLineWrapMode(QTextEdit::NoWrap);
-        textbox_blockedname->setAcceptRichText(false);
 
         horizontalLayout_8->addWidget(textbox_blockedname);
 
@@ -282,7 +266,7 @@ public:
 
         retranslateUi(UserWidget);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(UserWidget);
@@ -290,20 +274,20 @@ public:
 
     void retranslateUi(QWidget *UserWidget)
     {
-        UserWidget->setWindowTitle(QApplication::translate("UserWidget", "Form", 0));
-        btn_buddynamesave->setText(QApplication::translate("UserWidget", "save", 0));
-        chk_BuddyAutoOperator->setText(QApplication::translate("UserWidget", "AutoOperator", 0));
-        chk_BuddyAutoTalkpower->setText(QApplication::translate("UserWidget", "AutoTalkpower", 0));
-        chk_BuddyAntiChannelBan->setText(QApplication::translate("UserWidget", "AntiChannelBan", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("UserWidget", "Buddys", 0));
-        btn_blocknamesave->setText(QApplication::translate("UserWidget", "save", 0));
-        chk_BlockedAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", 0));
-        chk_BlockedAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("UserWidget", "Blocked", 0));
-        btn_buddynamesave_2->setText(QApplication::translate("UserWidget", "save", 0));
-        chk_BlockedNameAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", 0));
-        chk_BlockedNameAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", 0));
-        tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("UserWidget", "Names", 0));
+        UserWidget->setWindowTitle(QApplication::translate("UserWidget", "Conactlist", Q_NULLPTR));
+        btn_buddynamesave->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
+        chk_BuddyAutoOperator->setText(QApplication::translate("UserWidget", "AutoOperator", Q_NULLPTR));
+        chk_BuddyAutoTalkpower->setText(QApplication::translate("UserWidget", "AutoTalkpower", Q_NULLPTR));
+        chk_BuddyAntiChannelBan->setText(QApplication::translate("UserWidget", "AntiChannelBan", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("UserWidget", "Buddys", Q_NULLPTR));
+        btn_blocknamesave->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
+        chk_BlockedAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
+        chk_BlockedAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("UserWidget", "Blocked", Q_NULLPTR));
+        btn_buddynamesave_2->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
+        chk_BlockedNameAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
+        chk_BlockedNameAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("UserWidget", "Names", Q_NULLPTR));
     } // retranslateUi
 
 };

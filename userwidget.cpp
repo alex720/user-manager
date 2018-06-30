@@ -115,7 +115,26 @@ void UserWidget::on_chk_BlockedNameAutoKick_stateChanged(int state)
 	UserManager->updateName(blockedName);
 }
 
+void UserWidget::on_btn_buddynamesave_clicked()
+{
+	BuddyUser buddyUser = UserManager->getBuddybyUID(currentItem->text().toStdString());
+	buddyUser.SavedName = this->findChild<QLineEdit*>("textbox_buddyname")->text();
+	UserManager->updateBuddy(buddyUser);
+}
 
+void UserWidget::on_btn_blocknamesave_clicked()
+{
+	BlockedUser blockedUser = UserManager->getBlockedbyUID(currentItem->text().toStdString());
+	blockedUser.SavedName = this->findChild<QLineEdit*>("textbox_blockname")->text();
+	UserManager->updateBlocked(blockedUser);
+}
+
+void UserWidget::on_btn_blocknameNamesave_clicked()
+{
+	BlockedName blockedName = UserManager->getBlockedNamebyNAME(currentItem->text().toStdString());
+	blockedName.Name = this->findChild<QLineEdit*>("textbox_blockedname")->text();
+	UserManager->updateName(blockedName);
+}
 
 
 void UserWidget::buddyItemClicked(int row,int column)
@@ -129,7 +148,7 @@ void UserWidget::buddyItemClicked(int row,int column)
 	this->findChild<QCheckBox*>("chk_BuddyAutoOperator")->setChecked(buddyUser.AutoOperator);
 	this->findChild<QCheckBox*>("chk_BuddyAutoTalkpower")->setChecked(buddyUser.AutoTalkpower);
 	this->findChild<QCheckBox*>("chk_BuddyAntiChannelBan")->setChecked(buddyUser.AntiChannelBan);
-	this->findChild<QTextEdit*>("textbox_buddyname")->setText(buddyUser.SavedName);
+	this->findChild<QLineEdit*>("textbox_buddyname")->setText(buddyUser.SavedName);
 	}
 	else {
 		log("Error: BuddyUser in list not found");
@@ -148,7 +167,7 @@ void UserWidget::blockedItemClicked(int row, int column)
 	if (blockedUser.dummy_Return) {
 	this->findChild<QCheckBox*>("chk_BlockedAutoBan")->setChecked(blockedUser.AutoBan);
 	this->findChild<QCheckBox*>("chk_BlockedAutoKick")->setChecked(blockedUser.AutoKick);
-	this->findChild<QTextEdit*>("textbox_blockname")->setText(blockedUser.SavedName);
+	this->findChild<QLineEdit*>("textbox_blockname")->setText(blockedUser.SavedName);
 	}
 	else {
 		log("Error: BlockedUser in list not found");
@@ -165,7 +184,7 @@ void UserWidget::blockedNameItemClicked(int row, int column)
 	if (blockedname.dummy_Return) {
 		this->findChild<QCheckBox*>("chk_BlockedNameAutoBan")->setChecked(blockedname.AutoBan);
 		this->findChild<QCheckBox*>("chk_BlockedNameAutoKick")->setChecked(blockedname.AutoKick);
-		this->findChild<QTextEdit*>("textbox_blockedname")->setText(blockedname.Name);
+		this->findChild<QLineEdit*>("textbox_blockedname")->setText(blockedname.Name);
 	}
 	else {
 		log("Error: Name in list not found");

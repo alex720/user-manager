@@ -702,8 +702,6 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 			break;
 		}
 
-		//*data = (char*)malloc(INFODATA_BUFSIZE * sizeof(char));
-		//snprintf(*data, INFODATA_BUFSIZE * 2, infodata);	
 
 		*data = (char*)malloc((infodata.length() + 1) * sizeof(char));
 		snprintf(*data, (infodata.length() + 1), infodata.c_str());
@@ -1090,15 +1088,10 @@ void ts3plugin_onUpdateClientEvent(uint64 serverConnectionHandlerID, anyID clien
 }
 
 std::string GetKickMessage() {
-	QSettings settings(iniconfigPath, QSettings::IniFormat);
 	std::string buf = "AutoKick | ";
 	buf.append(Datas->getkickMessage());
 	return buf;
 }
-
-
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID, int visibility, const char* moveMessage) {
@@ -1118,16 +1111,17 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &UID);
 
 			BuddyUser buddyUser = UserManager->isBuddy(UID);
-
 			if (buddyUser.dummy_Return) {
 				BuddyUserProc(serverConnectionHandlerID, clientID, newChannelID,buddyUser);
 				return;
 			}
+
 			BlockedUser blockedUser = UserManager->isBlocked(UID);
 			if (blockedUser.dummy_Return) {
 				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedUser);
 				return;
 			}
+
 			BlockedName blockedName = UserManager->isNameBlocked(name);
 			if (blockedName.dummy_Return) {
 				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedName);

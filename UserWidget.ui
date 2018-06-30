@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Conactlist</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -29,7 +29,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -40,6 +40,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QTableWidget" name="TW_BUDDY">
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
          <property name="rowCount">
           <number>0</number>
          </property>
@@ -61,35 +64,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QTextEdit" name="textbox_buddyname">
-             <property name="maximumSize">
-              <size>
-               <width>200</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="inputMethodHints">
-              <set>Qt::ImhNone</set>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Sunken</enum>
-             </property>
-             <property name="lineWidth">
-              <number>1</number>
-             </property>
-             <property name="lineWrapMode">
-              <enum>QTextEdit::NoWrap</enum>
-             </property>
-             <property name="acceptRichText">
-              <bool>false</bool>
-             </property>
-            </widget>
+            <widget class="QLineEdit" name="textbox_buddyname"/>
            </item>
            <item>
             <widget class="QPushButton" name="btn_buddynamesave">
@@ -189,14 +164,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <widget class="QTextEdit" name="textbox_blockname">
-             <property name="maximumSize">
-              <size>
-               <width>200</width>
-               <height>23</height>
-              </size>
-             </property>
-            </widget>
+            <widget class="QLineEdit" name="textbox_blockname"/>
            </item>
            <item>
             <widget class="QPushButton" name="btn_blocknamesave">
@@ -285,35 +253,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
-            <widget class="QTextEdit" name="textbox_blockedname">
-             <property name="maximumSize">
-              <size>
-               <width>200</width>
-               <height>23</height>
-              </size>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="inputMethodHints">
-              <set>Qt::ImhNone</set>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Sunken</enum>
-             </property>
-             <property name="lineWidth">
-              <number>1</number>
-             </property>
-             <property name="lineWrapMode">
-              <enum>QTextEdit::NoWrap</enum>
-             </property>
-             <property name="acceptRichText">
-              <bool>false</bool>
-             </property>
-            </widget>
+            <widget class="QLineEdit" name="textbox_blockedname"/>
            </item>
            <item>
             <widget class="QPushButton" name="btn_buddynamesave_2">
