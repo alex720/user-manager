@@ -690,18 +690,17 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 		switch (userType) {
 		case 1: 
 			infodata += "The SavedName of the User is: ";
-			infodata += blockedName.Name.toStdString();
+			infodata += buddyUser.SavedName.toStdString();
 			infodata += "\n";
 			break;
 		case 2:
 			infodata += "The SavedName of the User is: ";
-			infodata += buddyUser.SavedName.toStdString();
+			infodata += blockedUser.SavedName.toStdString();
 			infodata += "\n";
 			break;
 		default:
 			break;
 		}
-
 
 		*data = (char*)malloc((infodata.length() + 1) * sizeof(char));
 		snprintf(*data, (infodata.length() + 1), infodata.c_str());
