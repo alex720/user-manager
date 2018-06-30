@@ -785,7 +785,9 @@ BuddyUser sqlw::getBuddybyUID(std::string UID)
 	for (auto it = buddyList.begin(); it != buddyList.end(); ++it)
 	{
 		if (it->compare(UID) == 0) {
-			return *it;
+			BuddyUser cache = *it;
+			cache.dummy_Return = true;
+			return cache;
 		}
 	}
 	BuddyUser cache = {};
@@ -797,7 +799,9 @@ BlockedUser sqlw::getBlockedbyUID(std::string UID)
 	for (auto it = blockList.begin(); it != blockList.end(); ++it)
 	{
 		if (it->compare(UID) == 0) {
-			return *it;
+			BlockedUser cache = *it;
+			cache.dummy_Return = true;
+			return cache;
 		}
 	}
 	BlockedUser cache = {};
@@ -809,8 +813,9 @@ BlockedName sqlw::getBlockedNamebyNAME(std::string name)
 	for (auto it = nameBlockList.begin(); it != nameBlockList.end(); ++it)
 	{
 		if (it->compare(name) == 0) {
-			it->dummy_Return = true;
-			return *it;
+			BlockedName cache = *it;
+			cache.dummy_Return = true;
+			return cache;
 		}
 	}
 	BlockedName cache = {};

@@ -35,9 +35,11 @@ UserWidget::UserWidget(sqlw * UserManager, std::string UID, bool buddy) : UserMa
 	if (buddy) {
 		this->findChild<QTabWidget*>("tabWidget")->setCurrentIndex(0);
 		fillBuddyTable(UID);
+		fillBlockedTable("");
 	}
 	else {
 		this->findChild<QTabWidget*>("tabWidget")->setCurrentIndex(1);
+		fillBuddyTable("");
 		fillBlockedTable(UID);
 	}
 	fillBlockedNameTable();
