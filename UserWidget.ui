@@ -29,7 +29,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -256,7 +256,7 @@
             <widget class="QLineEdit" name="textbox_blockedname"/>
            </item>
            <item>
-            <widget class="QPushButton" name="btn_buddynamesave_2">
+            <widget class="QPushButton" name="btn_blocknameNamesave">
              <property name="maximumSize">
               <size>
                <width>40</width>

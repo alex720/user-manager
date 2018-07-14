@@ -38,6 +38,8 @@
 		 if (stringForLog.isEmpty()) {
 			 return;
 		 }
+		 //printf(stringForLog.toStdString().c_str());
+		 //printf("\n");
 		 std::clog << getTimeStamp() << " : " << stringForLog.toStdString() << std::endl;
 	 }
 

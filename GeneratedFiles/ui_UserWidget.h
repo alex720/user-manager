@@ -62,7 +62,7 @@ public:
     QVBoxLayout *verticalLayout_3;
     QHBoxLayout *horizontalLayout_8;
     QLineEdit *textbox_blockedname;
-    QPushButton *btn_buddynamesave_2;
+    QPushButton *btn_blocknameNamesave;
     QCheckBox *chk_BlockedNameAutoBan;
     QCheckBox *chk_BlockedNameAutoKick;
     QSpacerItem *verticalSpacer_5;
@@ -228,12 +228,12 @@ public:
 
         horizontalLayout_8->addWidget(textbox_blockedname);
 
-        btn_buddynamesave_2 = new QPushButton(tab_3);
-        btn_buddynamesave_2->setObjectName(QStringLiteral("btn_buddynamesave_2"));
-        btn_buddynamesave_2->setMaximumSize(QSize(40, 40));
-        btn_buddynamesave_2->setCheckable(false);
+        btn_blocknameNamesave = new QPushButton(tab_3);
+        btn_blocknameNamesave->setObjectName(QStringLiteral("btn_blocknameNamesave"));
+        btn_blocknameNamesave->setMaximumSize(QSize(40, 40));
+        btn_blocknameNamesave->setCheckable(false);
 
-        horizontalLayout_8->addWidget(btn_buddynamesave_2);
+        horizontalLayout_8->addWidget(btn_blocknameNamesave);
 
 
         verticalLayout_3->addLayout(horizontalLayout_8);
@@ -266,7 +266,7 @@ public:
 
         retranslateUi(UserWidget);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(UserWidget);
@@ -284,7 +284,7 @@ public:
         chk_BlockedAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
         chk_BlockedAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("UserWidget", "Blocked", Q_NULLPTR));
-        btn_buddynamesave_2->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
+        btn_blocknameNamesave->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
         chk_BlockedNameAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
         chk_BlockedNameAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("UserWidget", "Names", Q_NULLPTR));

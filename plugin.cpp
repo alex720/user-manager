@@ -32,6 +32,7 @@
 #include <ctime>
 #include "configDialog.h"
 #include "userwidget.hpp"
+#include <queue>
 
 static struct TS3Functions ts3Functions;
 
@@ -132,7 +133,9 @@ char configPathUserDB[PATH_BUFSIZE]; // Datenbank
 char settingsDBpath[PATH_BUFSIZE];
 char lastmessage[TS3_MAX_SIZE_TEXTMESSAGE];
 void giveverification(uint64 serverconnectionhandlerid,int i, anyID clientID);
-
+bool running = true; // variable for the thread Loop to stop the loop if the plugin get shutdown
+void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID);
+void ThreadLoop();
 
 sqlw* UserManager;
 ConfigData *Datas;
@@ -140,7 +143,7 @@ bool dbnotopen;
 
 
 template <typename T>
-void BannedUserProc(uint64 serverConnectionHandlerID, anyID clientID, uint64 channelID, T blockedUser) {
+void BannedUserProc(uint64 serverConnectionHandlerID, anyID clientID, uint64 channelID, T blockedUser) { // template for blockedUser and blockedName
 
 	if (blockedUser.AutoBan) {
 
@@ -477,6 +480,11 @@ int ts3plugin_init() {
 
 	UserManager = new sqlw(configPathUserDB, settingsDBpath,Datas);
 
+
+	std::thread QueueWorkerThread(ThreadLoop);
+	QueueWorkerThread.detach();
+
+
 	return 0;  /* 0 = success, 1 = failure, -2 = failure but client will not show a "failed to load" warning */
 			   /* -2 is a very special case and should only be used if a plugin displays a dialog (e.g. overlay) asking the user to disable
 			   * the plugin again, avoiding the show another dialog by the client telling the user the plugin failed to load.
@@ -486,6 +494,8 @@ int ts3plugin_init() {
 /* Custom code called right before the plugin is unloaded */
 void ts3plugin_shutdown() {
 	/* Your plugin cleanup code here */
+	
+	running = false;
 	delete UserManager;
 	delete Datas;
 	logclose();
@@ -1092,10 +1102,25 @@ std::string GetKickMessage() {
 	return buf;
 }
 
+std::queue<InfoObjectQueue> UserWorker;
+
+void ThreadLoop() {
+	log("thread Started");
+	while (running) {
+		Sleep(10);
+		while (!UserWorker.empty()) {	
+			InfoObjectQueue &cache = UserWorker.front();
+			moveeventwork(cache.serverConnectionHandlerID, cache.clientID, cache.oldChannelID, cache.newChannelID);
+			UserWorker.pop();	
+		}
+	}
+	log("thread Closed");
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID, int visibility, const char* moveMessage) {
+void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID) {
 	
-	Sleep(100);
 	anyID myID;
 
 	ts3Functions.getClientID(serverConnectionHandlerID, &myID);
@@ -1146,8 +1171,8 @@ void ts3plugin_onClientMoveEvent(uint64 serverConnectionHandlerID, anyID clientI
 	ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
 
 	if (mychannelID == newChannelID && newChannelID != NULL) {  //If target is in the channel we want
-		std::thread eventwork(moveeventwork, serverConnectionHandlerID, clientID, oldChannelID, newChannelID, visibility, moveMessage);
-		eventwork.detach();
+		UserWorker.push({ serverConnectionHandlerID, clientID, oldChannelID, newChannelID });
+		log("Object added to Queue");
 	}
 }
 

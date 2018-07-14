@@ -16,7 +16,12 @@
 #endif
 
 
-
+struct InfoObjectQueue {
+	uint64 serverConnectionHandlerID = 0 ;
+	anyID clientID = 0;
+	uint64 oldChannelID = 0;
+	uint64 newChannelID = 0;
+};
 
 
 #ifdef __cplusplus
