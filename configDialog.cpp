@@ -57,18 +57,21 @@ void ConfigDialog::reloadOptions() {
 	else {
 		this->findChild<QCheckBox*>("chkAutoTalkpower")->setChecked(false);
 	}
+
 	if (datas->getAutoBan()) {
 		this->findChild<QCheckBox*>("chkAutoBan")->setChecked(true);
 	}
 	else {
 		this->findChild<QCheckBox*>("chkAutoBan")->setChecked(false);
 	}
+
 	if (datas->getAutoKick()) {
 		this->findChild<QCheckBox*>("chkAutoKick")->setChecked(true);
 	}
 	else {
 		this->findChild<QCheckBox*>("chkAutoKick")->setChecked(false);
 	}
+
 	if (datas->getAutoOperator()) {
 		this->findChild<QCheckBox*>("chkAutoOperator")->setChecked(true);
 	}
@@ -82,6 +85,7 @@ void ConfigDialog::reloadOptions() {
 	else {
 		this->findChild<QCheckBox*>("chkAntiChannelBan")->setChecked(false);
 	}
+
 	if (datas->getuseTSList()) {
 		useTSListcheck = true;
 		this->findChild<QCheckBox*>("chkUseTSList")->setChecked(true);
@@ -96,17 +100,26 @@ void ConfigDialog::reloadOptions() {
 	else {
 		this->findChild<QCheckBox*>("chkNotifikations")->setChecked(false);
 	}
+
 	if (datas->getlogging()) {
 		this->findChild<QCheckBox*>("chkLog")->setChecked(true);
 	}
 	else {
 		this->findChild<QCheckBox*>("chkLog")->setChecked(false);
 	}
+
 	if (datas->getWorking()) {
 		this->findChild<QCheckBox*>("chkWorking")->setChecked(true);
 	}
 	else {
 		this->findChild<QCheckBox*>("chkWorking")->setChecked(false);
+	}
+
+	if (datas->getchannelAnnouncments()) {
+		this->findChild<QCheckBox*>("chkChannelNotifikations")->setChecked(true);
+	}
+	else {
+		this->findChild<QCheckBox*>("chkChannelNotifikations")->setChecked(false);
 	}
 
 	if (datas->getautomute()){
@@ -303,7 +316,14 @@ void ConfigDialog::on_chkUseTSList_stateChanged(int state)
 
 void ConfigDialog::on_chkWorking_stateChanged(int state)
 {
+	if (initphase) return;
 	datas->setWorking(state);
+}
+
+void ConfigDialog::on_chkChannelNotifikations_stateChanged(int state)
+{
+	if (initphase) return;
+	datas->setchannelAnnouncments(state);
 }
 
 

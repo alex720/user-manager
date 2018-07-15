@@ -36,6 +36,9 @@ ConfigData::ConfigData(std::string iniconfigPath) : SettingsFile(iniconfigPath.c
 	if (settings.value("UseTSList", -1).toInt() == -1) {
 		settings.setValue("UseTSList", 0);
 	}
+	if (settings.value("channelAnnouncments", -1).toInt() == -1) {
+		settings.setValue("channelAnnouncments", 0);
+	}
 	if (settings.value("kickmessage", "").toString() == "") {
 		settings.setValue("kickmessage", "Geblockter User");
 	}
@@ -105,6 +108,11 @@ bool ConfigData::getuseTSList()
 bool ConfigData::getAutoKick()
 {
 	return AutoKick;
+}
+
+bool ConfigData::getchannelAnnouncments()
+{
+	return channelAnnouncments;
 }
 
 std::string ConfigData::getkickMessage()
@@ -281,6 +289,24 @@ void ConfigData::setuseTSList(bool val)
 	else {
 		settings.beginGroup("Config");
 		settings.setValue("UseTSList", 1);
+		settings.endGroup();
+		settings.sync();
+	}
+}
+
+void ConfigData::setchannelAnnouncments(bool val)
+{
+	channelAnnouncments = val;
+	QSettings settings(SettingsFile, QSettings::IniFormat);
+	if (val == 0) {
+		settings.beginGroup("Config");
+		settings.setValue("channelAnnouncments", 0);
+		settings.endGroup();
+		settings.sync();
+	}
+	else {
+		settings.beginGroup("Config");
+		settings.setValue("channelAnnouncments", 1);
 		settings.endGroup();
 		settings.sync();
 	}

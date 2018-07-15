@@ -986,25 +986,39 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 			break;
 
 		case 12:
-			strcat(buffer, "You removed the blocked User: ");
-			strcat(buffer, name);
-			strcat(buffer, " out of the channel");
-			ts3Functions.printMessageToCurrentTab(buffer);
-			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
+
+			if (Datas->getchannelAnnouncments()) {
+
+				anyID myID;
+				uint64 myChannelID;
+				ts3Functions.getClientID(serverConnectionHandlerID, &myID);
+				ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &myChannelID);
+				strcat(buffer, "I removed the blocked User: ");
+				strcat(buffer, name);
+				strcat(buffer, " out of the channel");
+				ts3Functions.requestSendChannelTextMsg(serverConnectionHandlerID, buffer, myChannelID, NULL);
+			}
+			else {
+				strcat(buffer, "You removed the blocked User: ");
+				strcat(buffer, name);
+				strcat(buffer, " out of the channel");
+				ts3Functions.printMessageToCurrentTab(buffer);
+				memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
+			}
 			break;
 		case 13:
 			strcat(buffer, "You gave your Buddy: ");
 			strcat(buffer, name);
 			strcat(buffer, " Talkpower");
 			ts3Functions.printMessageToCurrentTab(buffer);
-			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
+			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 		case 14:
 			strcat(buffer, "You gave your Buddy: ");
 			strcat(buffer, name);
 			strcat(buffer, " Operator");
 			ts3Functions.printMessageToCurrentTab(buffer);
-			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
+			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 		case 15:
 			strcat(buffer, "You unblocked the User: ");
@@ -1029,12 +1043,12 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 
 		case 18:
 			ts3Functions.printMessageToCurrentTab("You activated Notifications");
-			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
+			memcpy(lastmessage, "You activated Notifications", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 19:
 			ts3Functions.printMessageToCurrentTab("You deactivated Notifications");
-			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
+			memcpy(lastmessage, "You deactivated Notifications", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 20:
@@ -1046,33 +1060,31 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 			break;
 
 		case 21:
-			strcat(buffer, "Action impossible because User is not online");
-			ts3Functions.printMessageToCurrentTab(buffer);
-			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
+			ts3Functions.printMessageToCurrentTab("Action impossible because User is not online");
+			memcpy(lastmessage, "Action impossible because User is not online", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 22:
+			ts3Functions.printMessageToCurrentTab("Action impossible because User is not online");
+			memcpy(lastmessage, "Action impossible because User is not online", TS3_MAX_SIZE_TEXTMESSAGE);
 			strcat(buffer, "Automute when blocking the user was activated");
-			ts3Functions.printMessageToCurrentTab(buffer);
-			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 23:
-			strcat(buffer, "Automute when blocking the user was deactivated");
-			ts3Functions.printMessageToCurrentTab(buffer);
-			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
+			ts3Functions.printMessageToCurrentTab("Automute when blocking the user was deactivated");
+			memcpy(lastmessage, "Automute when blocking the user was deactivated", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
-
 		case 24:
-			strcat(buffer, "An internal error appered wait a second or restart teamspeak");
-			ts3Functions.printMessageToCurrentTab(buffer);
-			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
+			ts3Functions.printMessageToCurrentTab("An internal error appered wait a second or restart teamspeak");
+			memcpy(lastmessage, "An internal error appered wait a second or restart teamspeak", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 	default:
 		ts3Functions.printMessageToCurrentTab("internal Error");
-		memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
+		memcpy(lastmessage, "internal Error", TS3_MAX_SIZE_TEXTMESSAGE);
 		break;
 	}
+
+	
 }
 
 void ts3plugin_onNewChannelEvent(uint64 serverConnectionHandlerID, uint64 channelID, uint64 channelParentID) {

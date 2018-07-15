@@ -43,7 +43,7 @@ public:
 	void on_chkcurrent_server_toggled(bool state);
 	void on_chkUseTSList_stateChanged(int state);
 	void on_chkWorking_stateChanged(int state);
-	
+	void on_chkChannelNotifikations_stateChanged(int state);
 
 private:
 	Ui::ConfigDialog *ui;

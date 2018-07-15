@@ -68,6 +68,7 @@ public:
     QCheckBox *chkNotifikations;
     QCheckBox *chkUseTSList;
     QCheckBox *chkWorking;
+    QCheckBox *chkChannelNotifikations;
     QSpacerItem *verticalSpacer;
     QSpacerItem *verticalSpacer_2;
     QVBoxLayout *verticalLayout_2;
@@ -79,7 +80,7 @@ public:
     {
         if (ConfigDialog->objectName().isEmpty())
             ConfigDialog->setObjectName(QStringLiteral("ConfigDialog"));
-        ConfigDialog->resize(410, 523);
+        ConfigDialog->resize(412, 523);
         verticalLayout_6 = new QVBoxLayout(ConfigDialog);
         verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
         groupBox1 = new QGroupBox(ConfigDialog);
@@ -273,6 +274,11 @@ public:
 
         verticalLayout_3->addWidget(chkWorking);
 
+        chkChannelNotifikations = new QCheckBox(groupBox2);
+        chkChannelNotifikations->setObjectName(QStringLiteral("chkChannelNotifikations"));
+
+        verticalLayout_3->addWidget(chkChannelNotifikations);
+
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_3->addItem(verticalSpacer);
@@ -375,6 +381,10 @@ public:
         chkWorking->setToolTip(QApplication::translate("ConfigDialog", "If this Option is false no User would get any new channel Group ( like the Plugin is deactivated)", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         chkWorking->setText(QApplication::translate("ConfigDialog", "Plugin Active", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        chkChannelNotifikations->setToolTip(QApplication::translate("ConfigDialog", "Notfications in the  Channel Chat if you remove a User out of the Channel", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        chkChannelNotifikations->setText(QApplication::translate("ConfigDialog", "Channel Notification", Q_NULLPTR));
         btnSave->setText(QApplication::translate("ConfigDialog", "Save && Apply", Q_NULLPTR));
         btnImport_Buddys->setText(QApplication::translate("ConfigDialog", "Import Teamspeak buddies to User Manager", Q_NULLPTR));
         btnImport_Blocked->setText(QApplication::translate("ConfigDialog", "Import Teamspeak blocked users to User Manager", Q_NULLPTR));

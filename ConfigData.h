@@ -19,6 +19,7 @@ public:
 	bool getlogging();
 	bool getuseTSList();
 	bool getAutoKick();
+	bool getchannelAnnouncments();
 	std::string getkickMessage();
 
 	void setWorking(bool val);
@@ -31,6 +32,7 @@ public:
 	void setautomute(bool val);
 	void setlogging(bool val);
 	void setuseTSList(bool val);
+	void setchannelAnnouncments(bool val);
 	void setkickMessage(std::string val);
 
 private:
@@ -50,6 +52,7 @@ private:
 	bool automute;
 	bool logging;
 	bool useTSList;
+	bool channelAnnouncments;
 
 	std::string kickMessage;
 	
