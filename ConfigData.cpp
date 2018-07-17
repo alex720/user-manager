@@ -129,18 +129,15 @@ void ConfigData::setAutoTP(bool val)
 {
 	AutoTP = val;
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("AutoTP", 0);
-		settings.endGroup();
-		settings.sync();
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("AutoTP", 1);
-		settings.endGroup();
-		settings.sync();
 	}
+	settings.endGroup();
+	settings.sync();
 }
 
 void ConfigData::setAutoBan(bool val)
@@ -148,110 +145,91 @@ void ConfigData::setAutoBan(bool val)
 	AutoBan = val;
 
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("AutoChannelBan", 0);
-		settings.endGroup();
-		settings.sync();
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("AutoChannelBan", 1);
-		settings.endGroup();
-		settings.sync();
 	}
-	AutoBan = val;
+	settings.endGroup();
+	settings.sync();
 }
 
 void ConfigData::setAutoKick(bool val)
 {
 	AutoKick = val;
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("AutoChannelKick", 0);
-		settings.endGroup();
-		settings.sync();
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("AutoChannelKick", 1);
-		settings.endGroup();
-		settings.sync();
 	}
+	settings.endGroup();
+	settings.sync();
 }
 
 void ConfigData::setAutoOperator(bool val)
 {
 	AutoOperator = val;
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("AutoOperator", 0);
-		settings.endGroup();
-		settings.sync();
 	}
 	else {
 		settings.beginGroup("Config");
 		settings.setValue("AutoOperator", 1);
-		settings.endGroup();
-		settings.sync();
 	}
+	settings.endGroup();
+	settings.sync();
 }
 
 void ConfigData::setAntiChannelBan(bool val)
 {
 	AntiChannelBan = val;
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("AntiChannelBan", 0);
-		settings.endGroup();
-		settings.sync();
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("AntiChannelBan", 1);
-		settings.endGroup();
-		settings.sync();
 	}
+	settings.endGroup();
+	settings.sync();
 }
 
 void ConfigData::setwantannoucments(bool val)
 {
 	wantannoucments = val;
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("wantannoucments", 0);
-		settings.endGroup();
-		settings.sync();
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("wantannoucments", 1);
-		settings.endGroup();
-		settings.sync();
 	}
-	
+	settings.endGroup();
+	settings.sync();
 }
 
 void ConfigData::setautomute(bool val)
 {
 	automute = val;
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("automute", 0);
-		settings.endGroup();
-		settings.sync();
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("automute", 1);
-		settings.endGroup();
-		settings.sync();
 	}
+	settings.endGroup();
+	settings.sync();
 }
 
 void ConfigData::setlogging(bool val)
@@ -259,20 +237,17 @@ void ConfigData::setlogging(bool val)
 	logging = val;
 
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("logging", 0);
-		settings.endGroup();
-		settings.sync();
 		logclose();
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("logging", 1);
-		settings.endGroup();
-		settings.sync();
 		loginit(logPath);
 	}
+	settings.endGroup();
+	settings.sync();
 	
 }
 
@@ -280,36 +255,30 @@ void ConfigData::setuseTSList(bool val)
 {
 	useTSList = val;
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("UseTSList", 0);
-		settings.endGroup();
-		settings.sync();
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("UseTSList", 1);
-		settings.endGroup();
-		settings.sync();
 	}
+	settings.endGroup();
+	settings.sync();
 }
 
 void ConfigData::setchannelAnnouncments(bool val)
 {
 	channelAnnouncments = val;
 	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
 	if (val == 0) {
-		settings.beginGroup("Config");
 		settings.setValue("channelAnnouncments", 0);
-		settings.endGroup();
-		settings.sync();
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("channelAnnouncments", 1);
-		settings.endGroup();
-		settings.sync();
 	}
+	settings.endGroup();
+	settings.sync();
 }
 
 void ConfigData::setkickMessage(std::string val)
