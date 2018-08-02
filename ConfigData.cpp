@@ -30,7 +30,7 @@ ConfigData::ConfigData(std::string iniconfigPath) : SettingsFile(iniconfigPath.c
 		settings.setValue("automute", 1);
 	}
 	if (settings.value("logging", -1).toInt() == -1) {
-		settings.setValue("logging", 0);
+		settings.setValue("logging", 1);
 		logclose();
 	}
 	if (settings.value("UseTSList", -1).toInt() == -1) {
@@ -180,7 +180,6 @@ void ConfigData::setAutoOperator(bool val)
 		settings.setValue("AutoOperator", 0);
 	}
 	else {
-		settings.beginGroup("Config");
 		settings.setValue("AutoOperator", 1);
 	}
 	settings.endGroup();

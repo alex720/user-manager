@@ -33,8 +33,8 @@
 #include "configDialog.h"
 #include "userwidget.hpp"
 #include <queue>
+#include "help_functions.h"
 
-static struct TS3Functions ts3Functions;
 
 #ifdef _WIN32
 #define _strcpy(dest, destSize, src) strcpy_s(dest, destSize, src)
@@ -267,6 +267,7 @@ void flipflopUserBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &name);
 
 
+
 	BlockedUser blockedUser = UserManager->isBlocked(UID);
 	if (!blockedUser.dummy_Return) {
 		blockedUser.AutoBan = Datas->getAutoBan();
@@ -274,6 +275,8 @@ void flipflopUserBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 		blockedUser.UID = UID;
 		blockedUser.SavedName = name;
 
+
+		
 
 		UserManager->addBlockedList(blockedUser);
 
@@ -472,6 +475,8 @@ int ts3plugin_init() {
 	printf("\n");
 	//ini file
 
+	logInitTS3Funktion(ts3Functions);
+
 	ts3Functions.printMessageToCurrentTab("WARNING: if you use a Database of a plugin before Version 4.3 it is not compatible, I do not guarantee that it works properly");
 	ts3Functions.printMessageToCurrentTab("WARNING: if your Database in incompatible please delete the database. it will recreated correctly");
 	loginit(logPath);
@@ -536,9 +541,6 @@ void ts3plugin_configure(void* handle, void* qParentWidget) {
 	config->setAttribute(Qt::WA_DeleteOnClose);
 	config->setWindowFlags(config->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 	config->exec();
-
-
-
 }
 
 /*
@@ -624,6 +626,8 @@ int ts3plugin_processCommand(uint64 serverConnectionHandlerID, const char* comma
 		ts3Functions.printMessageToCurrentTab(logPath);
 	}
 	
+	
+
 	return 0;  /* Plugin handled command */
 }
 
@@ -752,6 +756,7 @@ static struct PluginMenuItem* createMenuItem(enum PluginMenuType type, int id, c
 * ts3plugin_onMenuItemEvent will be called passing the menu ID of the triggered menu item.
 * These IDs are freely choosable by the plugin author. It's not really needed to use an enum, it just looks prettier.
 */
+
 
 
 /*
@@ -1116,11 +1121,12 @@ std::string GetKickMessage() {
 
 std::queue<InfoObjectQueue> UserWorker;
 
+
 void ThreadLoop() {
 	log("thread Started");
 	while (running) {
 		Sleep(10);
-		while (!UserWorker.empty()) {	
+		while (!UserWorker.empty()) {
 			InfoObjectQueue &cache = UserWorker.front();
 			moveeventwork(cache.serverConnectionHandlerID, cache.clientID, cache.oldChannelID, cache.newChannelID);
 			UserWorker.pop();	
@@ -1129,17 +1135,14 @@ void ThreadLoop() {
 	log("thread Closed");
 }
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID) {
-	
-	anyID myID;
+_declspec(noinline)void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID) {
 
-	ts3Functions.getClientID(serverConnectionHandlerID, &myID);
+
 
 	if (isEnabledTS(serverConnectionHandlerID)) {
 
-		if (myID != clientID) {	 // target is not ourself 
+		
 			char* name;
 			char* UID;
 
@@ -1148,6 +1151,7 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 
 			BuddyUser buddyUser = UserManager->isBuddy(UID);
 			if (buddyUser.dummy_Return) {
+
 				BuddyUserProc(serverConnectionHandlerID, clientID, newChannelID,buddyUser);
 				return;
 			}
@@ -1163,7 +1167,6 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedName);
 				return;
 			}
-		}
 	}
 }
 
@@ -1182,9 +1185,8 @@ void ts3plugin_onClientMoveEvent(uint64 serverConnectionHandlerID, anyID clientI
 	ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 	ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
 
-	if (mychannelID == newChannelID && newChannelID != NULL) {  //If target is in the channel we want
+	if (mychannelID == newChannelID && newChannelID != NULL && clientID != myID) {  //If target is in the channel we want
 		UserWorker.push({ serverConnectionHandlerID, clientID, oldChannelID, newChannelID });
-		log("Object added to Queue");
 	}
 }
 
@@ -1284,6 +1286,9 @@ void listAllBuddys(uint64 serverConnectionHandlerID) {
 	}
 
 	delete[] allClientIDs;
+
+	
+
 }
 
 /*
@@ -1401,23 +1406,16 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 		}
 		case MENU_ID_CLIENT_6: {
 			/* Menu client 6 was triggered */
-			log("MENU_ID_CLIENT_6clicked 1");
 			bool buddy = false;
 			char* UID;
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, (anyID)selectedItemID, CLIENT_UNIQUE_IDENTIFIER, &UID);
-			log("MENU_ID_CLIENT_6clicked 2");
 			BuddyUser buddyUser = UserManager->isBuddy(UID);
-			log("MENU_ID_CLIENT_6clicked 3");
 			if (buddyUser.dummy_Return) {
 				buddy = true;
 			}
-			log("MENU_ID_CLIENT_6clicked 4");
 			UserWidget* userwidget = new UserWidget(UserManager, UID, buddy); 
-			log("MENU_ID_CLIENT_6clicked 5");
 			userwidget->setAttribute(Qt::WA_DeleteOnClose);
-			log("MENU_ID_CLIENT_6clicked 6");
 			userwidget->setWindowFlags(userwidget->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-			log("MENU_ID_CLIENT_6clicked 7");
 			userwidget->show();
 
 

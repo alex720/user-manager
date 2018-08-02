@@ -14,6 +14,7 @@
 #include "ServerObject.h"
 #include "User.h"
 #include "ConfigData.h"
+#include <queue>
 
 #define _CRT_SECURE_NO_WARNINGS 
 #define PATH_BUFSIZE 512
@@ -21,7 +22,22 @@
 #define BLOCKTABLE QString("blocktable")
 #define NAMEBLOCKTABLE QString("nameblocktable")
 #define SERVERTABLE QString("EnabledServers")
+/*
+enum Task {
+	NONE = 0,
+	REMOVE,
+	INSERT,
+	UPDATE
+};
 
+
+struct InsertTaskObject {
+	Task task;
+	BuddyUser buddyUser;
+	BlockedUser blockedUser;
+	BlockedName blockedName;
+};
+*/
 
 class sqlw {
 public:
@@ -64,11 +80,16 @@ public:
 	std::list<BlockedName> nameBlockList;
 	std::list<BlockedUser> blockList;
 
+	void blocked_import();
+	void buddys_import();
 private:
-	void openDB();
-	void closeDB();
 
-	QSqlDatabase *UserDB;
+
+	//std::queue<InsertTaskObject> dataBaseWriter;
+	//void DataBaseWriterThreadLoop();
+	//bool DataBaseWriterThreadShouldWorking;
+
+
 	ConfigData *Datas;
 
 	void CreateFirstDB();
@@ -81,7 +102,7 @@ private:
 	std::vector<ServerCache> ServerCaches;
 
 	std::mutex dbprotect;
-	bool open = false;
+
 
 	std::mutex tsdbProtect;
 	

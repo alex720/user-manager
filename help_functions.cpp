@@ -19,6 +19,10 @@
 	}
 
 
+	void logInitTS3Funktion(const struct TS3Functions funcs) {
+		logTs3Functions = funcs;
+	}
+
 	void loginit(std::string in_logPath) {
 		if (logopen)
 			return;
@@ -41,6 +45,7 @@
 		 //printf(stringForLog.toStdString().c_str());
 		 //printf("\n");
 		 std::clog << getTimeStamp() << " : " << stringForLog.toStdString() << std::endl;
+		 logTs3Functions.logMessage(stringForLog.toStdString().c_str(), LogLevel_DEBUG, "User-Manager", 0);
 	 }
 
 

@@ -1,7 +1,7 @@
 #include "configDialog.h"
 #define _CRT_SECURE_NO_WARNINGS 
 
-ConfigDialog::ConfigDialog(sqlw* UserManagerPoint, const struct TS3Functions funcs,ConfigData *datas,QWidget *parent): UserManager(UserManagerPoint),QDialog(parent),datas(datas), ui(new Ui::ConfigDialog)
+ConfigDialog::ConfigDialog(sqlw *UserManagerPoint, const struct TS3Functions funcs,ConfigData *datas,QWidget *parent): UserManager(UserManagerPoint),QDialog(parent),datas(datas), ui(new Ui::ConfigDialog)
 {
 
 	initphase = true;
@@ -193,84 +193,12 @@ void ConfigDialog::on_chkNotifikations_stateChanged(int state)
 
 
 void ConfigDialog::on_btnImport_Blocked_clicked() {
-	blocked_import();
+	UserManager->blocked_import();
 }
 
-void ConfigDialog::buddys_import() {
-	ts3Functions.printMessageToCurrentTab("Beginne mit der Transferierung der Buddys");
-	Sleep(500);
-	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
-	tsdb.setDatabaseName(QString(UserManager->PathTsDB.c_str()));
-	tsdb.open();
-
-	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=0%'"));
-
-	while (queryout.next()) {
-
-
-		QString buffer = queryout.value("value").toString(); //buffer = string of the "value" column
-
-		std::string sBuffer = buffer.toStdString(); //sBUffer std::string von buffer
-		std::string searchstring("IDS=");
-		size_t pos = sBuffer.find(searchstring);
-
-		size_t pos2 = sBuffer.find("Friend=");
-		std::string Name = sBuffer.substr(9, pos2 - 10);
-
-		std::string cur = sBuffer.substr(pos + 4, 28);
-		if (!UserManager->isBlocked(cur.c_str()).dummy_Return && !UserManager->isBuddy(cur.c_str()).dummy_Return) {
-			
-			BuddyUser cache = {};
-			cache.AntiChannelBan = datas->getAntiChannelBan();
-			cache.AutoOperator = datas->getAutoOperator();
-			cache.AutoTalkpower = datas->getAutoTP();
-			cache.SavedName = Name.c_str();
-			cache.UID = cur.c_str();
-			
-			UserManager->addBuddyList(cache);
-		}
-	}
-
-	tsdb.close();
-	ts3Functions.printMessageToCurrentTab("Transferierung der Buddys beendet!");
-}
-
-void ConfigDialog::blocked_import() {
-	ts3Functions.printMessageToCurrentTab("Beginne mit der Transferierung der blockierten User");
-	Sleep(500);
-	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
-	tsdb.setDatabaseName(QString(UserManager->PathTsDB.c_str()));
-	tsdb.open();
-
-	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=1%'"));
-
-	while (queryout.next()) {
-
-		QString buffer = queryout.value("value").toString(); //buffer = string of the "value" column
-
-		std::string sBuffer = buffer.toStdString(); //sBUffer std::string von buffer
-		std::string searchstring("IDS=");
-		size_t pos = sBuffer.find(searchstring);
-
-		size_t pos2 = sBuffer.find("Friend=");
-		std::string Name = sBuffer.substr(9, pos2 - 10);
-		std::string cur = sBuffer.substr(pos + 4, 28);
-		if (!UserManager->isBlocked(cur.c_str()).dummy_Return && !UserManager->isBuddy(cur.c_str()).dummy_Return) {
-			ts3Functions.printMessageToCurrentTab("test");
-			BlockedUser cache = {};
-			cache.AutoBan = datas->getAutoBan();
-			cache.AutoKick = datas->getAutoKick();
-			cache.UID = cur.c_str();
-			cache.SavedName = Name.c_str();
-			UserManager->addBlockedList(cache);   
-		}
-	}
-	tsdb.close();
-	ts3Functions.printMessageToCurrentTab("Transferierung der blockierten User beendet!");
-}
 
 void ConfigDialog::on_btnImport_Buddys_clicked() {
-	buddys_import();
+	UserManager->buddys_import();
 }
 
 void ConfigDialog::on_chkcurrent_server_toggled(bool state) {

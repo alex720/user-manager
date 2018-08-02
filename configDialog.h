@@ -24,7 +24,7 @@ class ConfigDialog : public QDialog
 	Q_OBJECT
 
 public:
-	explicit ConfigDialog(sqlw* UserManager, const struct TS3Functions funcs,ConfigData *datas, QWidget *parent = Q_NULLPTR);
+	explicit ConfigDialog(sqlw *UserManager, const struct TS3Functions funcs,ConfigData *datas, QWidget *parent = Q_NULLPTR);
 
 	~ConfigDialog();
 	
@@ -53,8 +53,7 @@ private:
 	struct TS3Functions ts3Functions;
 	ConfigData *datas;
 
-	void buddys_import();
-	void blocked_import();
+
 	bool useTSListcheck = false;
 
 	bool initphase = false;;

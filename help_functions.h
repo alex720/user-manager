@@ -11,9 +11,11 @@
 #include <WinUser.h>
 #include <QtNetwork\qtcpsocket.h>
 #include <WinInet.h>
+#include "ts3_functions.h"
 
 
 
+	void logInitTS3Funktion(const struct TS3Functions funcs);
 	void loginit(std::string logPath);
 
 	void log(QString stringForLog);
@@ -21,6 +23,7 @@
 	void log(int stringForLog);
 
 	void logclose();
+	static struct TS3Functions logTs3Functions;
 	static bool logopen;
 	static char logPath[512];
 

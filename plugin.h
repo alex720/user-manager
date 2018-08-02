@@ -7,7 +7,7 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
-#include "help_functions.h"
+
 
 #ifdef WIN32
 #define PLUGINS_EXPORTDLL __declspec(dllexport)
@@ -15,6 +15,7 @@
 #define PLUGINS_EXPORTDLL __attribute__ ((visibility("default")))
 #endif
 
+static struct TS3Functions ts3Functions;
 
 struct InfoObjectQueue {
 	uint64 serverConnectionHandlerID = 0 ;
@@ -27,8 +28,6 @@ struct InfoObjectQueue {
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-	
 
 	
 
