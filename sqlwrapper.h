@@ -83,7 +83,8 @@ public:
 	void blocked_import();
 	void buddys_import();
 private:
-
+	void openDB();
+	void closeDB();
 
 	//std::queue<InsertTaskObject> dataBaseWriter;
 	//void DataBaseWriterThreadLoop();
@@ -102,7 +103,8 @@ private:
 	std::vector<ServerCache> ServerCaches;
 
 	std::mutex dbprotect;
-
+	QSqlDatabase *UserDB;
+	bool open;
 
 	std::mutex tsdbProtect;
 	

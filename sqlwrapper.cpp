@@ -1,188 +1,217 @@
+
 #include "sqlwrapper.h"
 #define _CRT_SECURE_NO_WARNINGS 
 
-#define DBCHECK2 if (!UserDB.isOpen() && !UserDB.isValid()){ \
-		QSqlError err = UserDB.lastError();\
+#define DBCHECK2 if (!UserDB->isOpen() && !UserDB->isValid()){ \
+		QSqlError err = UserDB->lastError();\
 		log(err.databaseText());\
 		log(err.text());\
 		log("Error occured with opening database");\
 		return bool(-1);\
 		}
 
-#define DBOPEN	dbprotect.lock();\
-				QSqlDatabase UserDB = QSqlDatabase::addDatabase("QSQLITE");\
-				UserDB.setDatabaseName(QString(PathUserDB.c_str()));
-									
-#define DBCLOSE UserDB.close();\
-				dbprotect.unlock();	
-				
+#define DBOPEN	dbprotect.lock();
 
-#define DBCHECK if (!UserDB.isOpen() && !UserDB.isValid()){ \
-		QSqlError err = UserDB.lastError();\
+#define DBCLOSE dbprotect.unlock();	
+
+#define DBCHECK if (!UserDB->isOpen() && !UserDB->isValid()){ \
+		QSqlError err = UserDB->lastError();\
 		log(err.databaseText());\
 		log(err.text());\
 		log("Error occured with opening database");\
 		dbprotect.unlock();\
 		return;}
 
+void sqlw::openDB() {
+	UserDB = new QSqlDatabase;
+	*UserDB = QSqlDatabase::addDatabase("QSQLITE");
+	UserDB->setDatabaseName(QString(PathUserDB.c_str()));
+	if (UserDB->open()) {
+		open = true;
+	}
+}
 
-sqlw::sqlw(const std::string userDB, const std::string tsDB, ConfigData *Datas) : PathUserDB(userDB), PathTsDB(tsDB),Datas(Datas){
+void sqlw::closeDB() {
 
-	//DataBaseWriterThreadShouldWorking = true;
+	open = false;
+	UserDB->close();
+
+	delete UserDB;
+}
+
+
+sqlw::sqlw(const std::string userDB, const std::string tsDB, ConfigData *Datas) : PathUserDB(userDB), PathTsDB(tsDB), Datas(Datas) {
 
 	if (!fileExists(userDB.c_str())) {
 		CreateFirstDB();
 	}
-	
 
+	openDB();
 
 	//checkForOldDB();
-	// create table if not exists if User has old database version
+
+
+
 	readFillServerObjectCache();
 
 	loadAllLists();
+
+
+
 	log("SQLW-Object created \n");
 }
 
 sqlw::~sqlw() {
-	//DataBaseWriterThreadShouldWorking = false;
 	log("SQLW-Object deleted \n");
-
+	closeDB();
 }
 
 void sqlw::addBlockedToTable(const BlockedUser blockedUser) {
 	DBOPEN
-	DBCHECK
+		DBCHECK
+
+
 		QString command = QString("INSERT INTO " + BLOCKTABLE + " (UID, AutoBan, AutoKick, SavedName) VALUES ('" + blockedUser.UID + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "'" + ", " + "'" + blockedUser.SavedName + "')");
-		log(command);
-		QSqlQuery query(UserDB);
-		query.exec(command);
-		QSqlError err = query.lastError();
-		log(err.databaseText());
+	log(command);
+	QSqlQuery query(*UserDB);
+	query.exec(command);
+	QSqlError err = query.lastError();
+	log(err.databaseText());
+
+
 	DBCLOSE
 }
+
 
 void sqlw::addBlockedNameToTable(const BlockedName blockedName) {
 	DBOPEN
-	DBCHECK
+		DBCHECK
+
+
+
 		QString command = QString("INSERT INTO " + NAMEBLOCKTABLE + " (UID,AutoBan,AutoKick) VALUES ('" + blockedName.Name + "'" + ", " + "'" + convertoString(boolToInt(blockedName.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedName.AutoKick)).c_str() + "')");
-		log(command);
-		QSqlQuery query(UserDB);
-		query.exec(command);
-		QSqlError err = query.lastError();
-		log(err.databaseText());
-	DBCLOSE
-}
-
-void sqlw::updateBlockedInTabled( BlockedUser blockedUser)
-{
-	DBOPEN
-	DBCHECK
-	QString command = QString("UPDATE " + BLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "', SavedName='" + blockedUser.SavedName + "' WHERE UID='" + blockedUser.UID + "'");
 	log(command);
-	QSqlQuery query(UserDB);
-	query.exec(command);
-	QSqlError err = query.lastError();
-	log(err.databaseText());
-	DBCLOSE
-}
-
-void sqlw::updateBuddyInTabled( BuddyUser buddyUser)
-{
-	DBOPEN
-	DBCHECK
-	QString command = QString("UPDATE " + BUDDYTABLE + " SET AutoOperator='" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "', AntiChannelBan='" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "', AutoTalkpower='" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "', SavedName='" + buddyUser.SavedName + "'" + "WHERE UID='" + buddyUser.UID + "'");
-	log(command);
-	QSqlQuery query(UserDB);
-	query.exec(command);
-	QSqlError err = query.lastError();
-	log(err.databaseText());
-	DBCLOSE
-}
-
-void sqlw::updateNameInTabled( BlockedName blockedname)
-{
-	DBOPEN
-	DBCHECK
-	QString command = QString("UPDATE " + NAMEBLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedname.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedname.AutoKick)).c_str()  + "' WHERE UID='" + blockedname.Name + "'");
-	log(command);
-	QSqlQuery query(UserDB);
+	QSqlQuery query(*UserDB);
 	query.exec(command);
 	QSqlError err = query.lastError();
 	log(err.databaseText());
 
+	DBCLOSE
+
+}
+
+void sqlw::updateBlockedInTabled(BlockedUser blockedUser)
+{
+
+	DBOPEN
+		DBCHECK
+		QString command = QString("UPDATE " + BLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "', SavedName='" + blockedUser.SavedName + "' WHERE UID='" + blockedUser.UID + "'");
+	log(command);
+	QSqlQuery query(*UserDB);
+	query.exec(command);
+	QSqlError err = query.lastError();
+	log(err.databaseText());
+	DBCLOSE
+
+}
+
+void sqlw::updateBuddyInTabled(BuddyUser buddyUser)
+{
+
+	DBOPEN
+		DBCHECK
+		QString command = QString("UPDATE " + BUDDYTABLE + " SET AutoOperator='" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "', AntiChannelBan='" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "', AutoTalkpower='" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "', SavedName='" + buddyUser.SavedName + "'" + "WHERE UID='" + buddyUser.UID + "'");
+	log(command);
+	QSqlQuery query(*UserDB);
+	query.exec(command);
+	QSqlError err = query.lastError();
+	log(err.databaseText());
+	DBCLOSE
+
+}
+
+void sqlw::updateNameInTabled(BlockedName blockedname)
+{
+
+	DBOPEN
+		DBCHECK
+		QString command = QString("UPDATE " + NAMEBLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedname.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedname.AutoKick)).c_str() + "' WHERE UID='" + blockedname.Name + "'");
+	log(command);
+	QSqlQuery query(*UserDB);
+	query.exec(command);
+	QSqlError err = query.lastError();
+	log(err.databaseText());
 	DBCLOSE
 }
 
 void sqlw::addBuddyToTable(const BuddyUser buddyUser) {
 	DBOPEN
-	DBCHECK
-		QString command = QString("INSERT INTO " + BUDDYTABLE + " (UID, AntiChannelBan, AutoOperator, AutoTalkpower, SavedName) VALUES ('" + buddyUser.UID + "'" + ", "+ "'" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "'" + ", " + "'" + buddyUser.SavedName + "')");
-		log(command);
-	//	log("Db name: " + UserDBdatabaseName() + " Valid: " + (UserDB->isValid() ? "true" : "false"));
-		QSqlQuery query(UserDB);
-		query.exec(command);
-		QSqlError err = query.lastError();
-		log(err.databaseText());
-			
+		DBCHECK
+		QString command = QString("INSERT INTO " + BUDDYTABLE + " (UID, AntiChannelBan, AutoOperator, AutoTalkpower, SavedName) VALUES ('" + buddyUser.UID + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "'" + ", " + "'" + buddyUser.SavedName + "')");
+	log(command);
+	QSqlQuery query(*UserDB);
+	query.exec(command);
+	QSqlError err = query.lastError();
+	log(err.databaseText());
+
 	DBCLOSE
 }
 
 void sqlw::removeUserofTable(const QString &UID, const int friendN) {
 	DBOPEN
-	DBCHECK
+		DBCHECK
 
-	switch (friendN)
-	{
-	case 0:
-	{
-		QString command = QString("DELETE FROM " + BLOCKTABLE + " WHERE UID = '" + UID + "'");
-		log(command);
-		QSqlQuery query(UserDB);
-		query.exec(command);
-		QSqlError err = query.lastError();
-		log(err.databaseText());
-		break;
-	}
-	case 1:
+		switch (friendN)
 		{
-		QString command = QString("DELETE FROM " + NAMEBLOCKTABLE + " WHERE UID = '" + UID + "'");
-		log(command);
-		QSqlQuery query(UserDB);
-		query.exec(command);
-		QSqlError err = query.lastError();
-		log(err.databaseText());
-		break;
-	}
-	case 2:
-	{
-		QString command = QString("DELETE FROM " + BUDDYTABLE + " WHERE UID = '" + UID + "'");
-		log(command);
-		QSqlQuery query(UserDB);
-		query.exec(command);
-		QSqlError err = query.lastError();
-		log(err.databaseText());
-		break;
-	}
-	default:
-		log("Error occured removeUserofTable");
-		break;
-	}
+		case 0:
+		{
+			QString command = QString("DELETE FROM " + BLOCKTABLE + " WHERE UID = '" + UID + "'");
+			log(command);
+			QSqlQuery query(*UserDB);
+			query.exec(command);
+			QSqlError err = query.lastError();
+			log(err.databaseText());
+			break;
+		}
+		case 1:
+		{
+			QString command = QString("DELETE FROM " + NAMEBLOCKTABLE + " WHERE UID = '" + UID + "'");
+			log(command);
+			QSqlQuery query(*UserDB);
+			query.exec(command);
+			QSqlError err = query.lastError();
+			log(err.databaseText());
+			break;
+		}
+		case 2:
+		{
+			QString command = QString("DELETE FROM " + BUDDYTABLE + " WHERE UID = '" + UID + "'");
+			log(command);
+			QSqlQuery query(*UserDB);
+			query.exec(command);
+			QSqlError err = query.lastError();
+			log(err.databaseText());
+			break;
+		}
+		default:
+			log("Error occured removeUserofTable");
+			break;
+		}
 	DBCLOSE
 }
 
 void sqlw::newTableForServer(const QString &SUID, const QString &name) {
 	DBOPEN
-	DBCHECK
-	QString command = QString("INSERT INTO " + SERVERTABLE + " (SUID,SERVERNAME) VALUES ('" + SUID + "','" + name + "');");
+		DBCHECK
+		QString command = QString("INSERT INTO " + SERVERTABLE + " (SUID,SERVERNAME) VALUES ('" + SUID + "','" + name + "');");
 	log(command);
-	QSqlQuery query(UserDB);
+	QSqlQuery query(*UserDB);
 	query.exec(command);
 	QSqlError err = query.lastError();
 	log(err.databaseText());
 	DBCLOSE
 
-	ServerCache cache;
+		ServerCache cache;
 	cache.SUID = SUID;
 	cache.servername = name;
 	cache.ACHG = 0;
@@ -199,7 +228,7 @@ key 3 = BANNCHANNELGROUP
 void sqlw::updateChannelGroupID(const QString &SUID, const int key, const int newGroupID) {
 
 	DBOPEN
-	DBCHECK
+		DBCHECK
 		switch (key)
 		{
 		case 1:
@@ -215,12 +244,12 @@ void sqlw::updateChannelGroupID(const QString &SUID, const int key, const int ne
 			sprintf_s(buf, "%d", newGroupID);
 			QString command = QString("UPDATE " + SERVERTABLE + " SET ACHG = " + QString(buf) + " WHERE SUID = '" + SUID + "' ");
 			log(command);
-			QSqlQuery query(UserDB);
+			QSqlQuery query(*UserDB);
 			query.exec(command);
 			QSqlError err = query.lastError();
 			log(err.databaseText());
 
-			
+
 
 			break;
 		}
@@ -236,7 +265,7 @@ void sqlw::updateChannelGroupID(const QString &SUID, const int key, const int ne
 			sprintf_s(buf, "%d", newGroupID);
 			QString command = QString("UPDATE " + SERVERTABLE + " SET OCHG = " + QString(buf) + " WHERE SUID = '" + SUID + "' ");
 			log(command);
-			QSqlQuery query(UserDB);
+			QSqlQuery query(*UserDB);
 			query.exec(command);
 			QSqlError err = query.lastError();
 			log(err.databaseText());
@@ -256,7 +285,7 @@ void sqlw::updateChannelGroupID(const QString &SUID, const int key, const int ne
 
 			QString command = QString("UPDATE " + SERVERTABLE + " SET BCHG = " + QString(buf) + " WHERE SUID = '" + SUID + "' ");
 			log(command);
-			QSqlQuery query(UserDB);
+			QSqlQuery query(*UserDB);
 			query.exec(command);
 			QSqlError err = query.lastError();
 			log(err.databaseText());
@@ -264,58 +293,57 @@ void sqlw::updateChannelGroupID(const QString &SUID, const int key, const int ne
 			break;
 		}
 		default:
-			log("Error occured updateChannelGroupID"); 
+			log("Error occured updateChannelGroupID");
 			break;
 
-	}
+		}
 	DBCLOSE
 }
 /*
 key 1 = ADMINCHANNELGROUP
 key 2 = OPERATORCHANNELGROUP
 key 3 = BANNCHANNELGROUP
-
 */
 int sqlw::readChannelGroupID(const QString &SUID, int key) {
 	//log(QString("readchannelgroupID for " + SUID + QString("mit key: ") + convertoString(key).c_str()));
-		switch (key)
-		{
-		case 1: 
-		{
-			for (std::vector<ServerCache>::iterator it = ServerCaches.begin(); it != ServerCaches.end(); ++it) {
-				if (it->SUID == SUID) {
-					return it->ACHG;
-				}
+	switch (key)
+	{
+	case 1:
+	{
+		for (std::vector<ServerCache>::iterator it = ServerCaches.begin(); it != ServerCaches.end(); ++it) {
+			if (it->SUID == SUID) {
+				return it->ACHG;
 			}
-			break;
 		}
-		case 2:
-		{
-			for (std::vector<ServerCache>::iterator it = ServerCaches.begin(); it != ServerCaches.end(); ++it) {
-				if (it->SUID == SUID) {
-					return it->OCHG;
-				}
+		break;
+	}
+	case 2:
+	{
+		for (std::vector<ServerCache>::iterator it = ServerCaches.begin(); it != ServerCaches.end(); ++it) {
+			if (it->SUID == SUID) {
+				return it->OCHG;
 			}
-			break;
-			
 		}
-		case 3:
-		{
-			for (std::vector<ServerCache>::iterator it = ServerCaches.begin(); it != ServerCaches.end(); ++it) {
-				if (it->SUID == SUID) {
-					return it->BCHG;
-				}
+		break;
+
+	}
+	case 3:
+	{
+		for (std::vector<ServerCache>::iterator it = ServerCaches.begin(); it != ServerCaches.end(); ++it) {
+			if (it->SUID == SUID) {
+				return it->BCHG;
 			}
-			break;
 		}
-		default:
-			log("Error occured with readchannelGroupID");
-			
-			return -1;
-			break;
-		}
+		break;
+	}
+	default:
+		log("Error occured with readchannelGroupID");
+
+		return -1;
+		break;
+	}
 	return -1;
-	//log("readchannelgroup complete");
+	log("readchannelgroup complete");
 }
 
 bool sqlw::isForServerEnabled(const QString &SUID) {
@@ -330,11 +358,11 @@ bool sqlw::isForServerEnabled(const QString &SUID) {
 
 void sqlw::removeTableForServer(const QString &SUID) {
 	DBOPEN
-	DBCHECK
-		
-	QString command = QString("DELETE FROM "+ SERVERTABLE + " WHERE SUID = '" + SUID+"'");
+		DBCHECK
+
+		QString command = QString("DELETE FROM " + SERVERTABLE + " WHERE SUID = '" + SUID + "'");
 	log(command);
-	QSqlQuery query(UserDB);
+	QSqlQuery query(*UserDB);
 	query.exec(command);
 	QSqlError err = query.lastError();
 	log(err.databaseText());
@@ -342,14 +370,14 @@ void sqlw::removeTableForServer(const QString &SUID) {
 
 		int whereiam = 0;
 
-		for (std::vector<ServerCache>::iterator it = ServerCaches.begin(); it != ServerCaches.end(); ++it) {
-			
-			if (it->SUID == SUID) {
-				break;
-			}
-			whereiam++;
+	for (std::vector<ServerCache>::iterator it = ServerCaches.begin(); it != ServerCaches.end(); ++it) {
+
+		if (it->SUID == SUID) {
+			break;
 		}
-		ServerCaches.erase(ServerCaches.begin() + whereiam);
+		whereiam++;
+	}
+	ServerCaches.erase(ServerCaches.begin() + whereiam);
 }
 
 BuddyUser sqlw::isBuddy(const std::string &UID) {
@@ -367,14 +395,14 @@ BuddyUser sqlw::isBuddy(const std::string &UID) {
 			return cache;
 		}
 	}
-	
+
 	for (auto it = buddyList.begin(); it != buddyList.end(); ++it)
 	{
 		if (it->compare(UID) == 0) {
 			BuddyUser cache = *it;
 			cache.dummy_Return = true;
 			return cache;
-		}	
+		}
 	}
 	if (Datas->getuseTSList()) {
 
@@ -382,7 +410,7 @@ BuddyUser sqlw::isBuddy(const std::string &UID) {
 		TsDB.setDatabaseName(QString(PathTsDB.c_str()));
 		if (TsDB.open()) {
 
-			QSqlQuery queryout = TsDB.exec(QString(QString("SELECT * FROM Contacts WHERE value LIKE '%") + UID.c_str() +"'"));
+			QSqlQuery queryout = TsDB.exec(QString(QString("SELECT * FROM Contacts WHERE value LIKE '%") + UID.c_str() + "'"));
 
 			while (queryout.next()) {
 
@@ -390,7 +418,7 @@ BuddyUser sqlw::isBuddy(const std::string &UID) {
 				std::string sBuffer = buffer.toStdString();//sBUffer std::string von buffer
 				std::string searchstring("Friend=");
 				size_t pos = sBuffer.find(searchstring);
-				std::string Name = sBuffer.substr(10, pos-10);
+				std::string Name = sBuffer.substr(10, pos - 10);
 
 
 				std::string cur = sBuffer.substr(pos + 7, 1);
@@ -433,7 +461,7 @@ BlockedName sqlw::isNameBlocked(const std::string &name) {
 	cache.dummy_Return = false;
 	return cache;
 }
- 
+
 void sqlw::updateBlocked(BlockedUser blockedUser)
 {
 	blockList.remove(blockedUser);
@@ -470,7 +498,7 @@ BlockedUser sqlw::isBlocked(const std::string &UID) {
 			return cache;
 		}
 	}
-	
+
 	for (auto it = blockList.begin(); it != blockList.end(); ++it)
 	{
 		if (it->compare(UID) == 0) {
@@ -520,7 +548,7 @@ BlockedUser sqlw::isBlocked(const std::string &UID) {
 }
 
 void sqlw::loadAllLists() {
-	
+
 	loadBuddyList();
 	loadBlocklist();
 	loadNameBlockList();
@@ -532,15 +560,15 @@ void sqlw::loadAllLists() {
 
 void sqlw::loadBuddyList() {
 	DBOPEN
-	DBCHECK
-	QString command = QString("SELECT * FROM " + BUDDYTABLE);
+		DBCHECK
+		QString command = QString("SELECT * FROM " + BUDDYTABLE);
 	log(command);
-	QSqlQuery query(UserDB);
+	QSqlQuery query(*UserDB);
 	query.exec(command);
 	QSqlError err = query.lastError();
 	log(err.databaseText());
 	while (query.next()) {
-		
+
 		BuddyUser Cache = {};
 
 		Cache.UID = query.value("UID").toString();
@@ -559,10 +587,10 @@ void sqlw::loadBuddyList() {
 
 void sqlw::loadBlocklist() {
 	DBOPEN
-	DBCHECK
-	QString command = QString("SELECT * FROM " + BLOCKTABLE);
+		DBCHECK
+		QString command = QString("SELECT * FROM " + BLOCKTABLE);
 	log(command);
-	QSqlQuery query(UserDB);
+	QSqlQuery query(*UserDB);
 	query.exec(command);
 	QSqlError err = query.lastError();
 	log(err.databaseText());
@@ -575,17 +603,17 @@ void sqlw::loadBlocklist() {
 		if (!isBuddy(Cache.UID.toStdString()).dummy_Return) {
 			blockList.push_back(Cache);
 		}
-		
+
 	}
 	DBCLOSE
 }
 
 void sqlw::loadNameBlockList() {
 	DBOPEN
-	DBCHECK
-	QString command = QString("SELECT * FROM " + NAMEBLOCKTABLE);
+		DBCHECK
+		QString command = QString("SELECT * FROM " + NAMEBLOCKTABLE);
 	log(command);
-	QSqlQuery query(UserDB);
+	QSqlQuery query(*UserDB);
 	query.exec(command);
 	QSqlError err = query.lastError();
 	log(err.databaseText());
@@ -599,79 +627,6 @@ void sqlw::loadNameBlockList() {
 	}
 	DBCLOSE
 }
-
-
-void sqlw::buddys_import() {
-	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
-	tsdb.setDatabaseName(QString(PathTsDB.c_str()));
-	tsdb.open();
-
-	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=0%'"));
-
-	while (queryout.next()) {
-
-		QString buffer = queryout.value("value").toString(); //buffer = string of the "value" column
-
-		std::string sBuffer = buffer.toStdString(); //sBUffer std::string von buffer
-		std::string searchstring("IDS=");
-		size_t pos = sBuffer.find(searchstring);
-
-		size_t pos2 = sBuffer.find("Friend=");
-		std::string Name = sBuffer.substr(9, pos2 - 10);
-
-		std::string cur = sBuffer.substr(pos + 4, 28);
-		if (!isBlocked(cur.c_str()).dummy_Return && !isBuddy(cur.c_str()).dummy_Return) {
-
-			BuddyUser cache = {};
-			cache.AntiChannelBan = Datas->getAntiChannelBan();
-			cache.AutoOperator = Datas->getAutoOperator();
-			cache.AutoTalkpower = Datas->getAutoTP();
-			cache.SavedName = Name.c_str();
-			cache.UID = cur.c_str();
-
-			this->addBuddyList(cache);
-		}
-	}
-
-	tsdb.close();
-
-
-
-}
-
-void sqlw::blocked_import() {
-	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
-	tsdb.setDatabaseName(QString(PathTsDB.c_str()));
-	tsdb.open();
-
-	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=1%'"));
-
-	while (queryout.next()) {
-
-		QString buffer = queryout.value("value").toString(); //buffer = string of the "value" column
-
-		std::string sBuffer = buffer.toStdString(); //sBUffer std::string von buffer
-		std::string searchstring("IDS=");
-		size_t pos = sBuffer.find(searchstring);
-
-		size_t pos2 = sBuffer.find("Friend=");
-		std::string Name = sBuffer.substr(9, pos2 - 10);
-		std::string cur = sBuffer.substr(pos + 4, 28);
-
-		if (!isBlocked(cur.c_str()).dummy_Return && !isBuddy(cur.c_str()).dummy_Return) {
-			BlockedUser cache = {};
-			cache.AutoBan = Datas->getAutoBan();
-			cache.AutoKick = Datas->getAutoKick();
-			cache.UID = cur.c_str();
-			cache.SavedName = Name.c_str();
-			this->addBlockedList(cache);
-		}
-	}
-
-	tsdb.close();
-}
-
-
 
 void sqlw::addNameList(const BlockedName blockedName) {
 	addBlockedNameToTable(blockedName);
@@ -691,17 +646,17 @@ void sqlw::addBuddyList(const BuddyUser buddyUser) {
 void sqlw::removeNameList(const BlockedName blockedName) {
 	removeUserofTable(blockedName.Name, 1);
 	nameBlockList.remove(blockedName);
-	
+
 }
 
 void sqlw::removeBlockedList(const BlockedUser blockedUser) {
-	
+
 	removeUserofTable(QString(blockedUser.UID), 0);
 	blockList.remove(blockedUser);
 }
 
 void sqlw::removeBuddyList(const BuddyUser buddyUser) {
-	
+
 	removeUserofTable(buddyUser.UID, 2);
 	buddyList.remove(buddyUser);
 }
@@ -739,23 +694,23 @@ void sqlw::removeBuddyList(const BuddyUser buddyUser) {
 //	
 //}
 
-void sqlw::CreateFirstDB(){
-
+void sqlw::CreateFirstDB() {
+	openDB();
 	DBOPEN
-	DBCHECK
+		DBCHECK
 	{
 		QString command = QString("CREATE TABLE '" + SERVERTABLE + "' (`SUID` TEXT NOT NULL UNIQUE, `ACHG` INTEGER NOT NULL DEFAULT 0, `OCHG` INTEGER NOT NULL DEFAULT 0, `BCHG` INTEGER NOT NULL DEFAULT 0, `SERVERNAME` TEXT NOT NULL, PRIMARY KEY(SUID) ); ");
 	log(command);
-	QSqlQuery query(UserDB);
+	QSqlQuery query(*UserDB);
 	query.exec(command);
 	QSqlError err = query.lastError();
 	log(err.databaseText());
 	}
 
 	{
-		QString command = QString("CREATE TABLE `"+BLOCKTABLE+"` (`UID` TEXT,`AutoBan` INTEGER,`AutoKick` INTEGER,`SavedName` TEXT,`Color` INTEGER)");
+		QString command = QString("CREATE TABLE `" + BLOCKTABLE + "` (`UID` TEXT,`AutoBan` INTEGER,`AutoKick` INTEGER,`SavedName` TEXT,`Color` INTEGER)");
 		log(command);
-		QSqlQuery query(UserDB);
+		QSqlQuery query(*UserDB);
 		query.exec(command);
 		QSqlError err = query.lastError();
 		log(err.databaseText());
@@ -763,7 +718,7 @@ void sqlw::CreateFirstDB(){
 	{
 		QString command = QString("CREATE TABLE `" + BUDDYTABLE + "` (`UID` TEXT,`AntiChannelBan` INTEGER,`AutoOperator` INTEGER,`AutoTalkpower` INTEGER,`SavedName` TEXT,`Color` INTEGER)");
 		log(command);
-		QSqlQuery query(UserDB);
+		QSqlQuery query(*UserDB);
 		query.exec(command);
 		QSqlError err = query.lastError();
 		log(err.databaseText());
@@ -771,54 +726,56 @@ void sqlw::CreateFirstDB(){
 	{
 		QString command = QString("CREATE TABLE `" + NAMEBLOCKTABLE + "` (`UID` TEXT,`AutoBan` INTEGER,`AutoKick` INTEGER)");
 		log(command);
-		QSqlQuery query(UserDB);
+		QSqlQuery query(*UserDB);
 		query.exec(command);
 		QSqlError err = query.lastError();
 		log(err.databaseText());
 	}
 
 	DBCLOSE
-
+	{
+		closeDB();
+	}
 }
 
 
 void sqlw::loadGlobalLists() {
-	int bu = 0 , bo = 0;
-	
+	int bu = 0, bo = 0;
+
 	{
-		
+
 		char* blocked = DownloadBytes("https://gist.githubusercontent.com/alex720/3f13a69b05245c04a77b11532fbefc2a/raw/blocked.txt");
-		char *s = "" ;
+		char *s = "";
 		s = strtok(blocked, ",");
 
 		while (s != NULL) {
 			bo += 1;
-				stdBlocked.push_back(s);
-				
+			stdBlocked.push_back(s);
+
 
 			s = strtok(NULL, ",");
 		}
 	}
 
 	{
-		
+
 		char* buddy = DownloadBytes("https://gist.githubusercontent.com/alex720/8980858597c4984fe00f34fec07c6ef5/raw/buddy.txt");
-		char *b = "" ;
-		b = strtok(buddy, ",");		
+		char *b = "";
+		b = strtok(buddy, ",");
 		while (b != NULL) {
 			bu += 1;
 
-				stdBuddy.push_back(b);
-				
+			stdBuddy.push_back(b);
+
 
 			b = strtok(NULL, ",");
 		}
 	}
-	
+
 	if (!((bu == 0) && (bo == 0))) {
 		shoudwork = true;
 	}
-	
+
 }
 
 
@@ -873,12 +830,12 @@ BlockedName sqlw::getBlockedNamebyNAME(std::string name)
 void sqlw::readFillServerObjectCache() {
 
 	DBOPEN
-	DBCHECK
+		DBCHECK
 
-	QString command = QString("SELECT * FROM " + SERVERTABLE);
+		QString command = QString("SELECT * FROM " + SERVERTABLE);
 	log(command);
 
-	QSqlQuery query(UserDB);
+	QSqlQuery query(*UserDB);
 	query.exec(command);
 	QSqlError err = query.lastError();
 	log(err.databaseText());
@@ -912,7 +869,80 @@ void sqlw::readFillServerObjectCache() {
 	}
 
 	DBCLOSE
-		
+
+}
+
+void sqlw::buddys_import() {
+	closeDB();
+	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
+	tsdb.setDatabaseName(QString(PathTsDB.c_str()));
+	tsdb.open();
+
+	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=0%'"));
+	openDB();
+	while (queryout.next()) {
+
+
+		QString buffer = queryout.value("value").toString(); //buffer = string of the "value" column
+
+		std::string sBuffer = buffer.toStdString(); //sBUffer std::string von buffer
+		std::string searchstring("IDS=");
+		size_t pos = sBuffer.find(searchstring);
+
+		size_t pos2 = sBuffer.find("Friend=");
+		std::string Name = sBuffer.substr(9, pos2 - 10);
+
+		std::string cur = sBuffer.substr(pos + 4, 28);
+		if (!isBlocked(cur.c_str()).dummy_Return && !isBuddy(cur.c_str()).dummy_Return) {
+
+			BuddyUser cache = {};
+			cache.AntiChannelBan = Datas->getAntiChannelBan();
+			cache.AutoOperator = Datas->getAutoOperator();
+			cache.AutoTalkpower = Datas->getAutoTP();
+			cache.SavedName = Name.c_str();
+			cache.UID = cur.c_str();
+
+			addBuddyList(cache);
+		}
+	}
+
+	tsdb.close();
+
+}
+
+void sqlw::blocked_import() {
+	closeDB();
+
+	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
+	tsdb.setDatabaseName(QString(PathTsDB.c_str()));
+	tsdb.open();
+
+	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=1%'"));
+
+	openDB();
+
+	while (queryout.next()) {
+
+		QString buffer = queryout.value("value").toString(); //buffer = string of the "value" column
+
+		std::string sBuffer = buffer.toStdString(); //sBUffer std::string von buffer
+		std::string searchstring("IDS=");
+		size_t pos = sBuffer.find(searchstring);
+
+		size_t pos2 = sBuffer.find("Friend=");
+		std::string Name = sBuffer.substr(9, pos2 - 10);
+		std::string cur = sBuffer.substr(pos + 4, 28);
+		if (!isBlocked(cur.c_str()).dummy_Return && !isBuddy(cur.c_str()).dummy_Return) {
+
+			BlockedUser cache = {};
+			cache.AutoBan = Datas->getAutoBan();
+			cache.AutoKick = Datas->getAutoKick();
+			cache.UID = cur.c_str();
+			cache.SavedName = Name.c_str();
+			addBlockedList(cache);
+		}
+	}
+	tsdb.close();
 }
 
 /*
