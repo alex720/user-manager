@@ -1,8 +1,4 @@
-/*
-* TeamSpeak 3 demo plugin
-*
-* Copyright (c) 2008-2016 TeamSpeak Systems GmbH
-*/
+
 #define _CRT_SECURE_NO_WARNINGS
 #ifdef _WIN32
 #pragma warning (disable : 4100)  /* Disable Unreferenced parameter warning */
@@ -297,7 +293,8 @@ void flipflopUserBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 				ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 				uint64 newChannelID;
 				ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &newChannelID);
-				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedUser);
+				if (Datas->getWorking())
+					BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedUser);
 			}
 		}
 	}
@@ -347,6 +344,7 @@ void flipflopUserNameBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 				ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 				uint64 newChannelID;
 				ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &newChannelID);
+				if (Datas->getWorking())
 				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID,blockedName);
 
 			}
@@ -1136,7 +1134,7 @@ void ThreadLoop() {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-_declspec(noinline)void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID) {
+void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID) {
 
 
 
