@@ -32,6 +32,7 @@ UserWidget::UserWidget(sqlw * UserManager, std::string UID, bool buddy) : UserMa
 	connect(this->findChild<QTableWidget*>("TW_NAMES"), SIGNAL(cellClicked(int, int)), this, SLOT(blockedNameItemClicked(int, int)));
 
 
+
 	if (buddy) {
 		this->findChild<QTabWidget*>("tabWidget")->setCurrentIndex(0);
 		fillBuddyTable(UID);
@@ -48,9 +49,7 @@ UserWidget::UserWidget(sqlw * UserManager, std::string UID, bool buddy) : UserMa
 
 }
 
-UserWidget::~UserWidget() {
-	
-}
+UserWidget::~UserWidget() {}
 
 void UserWidget::on_chk_BuddyAutoTalkpower_stateChanged(int state)
 {
@@ -117,6 +116,7 @@ void UserWidget::on_chk_BlockedNameAutoKick_stateChanged(int state)
 
 void UserWidget::on_btn_buddynamesave_clicked()
 {
+
 	BuddyUser buddyUser = UserManager->getBuddybyUID(currentItem->text().toStdString());
 	buddyUser.SavedName = this->findChild<QLineEdit*>("textbox_buddyname")->text();
 	UserManager->updateBuddy(buddyUser);
@@ -195,6 +195,7 @@ void UserWidget::blockedNameItemClicked(int row, int column)
 void UserWidget::fillBuddyTable(std::string UID)
 {
 	size_t rowCount = UserManager->buddyList.size();
+	bool found = false;
 	this->findChild<QTableWidget*>("TW_BUDDY")->setRowCount((int)rowCount);
 	int row = 0;
 	for (auto it = UserManager->buddyList.begin(); it != UserManager->buddyList.end(); it++) {
@@ -204,14 +205,19 @@ void UserWidget::fillBuddyTable(std::string UID)
 		if (UID == it->UID.toStdString()) {
 			this->findChild<QTableWidget*>("TW_BUDDY")->setItemSelected(newItem, true);
 			buddyItemClicked(row, 1);
+			found = true;
 		}
 		row++;
+	}
+	if (!found&& row>0) {
+		buddyItemClicked(0, 1);
 	}
 }
 
 void UserWidget::fillBlockedTable(std::string UID = "")
 {
 	size_t rowCount = UserManager->blockList.size();
+	bool found = false;
 	this->findChild<QTableWidget*>("TW_BLOCKED")->setRowCount((int)rowCount);
 	int row = 0;
 	for (auto it = UserManager->blockList.begin(); it != UserManager->blockList.end(); it++) {
@@ -224,6 +230,9 @@ void UserWidget::fillBlockedTable(std::string UID = "")
 		}
 		row++;
 	}
+	if (!found && row>0) {
+		blockedItemClicked(0, 1);
+	}
 }
 
 void UserWidget::fillBlockedNameTable()
@@ -235,6 +244,9 @@ void UserWidget::fillBlockedNameTable()
 		this->findChild<QTableWidget*>("TW_NAMES")->setItem(row, 0, new QTableWidgetItem(it->Name));
 		row++;
 	}
-
+	if (row>0) {
+		blockedNameItemClicked(0, 1);
+	}
+	
 }
 

@@ -10,9 +10,12 @@
 		return bool(-1);\
 		}
 
-#define DBOPEN	dbprotect.lock();
+#define DBOPEN	dbprotect.lock();\
+				openDB();
 
-#define DBCLOSE dbprotect.unlock();	
+
+#define DBCLOSE dbprotect.unlock();	\
+				closeDB();
 
 #define DBCHECK if (!UserDB->isOpen() && !UserDB->isValid()){ \
 		QSqlError err = UserDB->lastError();\
@@ -23,7 +26,6 @@
 		return;}
 
 void sqlw::openDB() {
-	UserDB = new QSqlDatabase;
 	*UserDB = QSqlDatabase::addDatabase("QSQLITE");
 	UserDB->setDatabaseName(QString(PathUserDB.c_str()));
 	if (UserDB->open()) {
@@ -36,17 +38,17 @@ void sqlw::closeDB() {
 	open = false;
 	UserDB->close();
 
-	delete UserDB;
 }
 
 
 sqlw::sqlw(const std::string userDB, const std::string tsDB, ConfigData *Datas) : PathUserDB(userDB), PathTsDB(tsDB), Datas(Datas) {
+	UserDB = new QSqlDatabase;
 
 	if (!fileExists(userDB.c_str())) {
 		CreateFirstDB();
 	}
-
-	openDB();
+	
+	
 
 	//checkForOldDB();
 
@@ -57,13 +59,13 @@ sqlw::sqlw(const std::string userDB, const std::string tsDB, ConfigData *Datas) 
 	loadAllLists();
 
 
-
+	initcomplete = true;
 	log("SQLW-Object created \n");
 }
 
 sqlw::~sqlw() {
 	log("SQLW-Object deleted \n");
-	closeDB();
+	delete UserDB;
 }
 
 void sqlw::addBlockedToTable(const BlockedUser blockedUser) {
@@ -404,8 +406,9 @@ BuddyUser sqlw::isBuddy(const std::string &UID) {
 			return cache;
 		}
 	}
-	if (Datas->getuseTSList()) {
-
+	if (Datas->getuseTSList() && initcomplete) {
+		dbprotect.lock();
+			
 		QSqlDatabase TsDB = QSqlDatabase::addDatabase("QSQLITE");
 		TsDB.setDatabaseName(QString(PathTsDB.c_str()));
 		if (TsDB.open()) {
@@ -423,6 +426,7 @@ BuddyUser sqlw::isBuddy(const std::string &UID) {
 
 				std::string cur = sBuffer.substr(pos + 7, 1);
 				if (cur == "0") {
+					TsDB.close();
 					BuddyUser cache = {};
 					cache.AntiChannelBan = Datas->getAntiChannelBan();
 					cache.AutoOperator = Datas->getAutoOperator();
@@ -430,17 +434,18 @@ BuddyUser sqlw::isBuddy(const std::string &UID) {
 					cache.UID = UID.c_str();
 					cache.SavedName = Name.c_str();
 					cache.dummy_Return = true;
+					dbprotect.unlock();
 					return cache;
 				}
 			}
-
 			TsDB.close();
+			
 		}
 		else {
 			log("error with opening tsDatabase");
 		}
 
-
+		dbprotect.unlock();
 	}
 
 	BuddyUser cache;
@@ -508,8 +513,8 @@ BlockedUser sqlw::isBlocked(const std::string &UID) {
 		}
 	}
 
-	if (Datas->getuseTSList()) {
-
+	if (Datas->getuseTSList() && initcomplete) {
+		dbprotect.lock();
 		QSqlDatabase TsDB = QSqlDatabase::addDatabase("QSQLITE");
 		TsDB.setDatabaseName(QString(PathTsDB.c_str()));
 		if (TsDB.open()) {
@@ -526,17 +531,19 @@ BlockedUser sqlw::isBlocked(const std::string &UID) {
 				std::string Name = sBuffer.substr(10, pos - 10);
 				std::string cur = sBuffer.substr(pos + 7, 1);
 				if (cur == "1") {
-
+					
 					BlockedUser cache = {};
 					cache.AutoBan = Datas->getAutoBan();
 					cache.AutoKick = Datas->getAutoKick();
 					cache.UID = UID.c_str();
 					cache.dummy_Return = true;
 					cache.SavedName = Name.c_str();
+					dbprotect.unlock();
 					return cache;
 				}
 			}
 			TsDB.close();
+			dbprotect.unlock();
 		}
 		else {
 			log("error with opening tsDatabase");
@@ -597,14 +604,14 @@ void sqlw::loadBlocklist() {
 	while (query.next()) {
 		BlockedUser Cache = {};
 		Cache.UID = query.value("UID").toString();
-		Cache.SavedName = query.value("SavedName").toString();
+		Cache.SavedName = query.value("SavedName").toString();;
 		Cache.AutoBan = query.value("AutoBan").toBool();
 		Cache.AutoKick = query.value("AutoKick").toBool();
 		if (!isBuddy(Cache.UID.toStdString()).dummy_Return) {
 			blockList.push_back(Cache);
 		}
-
 	}
+	
 	DBCLOSE
 }
 
@@ -695,7 +702,7 @@ void sqlw::removeBuddyList(const BuddyUser buddyUser) {
 //}
 
 void sqlw::CreateFirstDB() {
-	openDB();
+	
 	DBOPEN
 		DBCHECK
 	{
@@ -733,9 +740,7 @@ void sqlw::CreateFirstDB() {
 	}
 
 	DBCLOSE
-	{
-		closeDB();
-	}
+	
 }
 
 
@@ -873,13 +878,13 @@ void sqlw::readFillServerObjectCache() {
 }
 
 void sqlw::buddys_import() {
-	closeDB();
+	DBCLOSE
 	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
 	tsdb.setDatabaseName(QString(PathTsDB.c_str()));
 	tsdb.open();
 
 	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=0%'"));
-	openDB();
+	DBOPEN
 	while (queryout.next()) {
 
 
@@ -911,7 +916,7 @@ void sqlw::buddys_import() {
 }
 
 void sqlw::blocked_import() {
-	closeDB();
+	DBCLOSE
 
 	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
 	tsdb.setDatabaseName(QString(PathTsDB.c_str()));
@@ -919,7 +924,7 @@ void sqlw::blocked_import() {
 
 	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=1%'"));
 
-	openDB();
+	DBOPEN
 
 	while (queryout.next()) {
 

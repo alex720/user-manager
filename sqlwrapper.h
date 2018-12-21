@@ -105,7 +105,7 @@ private:
 	std::mutex dbprotect;
 	QSqlDatabase *UserDB;
 	bool open;
-
+	bool initcomplete = false;
 	std::mutex tsdbProtect;
 	
 

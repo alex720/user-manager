@@ -2,8 +2,6 @@
 #include <qstring.h>
 
 
-
-
 struct BuddyUser {
 	QString UID = "";
 	QString SavedName = "";
@@ -24,8 +22,6 @@ struct BuddyUser {
 	}
 };
 
-
-
 struct BlockedUser {
 	QString UID = "";
 	QString SavedName = "";
@@ -45,7 +41,6 @@ struct BlockedUser {
 	}
 };
 
-
 struct BlockedName {
 	QString Name = "";
 	bool AutoBan = false;;
@@ -63,11 +58,3 @@ struct BlockedName {
 	}
 };
 
-/*
-
-TODOLIST
-- write infos to database
-- write name in infodata
-
-
-*/
