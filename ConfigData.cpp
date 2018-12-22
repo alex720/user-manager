@@ -335,6 +335,13 @@ void ConfigData::reload()
 		wantannoucments = false;
 	}
 
+	if (settings.value("channelAnnouncments").toInt() == 1) {
+		channelAnnouncments = true;
+	}
+	else {
+		channelAnnouncments = false;
+	}
+
 	if (settings.value("automute").toInt() == 1) {
 		automute = true;
 	}
