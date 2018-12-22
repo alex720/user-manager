@@ -1261,7 +1261,7 @@ void listAllBuddys(uint64 serverConnectionHandlerID) {
 	ts3Functions.requestServerVariables(serverConnectionHandlerID);
 	Sleep(500);
 
-	ts3Functions.getServerVariableAsUInt64(serverConnectionHandlerID, VIRTUALSERVER_CLIENTS_ONLINE, &numberOfClients);
+	ts3Functions.getServerVariableAsUInt64(serverConnectionHandlerID, VIRTUALSERVER_MAXCLIENTS, &numberOfClients);
 
 	anyID *allClientIDs = new anyID[numberOfClients];
 	ts3Functions.getClientList(serverConnectionHandlerID, &allClientIDs);
