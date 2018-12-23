@@ -1225,13 +1225,13 @@ void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
 	
 	std::string clientLink = "";
 	getClientIdLink(serverConnectionHandlerID,clientID, clientLink);
-	
-	const char *cClientLink = clientLink.c_str();
+
+
 	uint64 channelID = 0;
 	char *channelName = "";
 	char *clientname = "";
 
-	if (cClientLink == "") {
+	if (clientLink == "") {
 		return;
 	}
 
@@ -1239,20 +1239,21 @@ void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
 
 	ts3Functions.getChannelOfClient(serverConnectionHandlerID, clientID, &channelID);
 	ts3Functions.getChannelVariableAsString(serverConnectionHandlerID, channelID, CHANNEL_NAME, &channelName);
+	
+	std::string buffer = "";
 
-	char buffer[TS3_MAX_SIZE_TEXTMESSAGE] = " ";
+	buffer+= "Your Buddy: ";
+	buffer += clientLink;
 
-	strcat(buffer, "Your Buddy: ");
-	strcat(buffer, cClientLink);
+	buffer += " is in the channel:    ";
+	buffer += channelName;
 
-	strcat(buffer, " is in the channel:    ");
-	strcat(buffer, channelName);
 	if (channelName != "") {
-		ts3Functions.printMessageToCurrentTab(buffer);
+		ts3Functions.printMessageToCurrentTab(buffer.c_str());
 	}
 
-	ZeroMemory(buffer, TS3_MAX_SIZE_TEXTMESSAGE);
-	//memcpy(buffer, "", TS3_MAX_SIZE_TEXTMESSAGE);
+	
+	
 }
 
 void listAllBuddys(uint64 serverConnectionHandlerID) {
@@ -1273,25 +1274,26 @@ void listAllBuddys(uint64 serverConnectionHandlerID) {
 	ts3Functions.getClientList(serverConnectionHandlerID, &allClientIDs);
 
 	std::vector<anyID> activeBuddys;
-
+	
 	for (int i = 0; i < numberOfClients; i++) {
 
 		char *bufferUID;
 		ts3Functions.getClientVariableAsString(serverConnectionHandlerID, allClientIDs[i], CLIENT_UNIQUE_IDENTIFIER, &bufferUID);
-		
 
 		if (UserManager->isBuddy(bufferUID).dummy_Return) {
 			activeBuddys.push_back(allClientIDs[i]);
 		}
 	}
 
-	for (size_t i = 0; i < activeBuddys.size(); i++) {
-		printNamePlusChannel(serverConnectionHandlerID, activeBuddys[i]);
+	log("all buddied searched");
+	
+	for (auto it = activeBuddys.begin(); it != activeBuddys.end();it++) {
+		printNamePlusChannel(serverConnectionHandlerID, *it);
 	}
 
 	delete[] allClientIDs;
 
-	
+	log("listAllBuddys completed");
 
 }
 
