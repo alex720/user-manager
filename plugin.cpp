@@ -88,7 +88,7 @@ const char* ts3plugin_name() {
 
 /* Plugin version */
 const char* ts3plugin_version() {
-	return "4.3.1";
+	return "4.3.2";
 }
 
 
@@ -1225,7 +1225,6 @@ void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
 	
 	std::string clientLink = "";
 	getClientIdLink(serverConnectionHandlerID,clientID, clientLink);
-
 
 	uint64 channelID = 0;
 	char *channelName = "";
