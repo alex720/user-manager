@@ -12,7 +12,7 @@
 #include <QtNetwork\qtcpsocket.h>
 #include <WinInet.h>
 #include "ts3_functions.h"
-
+#include <vector>
 
 
 	void logInitTS3Funktion(const struct TS3Functions funcs);
@@ -46,5 +46,16 @@
 	std::string convertoString(T a) {
 		return std::to_string(a);
 	}
+
+
+	template<typename T>
+	bool isValueInList(std::vector<T> list, T value) {
+
+		for (auto it = list.begin(); it != list.end(); it++) {
+			if (*it == value)return true;
+		}
+		return false;
+	}
+
 
 	void replace(std::string &string, std::string rpl, std::string orig);

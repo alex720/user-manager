@@ -88,7 +88,7 @@ const char* ts3plugin_name() {
 
 /* Plugin version */
 const char* ts3plugin_version() {
-	return "4.3.2";
+	return "4.3.3";
 }
 
 
@@ -137,6 +137,7 @@ sqlw* UserManager;
 ConfigData *Datas;
 bool dbnotopen;
 
+anyID currentUser = 0;
 
 template <typename T>
 void BannedUserProc(uint64 serverConnectionHandlerID, anyID clientID, uint64 channelID, T blockedUser) { // template for blockedUser and blockedName
@@ -656,6 +657,7 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 
 
 	if (type == PLUGIN_CLIENT) {
+		currentUser = (anyID)id;
 		if (ts3Functions.getClientVariableAsString(serverConnectionHandlerID, (anyID)id, CLIENT_UNIQUE_IDENTIFIER, &UID) != ERROR_ok) {
 			printf("Error getting client UID\n");
 			return;
@@ -717,7 +719,9 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 		*data = (char*)malloc((infodata.length() + 1) * sizeof(char));
 		snprintf(*data, (infodata.length() + 1), infodata.c_str());
 	}
-	
+	else {
+		currentUser = 0;
+	}
 }
 
 /* Required to release the memory for parameter "data" allocated in ts3plugin_infoData and ts3plugin_initMenus */
@@ -837,7 +841,10 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
 	/* Register hotkeys giving a keyword and a description.
 	* The keyword will be later passed to ts3plugin_onHotkeyEvent to identify which hotkey was triggered.
 	* The description is shown in the clients hotkey dialog. */
-	BEGIN_CREATE_HOTKEYS(0);  /* Create 3 hotkeys. Size must be correct for allocating memory. */	
+	BEGIN_CREATE_HOTKEYS(3);  /* Create 3 hotkeys. Size must be correct for allocating memory. */	
+	CREATE_HOTKEY("BlockUser", "Set / remove client on the blocklist");
+	CREATE_HOTKEY("BuddyUser", "Set / Remove Client Buddy");
+	CREATE_HOTKEY("BlockName", "Set / remove client name on the block list");
 	END_CREATE_HOTKEYS;
 
 	/* The client will call ts3plugin_freeMemory to release all allocated memory */
@@ -850,12 +857,12 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
 */
 
 /* Clientlib */
-
+//returns an empty if failed
 void getClientIdLink(uint64 serverConnectionHandlerID, anyID clientID, std::string &clientLink) {
 	std::string cClientID = std::to_string(clientID);
 
-	char *clientUid;
-	char *username;
+	char *clientUid ="";
+	char *username = "";
 
 	if (clientID == 0) {
 		ts3Functions.getServerVariableAsString(serverConnectionHandlerID, VIRTUALSERVER_NAME, &username);
@@ -865,11 +872,19 @@ void getClientIdLink(uint64 serverConnectionHandlerID, anyID clientID, std::stri
 		ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &clientUid);
 		ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &username);
 	}
-	std::string friendname = username;
 
+	if (username == "") {
+		clientLink = "";
+		return;
+	}
+
+	std::string friendname = username;
+	//log("username");
+	//log(username);
 	replace(friendname, "%20", " ");
 
 	clientLink = "[URL=client://" + cClientID + "/" + clientUid +"~"+ friendname + "]" + username + "[/URL]";
+	return;;
 }
 QString getSUID(uint64 serverConnectionHandlerID) {
 
@@ -1218,27 +1233,33 @@ bool rechtecheck(uint64 serverConnectionHandlerID, int checkForParameter) {
 }
 
 void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
-	
+
 	if (clientID == 0) {
 		return;
 	}
-	
+	log("clientid: ");
+	log((int)clientID);
+	log("get clientLink");
 	std::string clientLink = "";
 	getClientIdLink(serverConnectionHandlerID,clientID, clientLink);
+	log("get clientLink complete");
+
+	if (clientLink == "") return;
 
 	uint64 channelID = 0;
 	char *channelName = "";
 	char *clientname = "";
 
-	if (clientLink == "") {
-		return;
-	}
+
+	
 
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &clientname);
 
 	ts3Functions.getChannelOfClient(serverConnectionHandlerID, clientID, &channelID);
 	ts3Functions.getChannelVariableAsString(serverConnectionHandlerID, channelID, CHANNEL_NAME, &channelName);
 	
+
+
 	std::string buffer = "";
 
 	buffer+= "Your Buddy: ";
@@ -1250,8 +1271,6 @@ void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
 	if (channelName != "") {
 		ts3Functions.printMessageToCurrentTab(buffer.c_str());
 	}
-
-	
 	
 }
 
@@ -1280,19 +1299,18 @@ void listAllBuddys(uint64 serverConnectionHandlerID) {
 		ts3Functions.getClientVariableAsString(serverConnectionHandlerID, allClientIDs[i], CLIENT_UNIQUE_IDENTIFIER, &bufferUID);
 
 		if (UserManager->isBuddy(bufferUID).dummy_Return) {
-			activeBuddys.push_back(allClientIDs[i]);
+			if (!isValueInList(activeBuddys, allClientIDs[i])) {
+				activeBuddys.push_back(allClientIDs[i]);
+			}
 		}
 	}
 
-	log("all buddied searched");
 	
 	for (auto it = activeBuddys.begin(); it != activeBuddys.end();it++) {
 		printNamePlusChannel(serverConnectionHandlerID, *it);
 	}
 
 	delete[] allClientIDs;
-
-	log("listAllBuddys completed");
 
 }
 
@@ -1508,6 +1526,32 @@ void ts3plugin_onClientChannelGroupChangedEvent(uint64 serverConnectionHandlerID
 	}
 }
 
+
+void ts3plugin_onHotkeyEvent(const char* keyword) {
+
+	uint64 serverConnectionHandlerID = ts3Functions.getCurrentServerConnectionHandlerID();
+
+	if (currentUser == 0) return;
+
+
+
+	if (!intToBool(strcmp(keyword, "BlockUser"))) {
+		std::thread flipflopUserBannedthread(flipflopUserBanned, serverConnectionHandlerID, currentUser);
+		flipflopUserBannedthread.detach();
+	}
+
+	else if (!intToBool(strcmp(keyword, "BuddyUser"))) {
+		std::thread flipflopBuddysUserthread(flipflopBuddysUser, serverConnectionHandlerID, currentUser);
+		flipflopBuddysUserthread.detach();
+	}
+	else if (!intToBool(strcmp(keyword, "BlockName"))) {
+		std::thread flipflopUserNameBannedthread(flipflopUserNameBanned, serverConnectionHandlerID, currentUser);
+		flipflopUserNameBannedthread.detach();
+	}
+
+
+	/* Identify the hotkey by keyword ("keyword_1", "keyword_2" or "keyword_3" in this example) and handle here... */
+}
 
 
 

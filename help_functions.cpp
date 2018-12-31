@@ -53,6 +53,7 @@
 		 if (!logopen)
 			 return;
 		std::clog << getTimeStamp() << "Result : " << resultLog << std::endl;
+		logTs3Functions.logMessage(std::to_string(resultLog).c_str(), LogLevel_DEBUG, "User-Manager", 0);
 	}
 
 
@@ -142,7 +143,7 @@
 
 	 bool intToBool(int val)
 	 {
-		 if (val) return true;
+		 if (val != 0) return true;
 
 		 return false;
 	 }
@@ -156,6 +157,7 @@
 
 
 	 void replace(std::string &string, std::string rpl, std::string orig) {  // string reference which get replaced | orig the text which get replaced which rpl
+		
 		 size_t found = 0;
 		 found = string.find(orig);
 		 while (found != std::string::npos) {
@@ -163,4 +165,5 @@
 			 found++;
 			 found = string.find(orig);
 		 }
+		
 	 }

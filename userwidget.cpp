@@ -55,6 +55,7 @@ void UserWidget::on_chk_BuddyAutoTalkpower_stateChanged(int state)
 {
 	if (initphase) return;
 	log("on_chk_BuddyAutoTalkpower");
+	if (currentItem == nullptr) return;
 	BuddyUser buddyUser = UserManager->getBuddybyUID(currentItem->text().toStdString());
 	buddyUser.AutoTalkpower = intToBool(state);
 	UserManager->updateBuddy(buddyUser);
@@ -64,6 +65,7 @@ void UserWidget::on_chk_BuddyAntiChannelBan_stateChanged(int state)
 {
 	if (initphase) return;
 	log("on_chk_BuddyAntiChannelBan");
+	if (currentItem == nullptr) return;
 	BuddyUser buddyUser = UserManager->getBuddybyUID(currentItem->text().toStdString());
 	buddyUser.AntiChannelBan = intToBool(state);
 	UserManager->updateBuddy(buddyUser);
@@ -73,6 +75,7 @@ void UserWidget::on_chk_BuddyAutoOperator_stateChanged(int state)
 {
 	if (initphase) return;
 	log("on_chk_BuddyAutoOperator");
+	if (currentItem == nullptr) return;
 	BuddyUser buddyUser = UserManager->getBuddybyUID(currentItem->text().toStdString());
 	buddyUser.AutoOperator = intToBool(state);
 	UserManager->updateBuddy(buddyUser);
@@ -82,6 +85,7 @@ void UserWidget::on_chk_BlockedAutoBan_stateChanged(int state)
 {
 	if (initphase) return;
 	log("on_chk_BlockedAutoBan");
+	if (currentItem == nullptr) return;
 	BlockedUser blockedUser = UserManager->getBlockedbyUID(currentItem->text().toStdString());
 	blockedUser.AutoBan = intToBool(state);
 	UserManager->updateBlocked(blockedUser);
@@ -91,6 +95,7 @@ void UserWidget::on_chk_BlockedAutoKick_stateChanged(int state)
 {
 	if (initphase) return;
 	log("on_chk_BlockedAutoKick");
+	if (currentItem == nullptr) return;
 	BlockedUser blockedUser = UserManager->getBlockedbyUID(currentItem->text().toStdString());
 	blockedUser.AutoKick = intToBool(state);
 	UserManager->updateBlocked(blockedUser);
@@ -100,6 +105,7 @@ void UserWidget::on_chk_BlockedNameAutoBan_stateChanged(int state)
 {
 	if (initphase) return;
 	log("on_chk_BlockedNameAutoBan");
+	if (currentItem == nullptr) return;
 	BlockedName blockedName = UserManager->getBlockedNamebyNAME(currentItem->text().toStdString());
 	blockedName.AutoBan = intToBool(state);
 	UserManager->updateName(blockedName);
@@ -109,6 +115,7 @@ void UserWidget::on_chk_BlockedNameAutoKick_stateChanged(int state)
 {
 	if (initphase) return;
 	log("on_chk_BlockedNameAutoKick");
+	if (currentItem == nullptr) return;
 	BlockedName blockedName = UserManager->getBlockedNamebyNAME(currentItem->text().toStdString());
 	blockedName.AutoKick = intToBool(state);
 	UserManager->updateName(blockedName);
@@ -116,7 +123,7 @@ void UserWidget::on_chk_BlockedNameAutoKick_stateChanged(int state)
 
 void UserWidget::on_btn_buddynamesave_clicked()
 {
-
+	if (currentItem == nullptr) return;
 	BuddyUser buddyUser = UserManager->getBuddybyUID(currentItem->text().toStdString());
 	buddyUser.SavedName = this->findChild<QLineEdit*>("textbox_buddyname")->text();
 	UserManager->updateBuddy(buddyUser);
@@ -124,6 +131,7 @@ void UserWidget::on_btn_buddynamesave_clicked()
 
 void UserWidget::on_btn_blocknamesave_clicked()
 {
+	if (currentItem == nullptr) return;
 	BlockedUser blockedUser = UserManager->getBlockedbyUID(currentItem->text().toStdString());
 	blockedUser.SavedName = this->findChild<QLineEdit*>("textbox_blockname")->text();
 	UserManager->updateBlocked(blockedUser);
@@ -131,6 +139,7 @@ void UserWidget::on_btn_blocknamesave_clicked()
 
 void UserWidget::on_btn_blocknameNamesave_clicked()
 {
+	if (currentItem == nullptr) return;
 	BlockedName blockedName = UserManager->getBlockedNamebyNAME(currentItem->text().toStdString());
 	blockedName.Name = this->findChild<QLineEdit*>("textbox_blockedname")->text();
 	UserManager->updateName(blockedName);
