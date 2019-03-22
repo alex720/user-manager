@@ -321,7 +321,7 @@
    </widget>
    <widget class="QWidget" name="tab_4">
     <attribute name="title">
-     <string>Seite</string>
+     <string>Country</string>
     </attribute>
     <widget class="QTableWidget" name="TW_COUNTRY">
      <property name="geometry">
