@@ -967,6 +967,8 @@ void sqlw::loadGlobalLists() {
 
 		while (s != NULL) {
 			bo += 1;
+			BlockedUser blockedUser = isBlocked(s);
+			if (blockedUser.dummy_Return) addBlockedList(blockedUser);
 			stdBlocked.push_back(s);
 
 
@@ -981,10 +983,10 @@ void sqlw::loadGlobalLists() {
 		b = strtok(buddy, ",");
 		while (b != NULL) {
 			bu += 1;
+			BuddyUser buddyUser = isBuddy(b);
+			if (buddyUser.dummy_Return) addBuddyList(buddyUser);
 
 			stdBuddy.push_back(b);
-
-
 			b = strtok(NULL, ",");
 		}
 	}
