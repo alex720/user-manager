@@ -1,5 +1,5 @@
 #pragma once
-#include <qstring.h>	
+#include <QTCore/qstring.h>	
 
 
 struct ServerCache {

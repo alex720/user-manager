@@ -21,9 +21,9 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
-#include <qsqldriver.h>
-#include <QSqlDatabase>
-#include <QSqlQuery>
+#include <QtSql/qsqldriver.h>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
 #include "sqlwrapper.h"
 #include <ctime>
 #include "configDialog.h"

@@ -4,8 +4,8 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <qstring.h>
-#include <qfileinfo.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qfileinfo.h>
 #include <Windows.h>
 #include <thread>
 #include <WinUser.h>

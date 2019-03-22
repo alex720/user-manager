@@ -3,10 +3,10 @@
 #include "ConfigData.h"
 #include "sqlwrapper.h"
 #include "ts3_functions.h"
-#include <QDialog>
+#include <QtWidgets/QDialog>
 #include <iostream>
-#include <qmessagebox.h>
-#include <qdesktopwidget.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qdesktopwidget.h>
 #include <QtCore/QObject>
 #include "help_functions.h"
 

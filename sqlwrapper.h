@@ -1,9 +1,9 @@
 #pragma once
-#include <qsettings.h>
-#include <QString>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlerror>
+#include <QTCore/qsettings.h>
+#include <QTCore/QString>
+#include <QTSql/QSqlDatabase>
+#include <QTSql/QSqlQuery>
+#include <QTSql/QSqlerror>
 #include <list>
 #include <QtCore\qsettings.h>
 #include <string>

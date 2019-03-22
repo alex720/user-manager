@@ -1,13 +1,13 @@
 ﻿#pragma once
 #include "ui_UserWidget.h"
-#include <qwidget.h>
-#include <QTableWidget>
+#include <QTWidgets/qwidget.h>
+#include <QTWidgets/QTableWidget>
 #include "sqlwrapper.h"
 #include <QtCore/QObject>
-#include <qdesktopwidget.h>
+#include <QTWidgets/qdesktopwidget.h>
 #include "help_functions.h"
 #include <string>
-#include <qlineedit.h>
+#include <QTWidgets/qlineedit.h>
 
 
 namespace Ui {

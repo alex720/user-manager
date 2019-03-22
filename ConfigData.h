@@ -1,5 +1,5 @@
 #pragma once
-#include <qsettings.h>
+#include <QtCore/qsettings.h>
 #include "help_functions.h"
 
 
