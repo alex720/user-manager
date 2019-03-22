@@ -1237,12 +1237,12 @@ void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
 	if (clientID == 0) {
 		return;
 	}
-	log("clientid: ");
+
 	log((int)clientID);
-	log("get clientLink");
+
 	std::string clientLink = "";
 	getClientIdLink(serverConnectionHandlerID,clientID, clientLink);
-	log("get clientLink complete");
+
 
 	if (clientLink == "") return;
 
