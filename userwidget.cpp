@@ -214,13 +214,12 @@ void UserWidget::fillBuddyTable(std::string UID)
 		if (UID == it->UID.toStdString()) {
 			this->findChild<QTableWidget*>("TW_BUDDY")->setItemSelected(newItem, true);
 			buddyItemClicked(row, 1);
+			currentItem = this->findChild<QTableWidget*>("TW_BUDDY")->item(row, 1);
 			found = true;
 		}
 		row++;
 	}
-	if (!found&& row>0) {
-		buddyItemClicked(0, 1);
-	}
+	
 }
 
 void UserWidget::fillBlockedTable(std::string UID = "")
@@ -236,12 +235,12 @@ void UserWidget::fillBlockedTable(std::string UID = "")
 		if (UID == it->UID.toStdString()) {
 			this->findChild<QTableWidget*>("TW_BLOCKED")->setItemSelected(newItem, true);
 			blockedItemClicked(row, 1);
+			currentItem = this->findChild<QTableWidget*>("TW_BLOCKED")->item(row, 1);
+			found = true;
 		}
 		row++;
 	}
-	if (!found && row>0) {
-		blockedItemClicked(0, 1);
-	}
+	
 }
 
 void UserWidget::fillBlockedNameTable()
@@ -253,9 +252,7 @@ void UserWidget::fillBlockedNameTable()
 		this->findChild<QTableWidget*>("TW_NAMES")->setItem(row, 0, new QTableWidgetItem(it->Name));
 		row++;
 	}
-	if (row>0) {
-		blockedNameItemClicked(0, 1);
-	}
+	
 	
 }
 

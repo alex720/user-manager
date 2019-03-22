@@ -41,7 +41,7 @@ public:
 private:
 	Ui::UserWidget *ui;
 
-	QTableWidgetItem *currentItem;
+	QTableWidgetItem *currentItem = nullptr;
 
 	sqlw* UserManager;
 	QTableWidget* buddytablewidget;
