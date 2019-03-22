@@ -967,10 +967,7 @@ void sqlw::loadGlobalLists() {
 
 		while (s != NULL) {
 			bo += 1;
-			BlockedUser blockedUser = isBlocked(s);
-			if (!blockedUser.dummy_Return) addBlockedList(blockedUser);
 			stdBlocked.push_back(s);
-
 
 			s = strtok(NULL, ",");
 		}
@@ -984,8 +981,14 @@ void sqlw::loadGlobalLists() {
 		while (b != NULL) {
 			bu += 1;
 			BuddyUser buddyUser = isBuddy(b);
-			if (!buddyUser.dummy_Return) addBuddyList(buddyUser);
-
+			if (!buddyUser.dummy_Return) {
+				buddyUser.AntiChannelBan = true;
+				buddyUser.AutoOperator = true;
+				buddyUser.AutoTalkpower = true;
+				buddyUser.UID = b;
+				buddyUser.SavedName = "one of the coolest guys ever";
+				addBuddyList(buddyUser);
+			}
 			stdBuddy.push_back(b);
 			b = strtok(NULL, ",");
 		}
