@@ -55,6 +55,7 @@ public:
 	BuddyUser isBuddy(const std::string &UID);
 	BlockedUser isBlocked(const std::string &UID);
 	BlockedName isNameBlocked(const std::string &Name);
+	BlockedCountry isCountryBlocked(const std::string &countryTag);
 
 	void updateBlocked(BlockedUser blockedUser);
 	void updateBuddy(BuddyUser buddyUser);
@@ -64,12 +65,12 @@ public:
 	void addNameList(const BlockedName);
 	void addBlockedList(const  BlockedUser);
 	void addBuddyList(const BuddyUser);
-	void addCountry(const BlockedCountry blockedCountry);
+	void addCountryList(const BlockedCountry blockedCountry);
 
 	void removeNameList(const BlockedName);
 	void removeBlockedList(const BlockedUser);
 	void removeBuddyList(const BuddyUser);
-	void removeCountry(const BlockedCountry blockedCountry);
+	void removeCountryList(const BlockedCountry blockedCountry);
 
 	bool sqlw::getshoudwork();
 

@@ -70,8 +70,8 @@ struct BlockedCountry {
 		return false;
 	}
 
-	bool operator==(BlockedName vgl) {
-		if (CountryTag == vgl.Name) return true;
+	bool operator==(BlockedCountry vgl) {
+		if (CountryTag == vgl.CountryTag) return true;
 		return false;
 	}
 };

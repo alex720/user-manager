@@ -67,6 +67,10 @@ public:
     QCheckBox *chk_BlockedNameAutoKick;
     QSpacerItem *verticalSpacer_5;
     QSpacerItem *verticalSpacer_6;
+    QWidget *tab_4;
+    QTableWidget *TW_COUNTRY;
+    QCheckBox *chk_BlockedCountryAutoBan;
+    QCheckBox *chk_BlockedCountryAutoKick;
 
     void setupUi(QWidget *UserWidget)
     {
@@ -76,7 +80,7 @@ public:
         UserWidget->setMaximumSize(QSize(1000, 1000));
         tabWidget = new QTabWidget(UserWidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(0, 10, 538, 391));
+        tabWidget->setGeometry(QRect(0, 0, 541, 391));
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
         horizontalLayout_3 = new QHBoxLayout(tab);
@@ -263,10 +267,22 @@ public:
         horizontalLayout_9->addLayout(horizontalLayout_7);
 
         tabWidget->addTab(tab_3, QString());
+        tab_4 = new QWidget();
+        tab_4->setObjectName(QStringLiteral("tab_4"));
+        TW_COUNTRY = new QTableWidget(tab_4);
+        TW_COUNTRY->setObjectName(QStringLiteral("TW_COUNTRY"));
+        TW_COUNTRY->setGeometry(QRect(10, 0, 241, 341));
+        chk_BlockedCountryAutoBan = new QCheckBox(tab_4);
+        chk_BlockedCountryAutoBan->setObjectName(QStringLiteral("chk_BlockedCountryAutoBan"));
+        chk_BlockedCountryAutoBan->setGeometry(QRect(260, 30, 64, 17));
+        chk_BlockedCountryAutoKick = new QCheckBox(tab_4);
+        chk_BlockedCountryAutoKick->setObjectName(QStringLiteral("chk_BlockedCountryAutoKick"));
+        chk_BlockedCountryAutoKick->setGeometry(QRect(260, 50, 64, 17));
+        tabWidget->addTab(tab_4, QString());
 
         retranslateUi(UserWidget);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(UserWidget);
@@ -288,6 +304,9 @@ public:
         chk_BlockedNameAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
         chk_BlockedNameAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("UserWidget", "Names", Q_NULLPTR));
+        chk_BlockedCountryAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
+        chk_BlockedCountryAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("UserWidget", "Seite", Q_NULLPTR));
     } // retranslateUi
 
 };

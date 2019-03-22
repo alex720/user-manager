@@ -349,7 +349,7 @@ void flipflopCountryBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 	char* countryTag = "";
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
 
-	BlockedCountry blockedCountry = UserManager->isCountryBlocked(blockedCountry);
+	BlockedCountry blockedCountry = UserManager->isCountryBlocked(countryTag);
 
 	if (!blockedCountry.dummy_Return) {
 
@@ -357,7 +357,7 @@ void flipflopCountryBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 		blockedCountry.AutoBan = Datas->getAutoBan();
 		blockedCountry.AutoKick = Datas->getAutoKick();
 
-		UserManager->addCountryList(blockedName);
+		UserManager->addCountryList(blockedCountry);
 
 		if (clientID != NULL) {
 
@@ -371,7 +371,7 @@ void flipflopCountryBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 				uint64 newChannelID;
 				ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &newChannelID);
 				if (Datas->getWorking())
-					BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedName);
+					BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedCountry);
 
 			}
 		}
@@ -677,10 +677,10 @@ const char* ts3plugin_infoTitle() {
 */
 void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum PluginItemType type, char** data) {
 	std::string infodata = "";
-	char* UID;
-	char* name;
+	char* UID="";
+	char* name="";
 	int userType = 0;  // 0 = nothing  |  1 = buddy | 2 = blocked | 3 = nameBlocked
-
+	char* countryTag ="";
 
 	if (type == PLUGIN_CLIENT) {
 		currentUser = (anyID)id;
@@ -692,10 +692,15 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 			printf("Error getting client nickname\n");
 			return;
 		}
+		if (ts3Functions.getClientVariableAsString(serverConnectionHandlerID, (anyID)id, CLIENT_COUNTRY, &countryTag) != ERROR_ok) {
+			printf("Error getting client nickname\n");
+			return;
+		}
 
 		BlockedName blockedName = UserManager->isNameBlocked(name);
 		BlockedUser blockedUser = UserManager->isBlocked(UID);
 		BuddyUser	buddyUser = UserManager->isBuddy(UID);
+		BlockedCountry blockedCountry = UserManager->isCountryBlocked(countryTag);
 
 		if (buddyUser.dummy_Return) {
 			infodata += "User is Buddy \n";
@@ -740,6 +745,15 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 			break;
 		default:
 			break;
+		}
+
+		if (blockedCountry.dummy_Return) {
+			infodata += "Country is blocked\n";
+			userType = 3;
+		}
+
+		else {
+			infodata += " Country is not blocked\n";
 		}
 
 		*data = (char*)malloc((infodata.length() + 1) * sizeof(char));
@@ -1126,6 +1140,26 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 			ts3Functions.printMessageToCurrentTab("An internal error appered wait a second or restart teamspeak");
 			memcpy(lastmessage, "An internal error appered wait a second or restart teamspeak", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
+		case 25:
+		{
+			char* countryTag = "";
+			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
+			strcat(buffer, "You blocked the CountryTag: ");
+			strcat(buffer, countryTag);
+			ts3Functions.printMessageToCurrentTab(buffer);
+			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE); 
+		}
+			break;
+		case 26:
+		{
+			char* countryTag = "";
+			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
+			strcat(buffer, "You unblocked the CountryTag: ");
+			strcat(buffer, countryTag);
+			ts3Functions.printMessageToCurrentTab(buffer);
+			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
+		}
+		break;
 	default:
 		ts3Functions.printMessageToCurrentTab("internal Error");
 		memcpy(lastmessage, "internal Error", TS3_MAX_SIZE_TEXTMESSAGE);
@@ -1186,12 +1220,14 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 	if (isEnabledTS(serverConnectionHandlerID)) {
 
 		
-			char* name;
-			char* UID;
+			char* name="";
+			char* UID="";
+			char* countryTag="";
 
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &name);
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &UID);
-
+			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
+				
 			BuddyUser buddyUser = UserManager->isBuddy(UID);
 			if (buddyUser.dummy_Return) {
 
@@ -1210,6 +1246,13 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedName);
 				return;
 			}
+
+			BlockedCountry blockedCountry = UserManager->isCountryBlocked(countryTag);
+			if (blockedCountry.dummy_Return) {
+				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedCountry);
+				return;
+			}
+
 	}
 }
 

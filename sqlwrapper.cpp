@@ -511,6 +511,21 @@ BlockedName sqlw::isNameBlocked(const std::string &name) {
 	return cache;
 }
 
+BlockedCountry sqlw::isCountryBlocked(const std::string &countryTag)
+{
+	for (auto it = countryList.begin(); it != countryList.end(); ++it)
+	{
+		if (it->compare(countryTag) == 0) {
+			BlockedCountry cache = *it;
+			cache.dummy_Return = true;
+			return cache;
+		}
+	}
+	BlockedCountry cache;
+	cache.dummy_Return = false;
+	return cache;
+}
+
 void sqlw::updateBlocked(BlockedUser blockedUser)
 {
 	blockList.remove(blockedUser);
@@ -724,7 +739,7 @@ void sqlw::addBuddyList(const BuddyUser buddyUser) {
 	buddyList.push_back(buddyUser);
 }
 
-void sqlw::addCountry(const BlockedCountry blockedCountry)
+void sqlw::addCountryList(const BlockedCountry blockedCountry)
 {
 	addBlockedCountryToTable(blockedCountry);
 	countryList.push_back(blockedCountry);
@@ -748,7 +763,7 @@ void sqlw::removeBuddyList(const BuddyUser buddyUser) {
 	buddyList.remove(buddyUser);
 }
 
-void sqlw::removeCountry(const BlockedCountry blockedCountry)
+void sqlw::removeCountryList(const BlockedCountry blockedCountry)
 {
 	removeUserofTable(blockedCountry.CountryTag, 3);
 	countryList.remove(blockedCountry);
