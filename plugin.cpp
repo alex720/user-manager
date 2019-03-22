@@ -1386,15 +1386,8 @@ void listAllBuddys(uint64 serverConnectionHandlerID) {
 
 }
 
-/*
-* Called when a plugin menu item (see ts3plugin_initMenus) is triggered. Optional function, when not using plugin menus, do not implement this.
-*
-* Parameters:
-* - serverConnectionHandlerID: ID of the current server tab
-* - type: Type of the menu (PLUGIN_MENU_TYPE_CHANNEL, PLUGIN_MENU_TYPE_CLIENT or PLUGIN_MENU_TYPE_GLOBAL)
-* - menuItemID: Id used when creating the menu item
-* - selectedItemID: Channel or Client ID in the case of PLUGIN_MENU_TYPE_CHANNEL and PLUGIN_MENU_TYPE_CLIENT. 0 for PLUGIN_MENU_TYPE_GLOBAL.
-*/
+
+
 bool checkisonline(uint64 serverConnectionHandlerID, anyID clientID) {
 	uint64 channelID = 0;
 
@@ -1409,6 +1402,15 @@ bool checkisonline(uint64 serverConnectionHandlerID, anyID clientID) {
 	return true;
 }
 
+/*
+* Called when a plugin menu item (see ts3plugin_initMenus) is triggered. Optional function, when not using plugin menus, do not implement this.
+*
+* Parameters:
+* - serverConnectionHandlerID: ID of the current server tab
+* - type: Type of the menu (PLUGIN_MENU_TYPE_CHANNEL, PLUGIN_MENU_TYPE_CLIENT or PLUGIN_MENU_TYPE_GLOBAL)
+* - menuItemID: Id used when creating the menu item
+* - selectedItemID: Channel or Client ID in the case of PLUGIN_MENU_TYPE_CHANNEL and PLUGIN_MENU_TYPE_CLIENT. 0 for PLUGIN_MENU_TYPE_GLOBAL.
+*/
 void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenuType type, int menuItemID, uint64 selectedItemID) {
 	switch (type) {
 	case PLUGIN_MENU_TYPE_GLOBAL:
@@ -1508,6 +1510,9 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 		}
 		case MENU_ID_CLIENT_6: {
 			/* Menu client 6 was triggered */
+
+			if (!checkisonline(serverConnectionHandlerID, (anyID)selectedItemID))break;
+
 			bool buddy = false;
 			char* UID;
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, (anyID)selectedItemID, CLIENT_UNIQUE_IDENTIFIER, &UID);
