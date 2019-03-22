@@ -31,6 +31,7 @@ UserWidget::UserWidget(sqlw * UserManager, std::string UID, bool buddy) : UserMa
 	connect(this->findChild<QTableWidget*>("TW_BUDDY"), SIGNAL(cellClicked(int, int)), this, SLOT(buddyItemClicked(int, int)));
 	connect(this->findChild<QTableWidget*>("TW_BLOCKED"), SIGNAL(cellClicked(int, int)), this, SLOT(blockedItemClicked(int, int)));
 	connect(this->findChild<QTableWidget*>("TW_NAMES"), SIGNAL(cellClicked(int, int)), this, SLOT(blockedNameItemClicked(int, int)));
+	connect(this->findChild<QTableWidget*>("TW_COUNTRY"), SIGNAL(cellClicked(int, int)), this, SLOT(blockedCountryItemClicked(int, int)));
 
 
 

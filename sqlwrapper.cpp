@@ -104,7 +104,7 @@ void sqlw::addBlockedCountryToTable(const BlockedCountry blockedCountry)
 	DBOPEN
 	DBCHECK
 
-	QString command = QString("INSERT INTO " + BLOCKEDCOUNTRYTABLE + " (UID,AutoBan,AutoKick) VALUES ('" + blockedCountry.CountryTag + "'" + ", " + "'" + convertoString(boolToInt(blockedCountry.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedCountry.AutoKick)).c_str() + "')");
+	QString command = QString("INSERT INTO " + BLOCKEDCOUNTRYTABLE + " (countryTag,AutoBan,AutoKick) VALUES ('" + blockedCountry.CountryTag + "'" + ", " + "'" + convertoString(boolToInt(blockedCountry.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedCountry.AutoKick)).c_str() + "')");
 	log(command);
 	QSqlQuery query(*UserDB);
 	query.exec(command);

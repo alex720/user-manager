@@ -332,6 +332,10 @@
        <height>341</height>
       </rect>
      </property>
+     <property name="columnCount">
+      <number>1</number>
+     </property>
+     <column/>
     </widget>
     <widget class="QCheckBox" name="chk_BlockedCountryAutoBan">
      <property name="geometry">

@@ -270,8 +270,11 @@ public:
         tab_4 = new QWidget();
         tab_4->setObjectName(QStringLiteral("tab_4"));
         TW_COUNTRY = new QTableWidget(tab_4);
+        if (TW_COUNTRY->columnCount() < 1)
+            TW_COUNTRY->setColumnCount(1);
         TW_COUNTRY->setObjectName(QStringLiteral("TW_COUNTRY"));
         TW_COUNTRY->setGeometry(QRect(10, 0, 241, 341));
+        TW_COUNTRY->setColumnCount(1);
         chk_BlockedCountryAutoBan = new QCheckBox(tab_4);
         chk_BlockedCountryAutoBan->setObjectName(QStringLiteral("chk_BlockedCountryAutoBan"));
         chk_BlockedCountryAutoBan->setGeometry(QRect(260, 30, 64, 17));
@@ -306,7 +309,7 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("UserWidget", "Names", Q_NULLPTR));
         chk_BlockedCountryAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
         chk_BlockedCountryAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
-        tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("UserWidget", "Seite", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("UserWidget", "Country", Q_NULLPTR));
     } // retranslateUi
 
 };

@@ -502,8 +502,7 @@ int ts3plugin_init() {
 
 	logInitTS3Funktion(ts3Functions);
 
-	ts3Functions.printMessageToCurrentTab("WARNING: if you use a Database of a plugin before Version 4.3 it is not compatible, I do not guarantee that it works properly");
-	ts3Functions.printMessageToCurrentTab("WARNING: if your Database in incompatible please delete the database. it will recreated correctly");
+	
 	loginit(logPath);
 
 	Datas = new ConfigData(iniconfigPath);
