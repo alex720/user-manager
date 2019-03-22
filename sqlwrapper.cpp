@@ -70,10 +70,9 @@ sqlw::~sqlw() {
 
 void sqlw::addBlockedToTable(const BlockedUser blockedUser) {
 	DBOPEN
-		DBCHECK
+	DBCHECK
 
-
-		QString command = QString("INSERT INTO " + BLOCKTABLE + " (UID, AutoBan, AutoKick, SavedName) VALUES ('" + blockedUser.UID + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "'" + ", " + "'" + blockedUser.SavedName + "')");
+	QString command = QString("INSERT INTO " + BLOCKTABLE + " (UID, AutoBan, AutoKick, SavedName) VALUES ('" + blockedUser.UID + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "'" + ", " + "'" + blockedUser.SavedName + "')");
 	log(command);
 	QSqlQuery query(*UserDB);
 	query.exec(command);
@@ -87,11 +86,9 @@ void sqlw::addBlockedToTable(const BlockedUser blockedUser) {
 
 void sqlw::addBlockedNameToTable(const BlockedName blockedName) {
 	DBOPEN
-		DBCHECK
+	DBCHECK
 
-
-
-		QString command = QString("INSERT INTO " + NAMEBLOCKTABLE + " (UID,AutoBan,AutoKick) VALUES ('" + blockedName.Name + "'" + ", " + "'" + convertoString(boolToInt(blockedName.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedName.AutoKick)).c_str() + "')");
+	QString command = QString("INSERT INTO " + NAMEBLOCKTABLE + " (UID,AutoBan,AutoKick) VALUES ('" + blockedName.Name + "'" + ", " + "'" + convertoString(boolToInt(blockedName.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedName.AutoKick)).c_str() + "')");
 	log(command);
 	QSqlQuery query(*UserDB);
 	query.exec(command);
@@ -102,12 +99,27 @@ void sqlw::addBlockedNameToTable(const BlockedName blockedName) {
 
 }
 
+void sqlw::addBlockedCountryToTable(const BlockedCountry blockedCountry)
+{
+	DBOPEN
+	DBCHECK
+
+	QString command = QString("INSERT INTO " + BLOCKEDCOUNTRYTABLE + " (UID,AutoBan,AutoKick) VALUES ('" + blockedCountry.CountryTag + "'" + ", " + "'" + convertoString(boolToInt(blockedCountry.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedCountry.AutoKick)).c_str() + "')");
+	log(command);
+	QSqlQuery query(*UserDB);
+	query.exec(command);
+	QSqlError err = query.lastError();
+	log(err.databaseText());
+
+	DBCLOSE
+}
+
 void sqlw::updateBlockedInTabled(BlockedUser blockedUser)
 {
-
 	DBOPEN
-		DBCHECK
-		QString command = QString("UPDATE " + BLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "', SavedName='" + blockedUser.SavedName + "' WHERE UID='" + blockedUser.UID + "'");
+	DBCHECK
+
+	QString command = QString("UPDATE " + BLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "', SavedName='" + blockedUser.SavedName + "' WHERE UID='" + blockedUser.UID + "'");
 	log(command);
 	QSqlQuery query(*UserDB);
 	query.exec(command);
@@ -119,10 +131,10 @@ void sqlw::updateBlockedInTabled(BlockedUser blockedUser)
 
 void sqlw::updateBuddyInTabled(BuddyUser buddyUser)
 {
-
 	DBOPEN
-		DBCHECK
-		QString command = QString("UPDATE " + BUDDYTABLE + " SET AutoOperator='" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "', AntiChannelBan='" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "', AutoTalkpower='" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "', SavedName='" + buddyUser.SavedName + "'" + "WHERE UID='" + buddyUser.UID + "'");
+	DBCHECK
+
+	QString command = QString("UPDATE " + BUDDYTABLE + " SET AutoOperator='" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "', AntiChannelBan='" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "', AutoTalkpower='" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "', SavedName='" + buddyUser.SavedName + "'" + "WHERE UID='" + buddyUser.UID + "'");
 	log(command);
 	QSqlQuery query(*UserDB);
 	query.exec(command);
@@ -134,22 +146,38 @@ void sqlw::updateBuddyInTabled(BuddyUser buddyUser)
 
 void sqlw::updateNameInTabled(BlockedName blockedname)
 {
-
 	DBOPEN
-		DBCHECK
-		QString command = QString("UPDATE " + NAMEBLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedname.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedname.AutoKick)).c_str() + "' WHERE UID='" + blockedname.Name + "'");
+	DBCHECK
+
+	QString command = QString("UPDATE " + NAMEBLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedname.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedname.AutoKick)).c_str() + "' WHERE UID='" + blockedname.Name + "'");
 	log(command);
 	QSqlQuery query(*UserDB);
 	query.exec(command);
 	QSqlError err = query.lastError();
 	log(err.databaseText());
 	DBCLOSE
+}
+
+void sqlw::updateBlockedCountryToTable(BlockedCountry blockedCountry)
+{
+	DBOPEN
+	DBCHECK
+
+	QString command = QString("UPDATE " + BLOCKEDCOUNTRYTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedCountry.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedCountry.AutoKick)).c_str() + "' WHERE UID='" + blockedCountry.CountryTag + "'");
+	log(command);
+	QSqlQuery query(*UserDB);
+	query.exec(command);
+	QSqlError err = query.lastError();
+	log(err.databaseText());
+	DBCLOSE
+
 }
 
 void sqlw::addBuddyToTable(const BuddyUser buddyUser) {
 	DBOPEN
-		DBCHECK
-		QString command = QString("INSERT INTO " + BUDDYTABLE + " (UID, AntiChannelBan, AutoOperator, AutoTalkpower, SavedName) VALUES ('" + buddyUser.UID + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "'" + ", " + "'" + buddyUser.SavedName + "')");
+	DBCHECK
+
+	QString command = QString("INSERT INTO " + BUDDYTABLE + " (UID, AntiChannelBan, AutoOperator, AutoTalkpower, SavedName) VALUES ('" + buddyUser.UID + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "'" + ", " + "'" + buddyUser.SavedName + "')");
 	log(command);
 	QSqlQuery query(*UserDB);
 	query.exec(command);
@@ -159,6 +187,11 @@ void sqlw::addBuddyToTable(const BuddyUser buddyUser) {
 	DBCLOSE
 }
 
+
+//0 == BlockedUser
+//1 == BlockedName
+//2 == BuddyUser
+//3 == Country
 void sqlw::removeUserofTable(const QString &UID, const int friendN) {
 	DBOPEN
 		DBCHECK
@@ -195,6 +228,17 @@ void sqlw::removeUserofTable(const QString &UID, const int friendN) {
 			log(err.databaseText());
 			break;
 		}
+		case 3:
+		{
+			QString command = QString("DELETE FROM " + BLOCKEDCOUNTRYTABLE + " WHERE countryTag = '" + UID + "'");
+			log(command);
+			QSqlQuery query(*UserDB);
+			query.exec(command);
+			QSqlError err = query.lastError();
+			log(err.databaseText());
+			break;
+		}
+		
 		default:
 			log("Error occured removeUserofTable");
 			break;
@@ -491,6 +535,14 @@ void sqlw::updateName(BlockedName blockedname)
 	nameBlockList.push_back(blockedname);
 }
 
+void sqlw::UpdateCountry(BlockedCountry blockedCountry)
+{
+	countryList.remove(blockedCountry);
+	updateBlockedCountryToTable(blockedCountry);
+
+	countryList.push_back(blockedCountry);
+}
+
 BlockedUser sqlw::isBlocked(const std::string &UID) {
 	for (auto it = stdBlocked.begin(); it != stdBlocked.end(); ++it)
 	{
@@ -559,6 +611,7 @@ void sqlw::loadAllLists() {
 	loadBuddyList();
 	loadBlocklist();
 	loadNameBlockList();
+	loadBlockCountryList();
 
 	std::thread _loadGlobalLists(std::bind(&sqlw::loadGlobalLists, this));
 	_loadGlobalLists.detach();
@@ -635,6 +688,27 @@ void sqlw::loadNameBlockList() {
 	DBCLOSE
 }
 
+void sqlw::loadBlockCountryList()
+{
+	DBOPEN
+	DBCHECK
+	QString command = QString("SELECT * FROM " + BLOCKEDCOUNTRYTABLE);
+	log(command);
+	QSqlQuery query(*UserDB);
+	query.exec(command);
+	QSqlError err = query.lastError();
+	log(err.databaseText());
+	while (query.next()) {
+
+		BlockedCountry Cache = {};
+		Cache.CountryTag = query.value("countryTag").toString();
+		Cache.AutoBan = query.value("AutoBan").toBool();
+		Cache.AutoKick = query.value("AutoKick").toBool();
+		countryList.push_back(Cache);
+	}
+	DBCLOSE
+}
+
 void sqlw::addNameList(const BlockedName blockedName) {
 	addBlockedNameToTable(blockedName);
 	nameBlockList.push_back(blockedName);
@@ -648,6 +722,12 @@ void sqlw::addBlockedList(const BlockedUser blockedUser) {
 void sqlw::addBuddyList(const BuddyUser buddyUser) {
 	addBuddyToTable(buddyUser);
 	buddyList.push_back(buddyUser);
+}
+
+void sqlw::addCountry(const BlockedCountry blockedCountry)
+{
+	addBlockedCountryToTable(blockedCountry);
+	countryList.push_back(blockedCountry);
 }
 
 void sqlw::removeNameList(const BlockedName blockedName) {
@@ -666,6 +746,12 @@ void sqlw::removeBuddyList(const BuddyUser buddyUser) {
 
 	removeUserofTable(buddyUser.UID, 2);
 	buddyList.remove(buddyUser);
+}
+
+void sqlw::removeCountry(const BlockedCountry blockedCountry)
+{
+	removeUserofTable(blockedCountry.CountryTag, 3);
+	countryList.remove(blockedCountry);
 }
 
 
@@ -741,7 +827,14 @@ void sqlw::CreateFirstDB() {
 		QSqlError err = query.lastError();
 		log(err.databaseText());
 	}
-
+	{
+		QString command = QString("CREATE TABLE IF NOT EXISTS `" + BLOCKEDCOUNTRYTABLE + "` (`countryTag` TEXT)");
+		log(command);
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+		QSqlError err = query.lastError();
+		log(err.databaseText());
+	}
 
 	
 	CreateColums();
@@ -828,6 +921,18 @@ void sqlw::CreateColums() {
 
 	{
 		QString command = QString("ALTER TABLE " + NAMEBLOCKTABLE + " ADD COLUMN AutoKick INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+
+	{
+		QString command = QString("ALTER TABLE " + BLOCKEDCOUNTRYTABLE + " ADD COLUMN AutoBan INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+
+	{
+		QString command = QString("ALTER TABLE " + BLOCKEDCOUNTRYTABLE + " ADD COLUMN AutoKick INTEGER");
 		QSqlQuery query(*UserDB);
 		query.exec(command);
 	}
@@ -919,6 +1024,20 @@ BlockedName sqlw::getBlockedNamebyNAME(std::string name)
 		}
 	}
 	BlockedName cache = {};
+	return cache;
+}
+
+BlockedCountry sqlw::getBlockedCountrybyCountryTag(std::string countryTag)
+{
+	for (auto it = countryList.begin(); it != countryList.end(); ++it)
+	{
+		if (it->compare(countryTag) == 0) {
+			BlockedCountry cache = *it;
+			cache.dummy_Return = true;
+			return cache;
+		}
+	}
+	BlockedCountry cache = {};
 	return cache;
 }
 

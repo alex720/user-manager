@@ -10,11 +10,12 @@ UserWidget::UserWidget(sqlw* UserManager) : UserManager(UserManager), ui(new Ui:
 	connect(this->findChild<QTableWidget*>("TW_BUDDY"), SIGNAL(cellClicked(int,int)),this, SLOT(buddyItemClicked(int, int)));
 	connect(this->findChild<QTableWidget*>("TW_BLOCKED"), SIGNAL(cellClicked(int,int)), this, SLOT(blockedItemClicked(int, int)));
 	connect(this->findChild<QTableWidget*>("TW_NAMES"), SIGNAL(cellClicked(int,int)), this, SLOT(blockedNameItemClicked(int, int)));
-	
+	connect(this->findChild<QTableWidget*>("TW_COUNTRY"), SIGNAL(cellClicked(int, int)), this, SLOT(blockedCountryItemClicked(int, int)));
 
 	fillBuddyTable("");
 	fillBlockedTable("");
 	fillBlockedNameTable();
+	fillBlockedCountryTable();
 	initphase = false;
 }
 
@@ -44,6 +45,7 @@ UserWidget::UserWidget(sqlw * UserManager, std::string UID, bool buddy) : UserMa
 		fillBlockedTable(UID);
 	}
 	fillBlockedNameTable();
+	fillBlockedCountryTable();
 
 	initphase = false;
 
@@ -145,6 +147,26 @@ void UserWidget::on_btn_blocknameNamesave_clicked()
 	UserManager->updateName(blockedName);
 }
 
+void UserWidget::chk_BlockedCountryAutoBan_stateChanged(int state)
+{
+	if (initphase) return;
+	log("chk_BlockedCountryAutoBan");
+	if (currentItem == nullptr) return;
+	BlockedCountry blockedCountry = UserManager->getBlockedCountrybyCountryTag(currentItem->text().toStdString());
+	blockedCountry.AutoBan= intToBool(state);
+	UserManager->UpdateCountry(blockedCountry);
+}
+
+void UserWidget::chk_BlockedCountryAutoKick_stateChanged(int state)
+{
+	if (initphase) return;
+	log("chk_BlockedCountryAutoKick");
+	if (currentItem == nullptr) return;
+	BlockedCountry blockedCountry = UserManager->getBlockedCountrybyCountryTag(currentItem->text().toStdString());
+	blockedCountry.AutoKick = intToBool(state);
+	UserManager->UpdateCountry(blockedCountry);
+}
+
 
 void UserWidget::buddyItemClicked(int row,int column)
 {
@@ -197,6 +219,22 @@ void UserWidget::blockedNameItemClicked(int row, int column)
 	}
 	else {
 		log("Error: Name in list not found");
+	}
+	initphase = false;
+}
+
+void UserWidget::blockedCountryItemClicked(int row, int column)
+{
+	log("blockedCountryItemClicked");
+	initphase = true;
+	currentItem = this->findChild<QTableWidget*>("TW_COUNTRY")->item(row, 0);
+	BlockedCountry blockedcountry = UserManager->getBlockedCountrybyCountryTag(currentItem->text().toStdString());
+	if (blockedcountry.dummy_Return) {
+		this->findChild<QCheckBox*>("chk_BlockedCountryAutoBan")->setChecked(blockedcountry.AutoBan);
+		this->findChild<QCheckBox*>("chk_BlockedCountryAutoKick")->setChecked(blockedcountry.AutoKick);
+	}
+	else {
+		log("Error: Country in list not found");
 	}
 	initphase = false;
 }
@@ -254,5 +292,16 @@ void UserWidget::fillBlockedNameTable()
 	}
 	
 	
+}
+
+void UserWidget::fillBlockedCountryTable()
+{
+	size_t rowCount = UserManager->countryList.size();
+	this->findChild<QTableWidget*>("TW_COUNTRY")->setRowCount((int)rowCount);
+	int row = 0;
+	for (auto it = UserManager->countryList.begin(); it != UserManager->countryList.end(); it++) {
+		this->findChild<QTableWidget*>("TW_COUNTRY")->setItem(row, 0, new QTableWidgetItem(it->CountryTag));
+		row++;
+	}
 }
 

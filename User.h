@@ -58,3 +58,21 @@ struct BlockedName {
 	}
 };
 
+
+struct BlockedCountry {
+	QString CountryTag = "";
+	bool AutoBan = false;;
+	bool AutoKick = false;;
+	bool dummy_Return = false;
+
+	bool compare(std::string toComp) {
+		if (this->CountryTag.compare(toComp.c_str())) return true;
+		return false;
+	}
+
+	bool operator==(BlockedName vgl) {
+		if (CountryTag == vgl.Name) return true;
+		return false;
+	}
+};
+

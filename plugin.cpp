@@ -337,6 +337,54 @@ void flipflopUserNameBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 }
 
 #pragma endregion
+#pragma region Country_BANLIST
+
+
+void flipflopCountryBanned(uint64 serverConnectionHandlerID, anyID clientID) {
+
+	if (!checkisonline(serverConnectionHandlerID, clientID)) {
+		return;
+	}
+
+	char* countryTag = "";
+	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
+
+	BlockedCountry blockedCountry = UserManager->isCountryBlocked(blockedCountry);
+
+	if (!blockedCountry.dummy_Return) {
+
+		blockedCountry.CountryTag = countryTag;
+		blockedCountry.AutoBan = Datas->getAutoBan();
+		blockedCountry.AutoKick = Datas->getAutoKick();
+
+		UserManager->addCountryList(blockedName);
+
+		if (clientID != NULL) {
+
+			if (Datas->getwantannoucments()) {
+				giveverification(serverConnectionHandlerID, 25, clientID);
+			}
+
+			if (rechtecheck(serverConnectionHandlerID, 2)) {
+				anyID myID;
+				ts3Functions.getClientID(serverConnectionHandlerID, &myID);
+				uint64 newChannelID;
+				ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &newChannelID);
+				if (Datas->getWorking())
+					BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedName);
+
+			}
+		}
+	}
+	else {
+		UserManager->removeCountryList(blockedCountry);
+		if (Datas->getwantannoucments()) {
+			giveverification(serverConnectionHandlerID, 26, clientID);
+		}
+	}
+}
+
+#pragma endregion
 #pragma region UID-BUDDYLIST
 
 
@@ -407,7 +455,8 @@ enum {
 	MENU_ID_CLIENT_3,
 	MENU_ID_CLIENT_4,
 	MENU_ID_CLIENT_5,
-	MENU_ID_CLIENT_6
+	MENU_ID_CLIENT_6,
+	MENU_ID_CLIENT_7
 };
 
 
@@ -764,13 +813,14 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
 	* e.g. for "test_plugin.dll", icon "1.png" is loaded from <TeamSpeak 3 Client install dir>\plugins\test_plugin\1.png
 	*/
 
-	BEGIN_CREATE_MENUS(9);  /* IMPORTANT: Number of menu items must be correct! */
+	BEGIN_CREATE_MENUS(10);  /* IMPORTANT: Number of menu items must be correct! */
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, MENU_ID_GLOBAL_1, "Where are my Buddys ???", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, MENU_ID_GLOBAL_2, "Open configuration", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, MENU_ID_GLOBAL_3, "Open Contactlist", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_1, "Set / remove client on the blocklist", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_2, "Set / remove client name on the block list", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_5, "Set / Remove Client Buddy", "");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_7, "Set / Remove Country Blocked", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_3, "Set client in my channel on the Channel Ban group", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_4, "Set client in my channel on the Channel Guest group", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_6, "Find him in Contactlist", "");
@@ -907,6 +957,9 @@ parameters:
 22 = Automute beim blockieren der User wurde aktiviert
 23 = Automute beim blockieren der User wurde deaktiviert
 24 = sqlw manager shoulwork on false
+
+25 = Country wurde gebannt +var clientID gebraucht
+26 = Country wurde entbannt +var clientID gebraucht
 */
 void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0) {
 	
@@ -1367,6 +1420,13 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 			// namen bannen/entbannen
 			std::thread flipflopUserNameBannedthread(flipflopUserNameBanned,serverConnectionHandlerID, (anyID)selectedItemID);
 			flipflopUserNameBannedthread.detach();
+			break;
+		
+		}case MENU_ID_CLIENT_7: {
+			/* Menu client 2 was triggered */
+			// Country bannen/entbannen
+			std::thread flipflopCountryBannedthread(flipflopCountryBanned, serverConnectionHandlerID, (anyID)selectedItemID);
+			flipflopCountryBannedthread.detach();
 			break;
 		}
 		case MENU_ID_CLIENT_3: {

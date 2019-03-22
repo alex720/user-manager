@@ -21,6 +21,7 @@
 #define BUDDYTABLE QString("buddytable")
 #define BLOCKTABLE QString("blocktable")
 #define NAMEBLOCKTABLE QString("nameblocktable")
+#define BLOCKEDCOUNTRYTABLE QString("blockedCountrytable")
 #define SERVERTABLE QString("EnabledServers")
 /*
 enum Task {
@@ -58,14 +59,17 @@ public:
 	void updateBlocked(BlockedUser blockedUser);
 	void updateBuddy(BuddyUser buddyUser);
 	void updateName(BlockedName blockedname);
+	void UpdateCountry(BlockedCountry blockedCountry);
 
 	void addNameList(const BlockedName);
 	void addBlockedList(const  BlockedUser);
 	void addBuddyList(const BuddyUser);
+	void addCountry(const BlockedCountry blockedCountry);
 
 	void removeNameList(const BlockedName);
 	void removeBlockedList(const BlockedUser);
 	void removeBuddyList(const BuddyUser);
+	void removeCountry(const BlockedCountry blockedCountry);
 
 	bool sqlw::getshoudwork();
 
@@ -75,10 +79,12 @@ public:
 	BuddyUser getBuddybyUID(std::string UID);
 	BlockedUser getBlockedbyUID(std::string UID);
 	BlockedName getBlockedNamebyNAME(std::string name);
+	BlockedCountry getBlockedCountrybyCountryTag(std::string countryTag);
 
 	std::list<BuddyUser> buddyList;
 	std::list<BlockedName> nameBlockList;
 	std::list<BlockedUser> blockList;
+	std::list<BlockedCountry> countryList;
 
 	void blocked_import();
 	void buddys_import();
@@ -94,7 +100,6 @@ private:
 	ConfigData *Datas;
 
 	void CreateFirstDB();
-	void checkForOldDB();
 	void CreateColums();
 
 	bool shoudwork = false;
@@ -116,15 +121,18 @@ private:
 	void loadBuddyList();
 	void loadBlocklist();
 	void loadNameBlockList();
-
+	void loadBlockCountryList();
 	
 	void addBuddyToTable(const BuddyUser buddyUser);
 	void addBlockedToTable(const BlockedUser blockedUser);
 	void addBlockedNameToTable(const BlockedName blockedName);
+	void addBlockedCountryToTable(const BlockedCountry blockedCountry);
+
 
 	void updateBlockedInTabled( BlockedUser blockedUser);
 	void updateBuddyInTabled( BuddyUser buddyUser);
 	void updateNameInTabled( BlockedName blockedname);
+	void updateBlockedCountryToTable( BlockedCountry blockedCountry);
 	
 	void removeUserofTable(const QString &UID,const int friendN);
 

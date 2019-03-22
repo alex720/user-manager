@@ -33,10 +33,13 @@ public:
 	void on_btn_buddynamesave_clicked();
 	void on_btn_blocknamesave_clicked();
 	void on_btn_blocknameNamesave_clicked();
+	void chk_BlockedCountryAutoBan_stateChanged(int state);
+	void chk_BlockedCountryAutoKick_stateChanged(int state);
 
 	void buddyItemClicked(int row, int column);
 	void blockedItemClicked(int row, int column);
 	void blockedNameItemClicked(int row, int column);
+	void blockedCountryItemClicked(int row, int column);
 
 private:
 	Ui::UserWidget *ui;
@@ -47,10 +50,12 @@ private:
 	QTableWidget* buddytablewidget;
 	QTableWidget* blocktablewidget;
 	QTableWidget* blocknametablewidget;
+	QTableWidget* blockCountrytablewidget;
 
 	void fillBuddyTable(std::string UID);
 	void fillBlockedTable(std::string UID);
 	void fillBlockedNameTable();
+	void fillBlockedCountryTable();
 
 	bool initphase = false;
 

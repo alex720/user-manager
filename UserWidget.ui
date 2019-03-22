@@ -23,13 +23,13 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>10</y>
-     <width>538</width>
+     <y>0</y>
+     <width>541</width>
      <height>391</height>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
@@ -318,6 +318,47 @@
       </layout>
      </item>
     </layout>
+   </widget>
+   <widget class="QWidget" name="tab_4">
+    <attribute name="title">
+     <string>Seite</string>
+    </attribute>
+    <widget class="QTableWidget" name="TW_COUNTRY">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>241</width>
+       <height>341</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="chk_BlockedCountryAutoBan">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>30</y>
+       <width>64</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>AutoBan</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="chk_BlockedCountryAutoKick">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>50</y>
+       <width>64</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>AutoKick</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
