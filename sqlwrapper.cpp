@@ -742,6 +742,7 @@ void sqlw::CreateFirstDB() {
 		log(err.databaseText());
 	}
 
+
 	
 	CreateColums();
 }
