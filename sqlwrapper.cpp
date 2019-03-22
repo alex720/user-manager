@@ -44,9 +44,9 @@ void sqlw::closeDB() {
 sqlw::sqlw(const std::string userDB, const std::string tsDB, ConfigData *Datas) : PathUserDB(userDB), PathTsDB(tsDB), Datas(Datas) {
 	UserDB = new QSqlDatabase;
 
-	if (!fileExists(userDB.c_str())) {
+	//if (!fileExists(userDB.c_str())) {
 		CreateFirstDB();
-	}
+	//}
 	
 	
 
@@ -667,6 +667,9 @@ void sqlw::removeBuddyList(const BuddyUser buddyUser) {
 	removeUserofTable(buddyUser.UID, 2);
 	buddyList.remove(buddyUser);
 }
+
+
+
 //
 //void sqlw::checkForOldDB() {
 //	
@@ -704,18 +707,18 @@ void sqlw::removeBuddyList(const BuddyUser buddyUser) {
 void sqlw::CreateFirstDB() {
 	
 	DBOPEN
-		DBCHECK
+	DBCHECK
 	{
-		QString command = QString("CREATE TABLE '" + SERVERTABLE + "' (`SUID` TEXT NOT NULL UNIQUE, `ACHG` INTEGER NOT NULL DEFAULT 0, `OCHG` INTEGER NOT NULL DEFAULT 0, `BCHG` INTEGER NOT NULL DEFAULT 0, `SERVERNAME` TEXT NOT NULL, PRIMARY KEY(SUID) ); ");
-	log(command);
-	QSqlQuery query(*UserDB);
-	query.exec(command);
-	QSqlError err = query.lastError();
-	log(err.databaseText());
+		QString command = QString("CREATE TABLE IF NOT EXISTS '" + SERVERTABLE + "' (`SUID` TEXT NOT NULL UNIQUE, PRIMARY KEY(SUID) ); "); 
+		log(command);
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+		QSqlError err = query.lastError();
+		log(err.databaseText());
 	}
 
 	{
-		QString command = QString("CREATE TABLE `" + BLOCKTABLE + "` (`UID` TEXT,`AutoBan` INTEGER,`AutoKick` INTEGER,`SavedName` TEXT,`Color` INTEGER)");
+		QString command = QString("CREATE TABLE IF NOT EXISTS `" + BLOCKTABLE + "` (`UID` TEXT)");
 		log(command);
 		QSqlQuery query(*UserDB);
 		query.exec(command);
@@ -723,7 +726,7 @@ void sqlw::CreateFirstDB() {
 		log(err.databaseText());
 	}
 	{
-		QString command = QString("CREATE TABLE `" + BUDDYTABLE + "` (`UID` TEXT,`AntiChannelBan` INTEGER,`AutoOperator` INTEGER,`AutoTalkpower` INTEGER,`SavedName` TEXT,`Color` INTEGER)");
+		QString command = QString("CREATE TABLE IF NOT EXISTS `" + BUDDYTABLE + "` (`UID` TEXT)");
 		log(command);
 		QSqlQuery query(*UserDB);
 		query.exec(command);
@@ -731,16 +734,104 @@ void sqlw::CreateFirstDB() {
 		log(err.databaseText());
 	}
 	{
-		QString command = QString("CREATE TABLE `" + NAMEBLOCKTABLE + "` (`UID` TEXT,`AutoBan` INTEGER,`AutoKick` INTEGER)");
+		QString command = QString("CREATE TABLE IF NOT EXISTS `" + NAMEBLOCKTABLE + "` (`UID` TEXT)");
 		log(command);
 		QSqlQuery query(*UserDB);
 		query.exec(command);
 		QSqlError err = query.lastError();
 		log(err.databaseText());
+	}
+
+	
+	CreateColums();
+}
+
+void sqlw::CreateColums() {
+
+	{
+		QString command = QString("ALTER TABLE " + SERVERTABLE + " ADD COLUMN ACHG INTEGER NOT NULL DEFAULT 0");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+
+	{
+		QString command = QString("ALTER TABLE " + SERVERTABLE + " ADD COLUMN OCHG INTEGER NOT NULL DEFAULT 0");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+
+	{
+		QString command = QString("ALTER TABLE " + SERVERTABLE + " ADD COLUMN BCHG INTEGER NOT NULL DEFAULT 0");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+
+	{
+		QString command = QString("ALTER TABLE " + SERVERTABLE + " ADD COLUMN SERVERNAME TEXT NOT NULL");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+
+	{
+		QString command = QString("ALTER TABLE "+ BLOCKTABLE +" ADD COLUMN AutoBan INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+	{
+		QString command = QString("ALTER TABLE " + BLOCKTABLE + " ADD COLUMN AutoKick INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+	{
+		QString command = QString("ALTER TABLE " + BLOCKTABLE + " ADD COLUMN  SavedName TEXT");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+	{
+		QString command = QString("ALTER TABLE " + BLOCKTABLE + " ADD COLUMN Color INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+
+	{
+		QString command = QString("ALTER TABLE " + BUDDYTABLE + " ADD COLUMN AntiChannelBan INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+	{
+		QString command = QString("ALTER TABLE " + BUDDYTABLE + " ADD COLUMN AutoOperator INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+	{
+		QString command = QString("ALTER TABLE " + BUDDYTABLE + " ADD COLUMN AutoTalkpower INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+	{
+		QString command = QString("ALTER TABLE " + BUDDYTABLE + " ADD COLUMN  SavedName TEXT");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+	{
+		QString command = QString("ALTER TABLE " + BUDDYTABLE + " ADD COLUMN Color INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+
+	{
+		QString command = QString("ALTER TABLE " + NAMEBLOCKTABLE + " ADD COLUMN AutoBan INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
+	}
+
+	{
+		QString command = QString("ALTER TABLE " + NAMEBLOCKTABLE + " ADD COLUMN AutoKick INTEGER");
+		QSqlQuery query(*UserDB);
+		query.exec(command);
 	}
 
 	DBCLOSE
-	
 }
 
 

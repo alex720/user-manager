@@ -1527,6 +1527,7 @@ void ts3plugin_onClientChannelGroupChangedEvent(uint64 serverConnectionHandlerID
 }
 
 
+
 void ts3plugin_onHotkeyEvent(const char* keyword) {
 
 	uint64 serverConnectionHandlerID = ts3Functions.getCurrentServerConnectionHandlerID();

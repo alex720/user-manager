@@ -95,6 +95,7 @@ private:
 
 	void CreateFirstDB();
 	void checkForOldDB();
+	void CreateColums();
 
 	bool shoudwork = false;
 
