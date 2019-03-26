@@ -688,11 +688,11 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 			return;
 		}
 		if (ts3Functions.getClientVariableAsString(serverConnectionHandlerID, (anyID)id, CLIENT_NICKNAME, &name) != ERROR_ok) {
-			printf("Error getting client nickname\n");
+			printf("Error getting client Nickname\n");
 			return;
 		}
 		if (ts3Functions.getClientVariableAsString(serverConnectionHandlerID, (anyID)id, CLIENT_COUNTRY, &countryTag) != ERROR_ok) {
-			printf("Error getting client nickname\n");
+			printf("Error getting client Country\n");
 			return;
 		}
 
