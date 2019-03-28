@@ -68,11 +68,14 @@ sqlw::~sqlw() {
 	delete UserDB;
 }
 
-void sqlw::addBlockedToTable(const BlockedUser blockedUser) {
+void sqlw::addBlockedToTable(BlockedUser blockedUser) {
 	DBOPEN
 	DBCHECK
 
-	QString command = QString("INSERT INTO " + BLOCKTABLE + " (UID, AutoBan, AutoKick, SavedName) VALUES ('" + blockedUser.UID + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "'" + ", " + "'" + blockedUser.SavedName + "')");
+	blockedUser.SavedName.replace("\'", " ");
+
+	
+	QString command = QString("INSERT INTO " + BLOCKTABLE + " (UID, AutoBan, AutoKick, SavedName) VALUES ('" + blockedUser.UID + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "'" + ", " + "'" + blockedUser.SavedName +"')");
 	log(command);
 	QSqlQuery query(*UserDB);
 	query.exec(command);
@@ -84,9 +87,11 @@ void sqlw::addBlockedToTable(const BlockedUser blockedUser) {
 }
 
 
-void sqlw::addBlockedNameToTable(const BlockedName blockedName) {
+void sqlw::addBlockedNameToTable( BlockedName blockedName) {
 	DBOPEN
 	DBCHECK
+
+		blockedName.Name.replace("\'", " ");
 
 	QString command = QString("INSERT INTO " + NAMEBLOCKTABLE + " (UID,AutoBan,AutoKick) VALUES ('" + blockedName.Name + "'" + ", " + "'" + convertoString(boolToInt(blockedName.AutoBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(blockedName.AutoKick)).c_str() + "')");
 	log(command);
@@ -99,7 +104,7 @@ void sqlw::addBlockedNameToTable(const BlockedName blockedName) {
 
 }
 
-void sqlw::addBlockedCountryToTable(const BlockedCountry blockedCountry)
+void sqlw::addBlockedCountryToTable(BlockedCountry blockedCountry)
 {
 	DBOPEN
 	DBCHECK
@@ -119,6 +124,8 @@ void sqlw::updateBlockedInTabled(BlockedUser blockedUser)
 	DBOPEN
 	DBCHECK
 
+		blockedUser.SavedName.replace("\'", " ");
+
 	QString command = QString("UPDATE " + BLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedUser.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedUser.AutoKick)).c_str() + "', SavedName='" + blockedUser.SavedName + "' WHERE UID='" + blockedUser.UID + "'");
 	log(command);
 	QSqlQuery query(*UserDB);
@@ -134,6 +141,8 @@ void sqlw::updateBuddyInTabled(BuddyUser buddyUser)
 	DBOPEN
 	DBCHECK
 
+	buddyUser.SavedName.replace("\'", " ");
+
 	QString command = QString("UPDATE " + BUDDYTABLE + " SET AutoOperator='" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "', AntiChannelBan='" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "', AutoTalkpower='" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "', SavedName='" + buddyUser.SavedName + "'" + "WHERE UID='" + buddyUser.UID + "'");
 	log(command);
 	QSqlQuery query(*UserDB);
@@ -148,6 +157,7 @@ void sqlw::updateNameInTabled(BlockedName blockedname)
 {
 	DBOPEN
 	DBCHECK
+		blockedname.Name.replace("\'", " ");
 
 	QString command = QString("UPDATE " + NAMEBLOCKTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedname.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedname.AutoKick)).c_str() + "' WHERE UID='" + blockedname.Name + "'");
 	log(command);
@@ -173,9 +183,11 @@ void sqlw::updateBlockedCountryToTable(BlockedCountry blockedCountry)
 
 }
 
-void sqlw::addBuddyToTable(const BuddyUser buddyUser) {
+void sqlw::addBuddyToTable( BuddyUser buddyUser) {
 	DBOPEN
 	DBCHECK
+
+		buddyUser.SavedName.replace("\'", " ");
 
 	QString command = QString("INSERT INTO " + BUDDYTABLE + " (UID, AntiChannelBan, AutoOperator, AutoTalkpower, SavedName) VALUES ('" + buddyUser.UID + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AntiChannelBan)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoOperator)).c_str() + "'" + ", " + "'" + convertoString(boolToInt(buddyUser.AutoTalkpower)).c_str() + "'" + ", " + "'" + buddyUser.SavedName + "')");
 	log(command);
@@ -1181,6 +1193,8 @@ void sqlw::blocked_import() {
 	}
 	tsdb.close();
 }
+
+
 
 /*
 void sqlw::DataBaseWriterThreadLoop() {

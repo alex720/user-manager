@@ -124,10 +124,10 @@ private:
 	void loadNameBlockList();
 	void loadBlockCountryList();
 	
-	void addBuddyToTable(const BuddyUser buddyUser);
-	void addBlockedToTable(const BlockedUser blockedUser);
-	void addBlockedNameToTable(const BlockedName blockedName);
-	void addBlockedCountryToTable(const BlockedCountry blockedCountry);
+	void addBuddyToTable( BuddyUser buddyUser);
+	void addBlockedToTable( BlockedUser blockedUser);
+	void addBlockedNameToTable( BlockedName blockedName);
+	void addBlockedCountryToTable( BlockedCountry blockedCountry);
 
 
 	void updateBlockedInTabled( BlockedUser blockedUser);
@@ -138,6 +138,7 @@ private:
 	void removeUserofTable(const QString &UID,const int friendN);
 
 	void readFillServerObjectCache();
+
 };
 
 
