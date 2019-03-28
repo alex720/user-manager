@@ -876,9 +876,10 @@ void sqlw::CreateColums() {
 	}
 
 	{
-		QString command = QString("ALTER TABLE " + SERVERTABLE + " ADD COLUMN SERVERNAME TEXT NOT NULL");
+		QString command = QString("ALTER TABLE " + SERVERTABLE + " ADD COLUMN SERVERNAME TEXT");
 		QSqlQuery query(*UserDB);
 		query.exec(command);
+
 	}
 
 	{
