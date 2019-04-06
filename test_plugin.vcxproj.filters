@@ -119,9 +119,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="User-Manager.ui">
-      <Filter>Form Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="configDialog.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
@@ -130,6 +127,9 @@
     </CustomBuild>
     <CustomBuild Include="userwidget.hpp">
       <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="User-Manager.ui">
+      <Filter>Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

@@ -129,6 +129,10 @@ void ConfigDialog::reloadOptions() {
 		this->findChild<QCheckBox*>("chkAutoMute")->setChecked(false);
 	}
 	this->findChild<QLineEdit*>("kickmessage")->setText(datas->getkickMessage().c_str());
+
+	this->findChild<QLineEdit*>("NameFilter")->setText(datas->getregExPattern());
+
+	this->findChild<QLineEdit*>("minimumNumberofTotalConnections")->setText(QString::number(datas->getminimumOfTotalConnections()));
 }
 
 void ConfigDialog::on_chkAntiChannelBan_stateChanged(int state) 
@@ -255,6 +259,7 @@ void ConfigDialog::on_chkChannelNotifikations_stateChanged(int state)
 }
 
 
+
 void ConfigDialog::on_btnSave_clicked() {
 	log("save btn clicked");
 	uint64 schid = ts3Functions.getCurrentServerConnectionHandlerID();
@@ -305,6 +310,8 @@ void ConfigDialog::on_btnSave_clicked() {
 	}
 
 	datas->setkickMessage(this->findChild<QLineEdit*>("kickmessage")->text().toStdString());
+	datas->setminimumOfTotalConnections(this->findChild<QLineEdit*>("minimumNumberofTotalConnections")->text().toInt());
+	datas->setregExPattern(this->findChild<QLineEdit*>("NameFilter")->text());
 
 	log("save btn complete ");
 }

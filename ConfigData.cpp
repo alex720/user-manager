@@ -42,6 +42,12 @@ ConfigData::ConfigData(std::string iniconfigPath) : SettingsFile(iniconfigPath.c
 	if (settings.value("kickmessage", "").toString() == "") {
 		settings.setValue("kickmessage", "Geblockter User");
 	}
+	if (settings.value("regExPattern", "").toString() == "") {
+		settings.setValue("regExPattern", "[]");
+	}
+	if (settings.value("minimumOfTotalConnections", "").toString() == "") {
+		settings.setValue("minimumOfTotalConnections", 0);
+	}
 
 	if (settings.value("UseTSList", -1).toInt() == 1) {
 		useTSList = true;
@@ -118,6 +124,16 @@ bool ConfigData::getchannelAnnouncments()
 std::string ConfigData::getkickMessage()
 {
 	return kickMessage;
+}
+
+QString ConfigData::getregExPattern()
+{
+	return regExPattern;
+}
+
+int ConfigData::getminimumOfTotalConnections()
+{
+	return minimumOfTotalConnections;
 }
 
 void ConfigData::setWorking(bool val)
@@ -290,6 +306,27 @@ void ConfigData::setkickMessage(std::string val)
 	settings.sync();
 }
 
+void ConfigData::setregExPattern(QString val)
+{
+	regExPattern = val;
+	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
+	settings.setValue("regExPattern", regExPattern);
+	settings.endGroup();
+	settings.sync();
+}
+
+void ConfigData::setminimumOfTotalConnections(int val)
+{
+	minimumOfTotalConnections = val;
+	QSettings settings(SettingsFile, QSettings::IniFormat);
+	settings.beginGroup("Config");
+	settings.setValue("minimumOfTotalConnections", minimumOfTotalConnections);
+	settings.endGroup();
+	settings.sync();
+	
+}
+
 void ConfigData::reload()
 {
 	working = true;
@@ -366,6 +403,8 @@ void ConfigData::reload()
 	}
 
 	kickMessage = settings.value("kickmessage").toString().toStdString();
+	regExPattern = settings.value("regExPattern").toString();
+	minimumOfTotalConnections = settings.value("minimumOfTotalConnections").toInt();
 
 	settings.endGroup();
 

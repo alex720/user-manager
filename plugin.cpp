@@ -919,8 +919,7 @@ void getClientIdLink(uint64 serverConnectionHandlerID, anyID clientID, std::stri
 	}
 
 	std::string friendname = username;
-	//log("username");
-	//log(username);
+
 	replace(friendname, "%20", " ");
 
 	clientLink = "[URL=client://" + cClientID + "/" + clientUid +"~"+ friendname + "]" + username + "[/URL]";
@@ -1211,10 +1210,11 @@ void ThreadLoop() {
 	log("thread Closed");
 }
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID) {
 
-
+	Sleep(50);
 
 	if (isEnabledTS(serverConnectionHandlerID)) {
 
@@ -1250,6 +1250,46 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 			if (blockedCountry.dummy_Return) {
 				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedCountry);
 				return;
+			}
+
+			{
+				//check for ExtraFilter
+				
+				int MiniumConnection = Datas->getminimumOfTotalConnections();
+				QRegExp regEx( Datas->getregExPattern());
+
+				int TotalConnections = 0;
+				ts3Functions.requestClientVariables(serverConnectionHandlerID, clientID, nullptr);
+				Sleep(250);
+				ts3Functions.getClientVariableAsInt(serverConnectionHandlerID, clientID, CLIENT_TOTALCONNECTIONS, &TotalConnections);
+;
+				log("totalConnections:");
+				log(TotalConnections);
+
+				if ((TotalConnections < MiniumConnection )&&(MiniumConnection != 0)) {
+					BlockedUser blockedUser;
+					blockedUser.AutoBan = Datas->getAutoBan();
+					blockedUser.AutoKick = Datas->getAutoKick();
+					blockedUser.UID = UID;
+					blockedUser.SavedName = name;
+					blockedUser.dummy_Return = true;
+					BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedUser);
+					return;
+				}
+				
+				int res = regEx.indexIn(name);
+				log("result for regex with the name");
+				log(name);
+				log(res);
+				if (res != -1) {
+					BlockedUser blockedUser;
+					blockedUser.AutoBan = Datas->getAutoBan();
+					blockedUser.AutoKick = Datas->getAutoKick();
+					blockedUser.UID = UID;
+					blockedUser.SavedName = name;
+					blockedUser.dummy_Return = true;
+					BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedUser);
+				}
 			}
 
 	}

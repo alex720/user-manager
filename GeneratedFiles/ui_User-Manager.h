@@ -70,6 +70,14 @@ public:
     QCheckBox *chkWorking;
     QCheckBox *chkChannelNotifikations;
     QSpacerItem *verticalSpacer;
+    QGroupBox *groupBox3_2;
+    QVBoxLayout *verticalLayout_7;
+    QHBoxLayout *horizontalLayout_9;
+    QLabel *label_7;
+    QLineEdit *NameFilter;
+    QHBoxLayout *horizontalLayout_8;
+    QLabel *label;
+    QLineEdit *minimumNumberofTotalConnections;
     QSpacerItem *verticalSpacer_2;
     QVBoxLayout *verticalLayout_2;
     QPushButton *btnSave;
@@ -80,7 +88,7 @@ public:
     {
         if (ConfigDialog->objectName().isEmpty())
             ConfigDialog->setObjectName(QStringLiteral("ConfigDialog"));
-        ConfigDialog->resize(412, 523);
+        ConfigDialog->resize(412, 599);
         verticalLayout_6 = new QVBoxLayout(ConfigDialog);
         verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
         groupBox1 = new QGroupBox(ConfigDialog);
@@ -292,6 +300,43 @@ public:
 
         verticalLayout_6->addWidget(groupBox2);
 
+        groupBox3_2 = new QGroupBox(ConfigDialog);
+        groupBox3_2->setObjectName(QStringLiteral("groupBox3_2"));
+        verticalLayout_7 = new QVBoxLayout(groupBox3_2);
+        verticalLayout_7->setObjectName(QStringLiteral("verticalLayout_7"));
+        horizontalLayout_9 = new QHBoxLayout();
+        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
+        label_7 = new QLabel(groupBox3_2);
+        label_7->setObjectName(QStringLiteral("label_7"));
+
+        horizontalLayout_9->addWidget(label_7);
+
+        NameFilter = new QLineEdit(groupBox3_2);
+        NameFilter->setObjectName(QStringLiteral("NameFilter"));
+
+        horizontalLayout_9->addWidget(NameFilter);
+
+
+        verticalLayout_7->addLayout(horizontalLayout_9);
+
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setObjectName(QStringLiteral("horizontalLayout_8"));
+        label = new QLabel(groupBox3_2);
+        label->setObjectName(QStringLiteral("label"));
+
+        horizontalLayout_8->addWidget(label);
+
+        minimumNumberofTotalConnections = new QLineEdit(groupBox3_2);
+        minimumNumberofTotalConnections->setObjectName(QStringLiteral("minimumNumberofTotalConnections"));
+
+        horizontalLayout_8->addWidget(minimumNumberofTotalConnections);
+
+
+        verticalLayout_7->addLayout(horizontalLayout_8);
+
+
+        verticalLayout_6->addWidget(groupBox3_2);
+
         verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_6->addItem(verticalSpacer_2);
@@ -385,6 +430,9 @@ public:
         chkChannelNotifikations->setToolTip(QApplication::translate("ConfigDialog", "Notfications in the  Channel Chat if you remove a User out of the Channel", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         chkChannelNotifikations->setText(QApplication::translate("ConfigDialog", "Channel Notification", Q_NULLPTR));
+        groupBox3_2->setTitle(QApplication::translate("ConfigDialog", "Extra Settings ( who matches these filter will be handled as a blocked User)", Q_NULLPTR));
+        label_7->setText(QApplication::translate("ConfigDialog", "NameFilter (Regex) :", Q_NULLPTR));
+        label->setText(QApplication::translate("ConfigDialog", "Minimumnumber of TotalConnections:", Q_NULLPTR));
         btnSave->setText(QApplication::translate("ConfigDialog", "Save && Apply", Q_NULLPTR));
         btnImport_Buddys->setText(QApplication::translate("ConfigDialog", "Import Teamspeak buddies to User Manager", Q_NULLPTR));
         btnImport_Blocked->setText(QApplication::translate("ConfigDialog", "Import Teamspeak blocked users to User Manager", Q_NULLPTR));

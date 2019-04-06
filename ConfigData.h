@@ -21,6 +21,8 @@ public:
 	bool getAutoKick();
 	bool getchannelAnnouncments();
 	std::string getkickMessage();
+	QString getregExPattern();
+	int getminimumOfTotalConnections();
 
 	void setWorking(bool val);
 	void setAutoTP(bool val);
@@ -34,6 +36,8 @@ public:
 	void setuseTSList(bool val);
 	void setchannelAnnouncments(bool val);
 	void setkickMessage(std::string val);
+	void setregExPattern(QString val);
+	void setminimumOfTotalConnections(int val);
 
 private:
 
@@ -53,6 +57,8 @@ private:
 	bool logging;
 	bool useTSList;
 	bool channelAnnouncments;
+	QString regExPattern;
+	int minimumOfTotalConnections;
 
 	std::string kickMessage;
 	
