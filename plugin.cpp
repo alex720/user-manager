@@ -469,7 +469,7 @@ int ts3plugin_init() {
 	char pluginPath[PATH_BUFSIZE];
 	/* Your plugin init code here */
 	
-	checkForUpdates();
+	
 
 	/* Example on how to query application, resources and configuration paths from client */
 	/* Note: Console client returns empty string for app and resources path */
@@ -514,6 +514,7 @@ int ts3plugin_init() {
 	std::thread QueueWorkerThread(ThreadLoop);
 	QueueWorkerThread.detach();
 
+	checkForUpdates();
 
 	return 0;  /* 0 = success, 1 = failure, -2 = failure but client will not show a "failed to load" warning */
 			   /* -2 is a very special case and should only be used if a plugin displays a dialog (e.g. overlay) asking the user to disable
