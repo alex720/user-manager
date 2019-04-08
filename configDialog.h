@@ -53,7 +53,6 @@ private:
 	struct TS3Functions ts3Functions;
 	ConfigData *datas;
 
-
 	bool useTSListcheck = false;
 
 	bool initphase = false;;

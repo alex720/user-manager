@@ -109,6 +109,7 @@ void giveverification(uint64 serverconnectionhandlerid,int i, anyID clientID);
 bool running = true; // variable for the thread Loop to stop the loop if the plugin get shutdown
 void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID);
 void ThreadLoop();
+void checkForUpdates();
 
 sqlw* UserManager;
 ConfigData *Datas;
@@ -468,7 +469,7 @@ int ts3plugin_init() {
 	char pluginPath[PATH_BUFSIZE];
 	/* Your plugin init code here */
 	
-
+	checkForUpdates();
 
 	/* Example on how to query application, resources and configuration paths from client */
 	/* Note: Console client returns empty string for app and resources path */
@@ -1703,6 +1704,29 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
 }
 
 
+void checkForUpdates()
+{
+
+	std::string newVersionString(DownloadBytes("https://gist.githubusercontent.com/alex720/4969c31d8814aee97113bcd5753d8d60/raw/version.txt"));
+	replace(newVersionString, "", ".");
+	int newVersion = std::atoi(newVersionString.c_str());
+	log(newVersionString.c_str());
+	log(newVersion);
+
+	std::string oldVersionString(ts3plugin_version());
+	replace(oldVersionString, "", ".");
+	int oldVersion = std::atoi(oldVersionString.c_str());
+	log(oldVersionString.c_str());
+	log(oldVersion);
+
+	if (newVersion > oldVersion) {
+
+		//callmsg("Download the the Update at: https://github.com/alex720/user-manager/releases", " A new Update is Available");
+		std::thread msgthread(callmsg, "Download the the Update at: https://github.com/alex720/user-manager/releases", " A new Update for the User-Manager is Available");
+		msgthread.detach();
+	}
+
+}
 
 /*
 void ts3plugin_onTalkStatusChangeEvent(uint64 serverConnectionHandlerID, int status, int isReceivedWhisper, anyID clientID) {

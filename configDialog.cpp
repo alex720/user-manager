@@ -135,6 +135,8 @@ void ConfigDialog::reloadOptions() {
 	this->findChild<QLineEdit*>("minimumNumberofTotalConnections")->setText(QString::number(datas->getminimumOfTotalConnections()));
 }
 
+
+
 void ConfigDialog::on_chkAntiChannelBan_stateChanged(int state) 
 {
 	if (initphase)return;
