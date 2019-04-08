@@ -65,7 +65,7 @@ const char* ts3plugin_name() {
 
 /* Plugin version */
 const char* ts3plugin_version() {
-	return "4.3.5";
+	return "4.4";
 }
 
 
