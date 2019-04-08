@@ -881,10 +881,13 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
 	/* Register hotkeys giving a keyword and a description.
 	* The keyword will be later passed to ts3plugin_onHotkeyEvent to identify which hotkey was triggered.
 	* The description is shown in the clients hotkey dialog. */
-	BEGIN_CREATE_HOTKEYS(3);  /* Create 3 hotkeys. Size must be correct for allocating memory. */	
+	BEGIN_CREATE_HOTKEYS(6);  /* Create 3 hotkeys. Size must be correct for allocating memory. */
 	CREATE_HOTKEY("BlockUser", "Set / remove client on the blocklist");
 	CREATE_HOTKEY("BuddyUser", "Set / Remove Client Buddy");
 	CREATE_HOTKEY("BlockName", "Set / remove client name on the block list");
+	CREATE_HOTKEY("BlockCountry", "Set / Remove Country Blocked");
+	CREATE_HOTKEY("wanttoban", "Set client in my channel on the Channel Ban group");
+	CREATE_HOTKEY("wanttoguest", "Set client in my channel on the Channel Guest group");
 	END_CREATE_HOTKEYS;
 
 	/* The client will call ts3plugin_freeMemory to release all allocated memory */
@@ -1229,7 +1232,7 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 				
 			BuddyUser buddyUser = UserManager->isBuddy(UID);
 			if (buddyUser.dummy_Return) {
-
+				
 				BuddyUserProc(serverConnectionHandlerID, clientID, newChannelID,buddyUser);
 				return;
 			}
@@ -1673,8 +1676,29 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
 		std::thread flipflopUserNameBannedthread(flipflopUserNameBanned, serverConnectionHandlerID, currentUser);
 		flipflopUserNameBannedthread.detach();
 	}
+	else if (!intToBool(strcmp(keyword, "BlockCountry"))) {
+		std::thread flipflopCountryBannedthread(flipflopCountryBanned, serverConnectionHandlerID, currentUser);
+		flipflopCountryBannedthread.detach();
+	}
+	else if (!intToBool(strcmp(keyword, "wanttoguest"))) {
+		anyID myID;
+		uint64 mychannelID;
+		ts3Functions.getClientID(serverConnectionHandlerID, &myID);
+		ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
+		int standertgroup;
+		ts3Functions.getServerVariableAsInt(serverConnectionHandlerID, VIRTUALSERVER_DEFAULT_CHANNEL_GROUP, &standertgroup);
+		ts3Functions.setchannelgroup(serverConnectionHandlerID, currentUser, mychannelID, standertgroup);
+	}
+	else if (!intToBool(strcmp(keyword, "wanttoban"))) {
+		anyID myID;
+		uint64 mychannelID;
 
+		ts3Functions.getClientID(serverConnectionHandlerID, &myID);
+		ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
+		ts3Functions.setchannelgroup(serverConnectionHandlerID, currentUser, mychannelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 3));
+	}
 
+	
 	/* Identify the hotkey by keyword ("keyword_1", "keyword_2" or "keyword_3" in this example) and handle here... */
 }
 
