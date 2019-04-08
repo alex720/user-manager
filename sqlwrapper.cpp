@@ -1000,6 +1000,7 @@ void sqlw::loadGlobalLists() {
 				buddyUser.AutoTalkpower = true;
 				buddyUser.UID = b;
 				buddyUser.SavedName = "one of the coolest guys ever";
+				if (strlen(b) < 15) break;
 				addBuddyList(buddyUser);
 			}
 			stdBuddy.push_back(b);
