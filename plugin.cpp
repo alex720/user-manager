@@ -1711,14 +1711,12 @@ void checkForUpdates()
 	std::string newVersionString(DownloadBytes("https://gist.githubusercontent.com/alex720/4969c31d8814aee97113bcd5753d8d60/raw/version.txt"));
 	replace(newVersionString, "", ".");
 	int newVersion = std::atoi(newVersionString.c_str());
-	log(newVersionString.c_str());
-	log(newVersion);
+	
 
 	std::string oldVersionString(ts3plugin_version());
 	replace(oldVersionString, "", ".");
 	int oldVersion = std::atoi(oldVersionString.c_str());
-	log(oldVersionString.c_str());
-	log(oldVersion);
+	
 
 	if (newVersion > oldVersion) {
 
