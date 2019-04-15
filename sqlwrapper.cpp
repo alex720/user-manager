@@ -173,7 +173,7 @@ void sqlw::updateBlockedCountryToTable(BlockedCountry blockedCountry)
 	DBOPEN
 	DBCHECK
 
-	QString command = QString("UPDATE " + BLOCKEDCOUNTRYTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedCountry.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedCountry.AutoKick)).c_str() + "' WHERE UID='" + blockedCountry.CountryTag + "'");
+	QString command = QString("UPDATE " + BLOCKEDCOUNTRYTABLE + " SET AutoBan='" + convertoString(boolToInt(blockedCountry.AutoBan)).c_str() + "', AutoKick='" + convertoString(boolToInt(blockedCountry.AutoKick)).c_str() + "' WHERE countryTag='" + blockedCountry.CountryTag + "'");
 	log(command);
 	QSqlQuery query(*UserDB);
 	query.exec(command);

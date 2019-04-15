@@ -148,17 +148,17 @@ void UserWidget::on_btn_blocknameNamesave_clicked()
 	UserManager->updateName(blockedName);
 }
 
-void UserWidget::chk_BlockedCountryAutoBan_stateChanged(int state)
+void UserWidget::on_chk_BlockedCountryAutoBan_stateChanged(int state)
 {
 	if (initphase) return;
 	log("chk_BlockedCountryAutoBan");
 	if (currentItem == nullptr) return;
 	BlockedCountry blockedCountry = UserManager->getBlockedCountrybyCountryTag(currentItem->text().toStdString());
-	blockedCountry.AutoBan= intToBool(state);
+	blockedCountry.AutoBan = intToBool(state);
 	UserManager->UpdateCountry(blockedCountry);
 }
 
-void UserWidget::chk_BlockedCountryAutoKick_stateChanged(int state)
+void UserWidget::on_chk_BlockedCountryAutoKick_stateChanged(int state)
 {
 	if (initphase) return;
 	log("chk_BlockedCountryAutoKick");

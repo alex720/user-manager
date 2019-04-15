@@ -33,8 +33,9 @@ public:
 	void on_btn_buddynamesave_clicked();
 	void on_btn_blocknamesave_clicked();
 	void on_btn_blocknameNamesave_clicked();
-	void chk_BlockedCountryAutoBan_stateChanged(int state);
-	void chk_BlockedCountryAutoKick_stateChanged(int state);
+
+	void on_chk_BlockedCountryAutoBan_stateChanged(int state);
+	void on_chk_BlockedCountryAutoKick_stateChanged(int state);
 
 	void buddyItemClicked(int row, int column);
 	void blockedItemClicked(int row, int column);
