@@ -6,13 +6,19 @@
 #include <iostream>
 #include <QtCore/qstring.h>
 #include <QtCore/qfileinfo.h>
-#include <Windows.h>
 #include <thread>
-#include <WinUser.h>
 #include <QtNetwork\qtcpsocket.h>
-#include <WinInet.h>
 #include "ts3_functions.h"
 #include <vector>
+
+#include <qmessagebox.h>
+#include <QUrl>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkRequest>
+#include <QtNetwork/QNetworkReply>
+#include <qeventloop.h>
+#include <QObject>
+#pragma comment(lib,"Qt5Network.lib")
 
 
 	void logInitTS3Funktion(const struct TS3Functions funcs);
@@ -35,7 +41,7 @@
 	void callmsg(std::string str, std::string str2);
 
 
-	char* DownloadBytes(LPCSTR szUrl);
+	 char* DownloadBytes(const char * szUrl);
 	
 
 	bool intToBool(int);

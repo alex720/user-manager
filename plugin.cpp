@@ -65,7 +65,7 @@ const char* ts3plugin_name() {
 
 /* Plugin version */
 const char* ts3plugin_version() {
-	return "4.4.1";
+	return "4.1.1";
 }
 
 
@@ -1716,24 +1716,22 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
 
 void checkForUpdates()
 {
-
-	std::string newVersionString(DownloadBytes("https://gist.githubusercontent.com/alex720/4969c31d8814aee97113bcd5753d8d60/raw/version.txt"));
+	const char* newVersionStringC = DownloadBytes("https://gist.githubusercontent.com/alex720/4969c31d8814aee97113bcd5753d8d60/raw/version.txt");
+	std::string newVersionString = newVersionStringC;
 	replace(newVersionString, "", ".");
 	int newVersion = std::atoi(newVersionString.c_str());
-	
+	delete[] newVersionStringC;
 
 	std::string oldVersionString(ts3plugin_version());
 	replace(oldVersionString, "", ".");
 	int oldVersion = std::atoi(oldVersionString.c_str());
-	
-
 	if (newVersion > oldVersion) {
 
-		//callmsg("Download the the Update at: https://github.com/alex720/user-manager/releases", " A new Update is Available");
-		std::thread msgthread(callmsg, "Download the the Update at: https://github.com/alex720/user-manager/releases", " A new Update for the User-Manager is Available");
-		msgthread.detach();
+		callmsg("Download the Update at: https://github.com/alex720/user-manager/releases", "A new Update for the User-Manager is Available");
+		//std::thread msgthread(callmsg, "Download the Update at: https://github.com/alex720/user-manager/releases", " A new Update for the User-Manager is Available");
+		//msgthread.detach();
 	}
-
+	
 }
 
 /*

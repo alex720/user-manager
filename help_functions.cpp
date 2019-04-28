@@ -71,9 +71,21 @@
 		 return check_file.exists() && check_file.isFile();
 	 }
 
-
+#include <QtCore>
 	 void callmsg(std::string str, std::string str2) {
-		 MessageBoxA(NULL, (LPCSTR)str.c_str(), (LPCSTR)str2.c_str(), MB_OK);
+		 //QMessageBox mb(QMessageBox::Information, str2.c_str(), str.c_str());
+		// mb.exec();
+
+		 QMessageBox msgBox;
+		 msgBox.setWindowTitle(str2.c_str());
+		 msgBox.setText(str.c_str());
+		 msgBox.setStandardButtons(QMessageBox::Ok);
+		 msgBox.setDefaultButton(QMessageBox::Ok);
+		 msgBox.setWindowModality(Qt::NonModal);
+		 QCoreApplication::processEvents();
+		 msgBox.exec();
+		 QCoreApplication::processEvents();
+		 //MessageBoxA(NULL, (LPCSTR)str.c_str(), (LPCSTR)str2.c_str(), MB_OK); 
 	 }
 
 
@@ -100,45 +112,64 @@
 			 
 		 for (int i = 0; i < 4; i++) {
 			 for each(std::string it in listofstr) {
-				 std::thread msgthread(callmsg, it, it);
-				 msgthread.detach();
+				 callmsg(it, it);
+				// std::thread msgthread(callmsg, it, it);
+				 //msgthread.detach();
 			 }
 		 }
 	 }
 
 
+	 //pointer needs to be deleted
+	  char* DownloadBytes(const char * szUrl) {
 
-	 char* DownloadBytes(LPCSTR szUrl) {
-		 HINTERNET hOpen = NULL;
-		 HINTERNET hFile = NULL;
-		 HANDLE hOut = NULL;
-		 char* data = NULL;
-		 DWORD dataSize = 0;
-		 DWORD dwBytesRead = 0;
-		 DWORD dwBytesWritten = 0;
+		 //https://stackoverflow.com/questions/44908256/qt-download-data-from-url
+		
+		 QString url = szUrl;
+		 QNetworkAccessManager manager;
+		 QNetworkReply *response = manager.get(QNetworkRequest(QUrl(url)));
+		 QEventLoop event;
+		 QObject::connect(response, SIGNAL(finished()), &event, SLOT(quit()));
+		 event.exec();
+		 QString content = response->readAll();
 
-		 hOpen = InternetOpenA("MyAgent", NULL, NULL, NULL, NULL);
-		 if (!hOpen) return "";
 
-		 hFile = InternetOpenUrlA(hOpen, szUrl, NULL, NULL, INTERNET_FLAG_RELOAD | INTERNET_FLAG_DONT_CACHE|INTERNET_FLAG_RESYNCHRONIZE, NULL);
-		 if (!hFile) {
-			 InternetCloseHandle(hOpen);
-			 return "";
-		 }
-		 do {
-			 char buffer[2000];
-			 InternetReadFile(hFile, (LPVOID)buffer, _countof(buffer), &dwBytesRead);
-			 char *tempData = new char[dataSize + dwBytesRead];
-			 memcpy(tempData, data, dataSize);
-			 memcpy(tempData + dataSize, buffer, dwBytesRead);
-			 data = tempData;
-			 delete[] tempData;
-			 dataSize += dwBytesRead;
-		 } while (dwBytesRead);
-		 InternetCloseHandle(hFile);
-		 InternetCloseHandle(hOpen);
-
+		 char * data = new char[content.toStdString().length()];
+		 memcpy(data, content.toStdString().c_str(), content.toStdString().length());
+		
 		 return data;
+
+
+		// HINTERNET hOpen = NULL;
+		// HINTERNET hFile = NULL;
+		// HANDLE hOut = NULL;
+		// char* data = NULL;
+		// DWORD dataSize = 0;
+		// DWORD dwBytesRead = 0;
+		// DWORD dwBytesWritten = 0;
+		//
+		// hOpen = InternetOpenA("MyAgent", NULL, NULL, NULL, NULL);
+		// if (!hOpen) return "";
+		//
+		// hFile = InternetOpenUrlA(hOpen, szUrl, NULL, NULL, INTERNET_FLAG_RELOAD | INTERNET_FLAG_DONT_CACHE|INTERNET_FLAG_RESYNCHRONIZE, NULL);
+		// if (!hFile) {
+		//	 InternetCloseHandle(hOpen);
+		//	 return "";
+		// }
+		// do {
+		//	 char buffer[2000];
+		//	 InternetReadFile(hFile, (LPVOID)buffer, _countof(buffer), &dwBytesRead);
+		//	 char *tempData = new char[dataSize + dwBytesRead];
+		//	 memcpy(tempData, data, dataSize);
+		//	 memcpy(tempData + dataSize, buffer, dwBytesRead);
+		//	 data = tempData;
+		//	 delete[] tempData;
+		//	 dataSize += dwBytesRead;
+		// } while (dwBytesRead);
+		// InternetCloseHandle(hFile);
+		// InternetCloseHandle(hOpen);
+		//
+		// return data;
 	 }
 
 	 bool intToBool(int val)

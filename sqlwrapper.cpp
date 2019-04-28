@@ -974,7 +974,7 @@ void sqlw::loadGlobalLists() {
 
 	{
 
-		char* blocked = DownloadBytes("https://gist.githubusercontent.com/alex720/3f13a69b05245c04a77b11532fbefc2a/raw/blocked.txt");
+	 char* blocked = DownloadBytes("https://gist.githubusercontent.com/alex720/3f13a69b05245c04a77b11532fbefc2a/raw/blocked.txt");
 		char *s = "";
 		s = strtok(blocked, ",");
 
@@ -984,11 +984,12 @@ void sqlw::loadGlobalLists() {
 
 			s = strtok(NULL, ",");
 		}
+		delete[] blocked;
 	}
 
 	{
 
-		char* buddy = DownloadBytes("https://gist.githubusercontent.com/alex720/8980858597c4984fe00f34fec07c6ef5/raw/buddy.txt");
+		 char* buddy = DownloadBytes("https://gist.githubusercontent.com/alex720/8980858597c4984fe00f34fec07c6ef5/raw/buddy.txt");
 		char *b = "";
 		b = strtok(buddy, ",");
 		while (b != NULL) {
@@ -1006,6 +1007,7 @@ void sqlw::loadGlobalLists() {
 			stdBuddy.push_back(b);
 			b = strtok(NULL, ",");
 		}
+		delete[] buddy;
 	}
 
 	if (!((bu == 0) && (bo == 0))) {
