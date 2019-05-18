@@ -72,7 +72,7 @@ public:
 	void removeBuddyList(const BuddyUser);
 	void removeCountryList(const BlockedCountry blockedCountry);
 
-	bool sqlw::getshoudwork();
+	bool getshoudwork();
 
 	std::string PathTsDB;
 	std::string PathUserDB;
