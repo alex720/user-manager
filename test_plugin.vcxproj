@@ -27,7 +27,7 @@
     <ProjectGuid>{192D646D-748B-450B-AF3D-BF8EDD5FC897}</ProjectGuid>
     <RootNamespace>test_plugin</RootNamespace>
     <ProjectName>user manager</ProjectName>
-    <Keyword>Qt5VSv1.0</Keyword>
+    <Keyword>Qt4VSv1.0</Keyword>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -199,6 +199,7 @@
     <ClInclude Include="ConfigData.h" />
     <ClInclude Include="GeneratedFiles\ui_UserWidget.h" />
     <ClInclude Include="help_functions.h" />
+    <ClInclude Include="include\ts3_functions.h" />
     <ClInclude Include="ServerObject.h" />
     <ClInclude Include="sqlwrapper.h" />
     <ClInclude Include="User.h" />

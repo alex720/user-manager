@@ -85,6 +85,9 @@
     <ClInclude Include="GeneratedFiles\ui_UserWidget.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ts3_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="plugin.cpp">
