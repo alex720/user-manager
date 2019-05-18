@@ -37,6 +37,12 @@ public:
 	void on_chk_BlockedCountryAutoBan_stateChanged(int state);
 	void on_chk_BlockedCountryAutoKick_stateChanged(int state);
 
+	void on_btn_buddyRemove_clicked();
+	void on_btn_blockedRemove_clicked();
+	void on_btn_NameRemove_clicked();
+	void on_btn_countryRemove_clicked();
+
+
 	void buddyItemClicked(int row, int column);
 	void blockedItemClicked(int row, int column);
 	void blockedNameItemClicked(int row, int column);
@@ -45,7 +51,10 @@ public:
 private:
 	Ui::UserWidget *ui;
 
-	QTableWidgetItem *currentItem = nullptr;
+	QTableWidgetItem *currentItemBuddy = nullptr;
+	QTableWidgetItem *currentItemBlocked = nullptr;
+	QTableWidgetItem *currentItemName = nullptr;
+	QTableWidgetItem *currentItemCountry = nullptr;
 
 	sqlw* UserManager;
 	QTableWidget* buddytablewidget;

@@ -41,6 +41,7 @@ public:
     QCheckBox *chk_BuddyAutoOperator;
     QCheckBox *chk_BuddyAutoTalkpower;
     QCheckBox *chk_BuddyAntiChannelBan;
+    QPushButton *btn_buddyRemove;
     QSpacerItem *verticalSpacer_2;
     QSpacerItem *verticalSpacer;
     QWidget *tab_2;
@@ -53,6 +54,7 @@ public:
     QPushButton *btn_blocknamesave;
     QCheckBox *chk_BlockedAutoBan;
     QCheckBox *chk_BlockedAutoKick;
+    QPushButton *btn_blockedRemove;
     QSpacerItem *verticalSpacer_3;
     QSpacerItem *verticalSpacer_4;
     QWidget *tab_3;
@@ -65,12 +67,14 @@ public:
     QPushButton *btn_blocknameNamesave;
     QCheckBox *chk_BlockedNameAutoBan;
     QCheckBox *chk_BlockedNameAutoKick;
+    QPushButton *btn_NameRemove;
     QSpacerItem *verticalSpacer_5;
     QSpacerItem *verticalSpacer_6;
     QWidget *tab_4;
     QTableWidget *TW_COUNTRY;
     QCheckBox *chk_BlockedCountryAutoBan;
     QCheckBox *chk_BlockedCountryAutoKick;
+    QPushButton *btn_countryRemove;
 
     void setupUi(QWidget *UserWidget)
     {
@@ -133,6 +137,13 @@ public:
 
         verticalLayout->addWidget(chk_BuddyAntiChannelBan);
 
+        btn_buddyRemove = new QPushButton(tab);
+        btn_buddyRemove->setObjectName(QStringLiteral("btn_buddyRemove"));
+        btn_buddyRemove->setMaximumSize(QSize(80, 16777215));
+        btn_buddyRemove->setCheckable(false);
+
+        verticalLayout->addWidget(btn_buddyRemove);
+
         verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout->addItem(verticalSpacer_2);
@@ -191,6 +202,13 @@ public:
         chk_BlockedAutoKick->setObjectName(QStringLiteral("chk_BlockedAutoKick"));
 
         verticalLayout_2->addWidget(chk_BlockedAutoKick);
+
+        btn_blockedRemove = new QPushButton(tab_2);
+        btn_blockedRemove->setObjectName(QStringLiteral("btn_blockedRemove"));
+        btn_blockedRemove->setMaximumSize(QSize(80, 16777215));
+        btn_blockedRemove->setCheckable(false);
+
+        verticalLayout_2->addWidget(btn_blockedRemove);
 
         verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
@@ -252,6 +270,13 @@ public:
 
         verticalLayout_3->addWidget(chk_BlockedNameAutoKick);
 
+        btn_NameRemove = new QPushButton(tab_3);
+        btn_NameRemove->setObjectName(QStringLiteral("btn_NameRemove"));
+        btn_NameRemove->setMaximumSize(QSize(80, 16777215));
+        btn_NameRemove->setCheckable(false);
+
+        verticalLayout_3->addWidget(btn_NameRemove);
+
         verticalSpacer_5 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
         verticalLayout_3->addItem(verticalSpacer_5);
@@ -281,11 +306,16 @@ public:
         chk_BlockedCountryAutoKick = new QCheckBox(tab_4);
         chk_BlockedCountryAutoKick->setObjectName(QStringLiteral("chk_BlockedCountryAutoKick"));
         chk_BlockedCountryAutoKick->setGeometry(QRect(260, 50, 64, 17));
+        btn_countryRemove = new QPushButton(tab_4);
+        btn_countryRemove->setObjectName(QStringLiteral("btn_countryRemove"));
+        btn_countryRemove->setGeometry(QRect(260, 70, 80, 23));
+        btn_countryRemove->setMaximumSize(QSize(80, 16777215));
+        btn_countryRemove->setCheckable(false);
         tabWidget->addTab(tab_4, QString());
 
         retranslateUi(UserWidget);
 
-        tabWidget->setCurrentIndex(3);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(UserWidget);
@@ -298,17 +328,21 @@ public:
         chk_BuddyAutoOperator->setText(QApplication::translate("UserWidget", "AutoOperator", Q_NULLPTR));
         chk_BuddyAutoTalkpower->setText(QApplication::translate("UserWidget", "AutoTalkpower", Q_NULLPTR));
         chk_BuddyAntiChannelBan->setText(QApplication::translate("UserWidget", "AntiChannelBan", Q_NULLPTR));
+        btn_buddyRemove->setText(QApplication::translate("UserWidget", "Remove", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("UserWidget", "Buddys", Q_NULLPTR));
         btn_blocknamesave->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
         chk_BlockedAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
         chk_BlockedAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
+        btn_blockedRemove->setText(QApplication::translate("UserWidget", "Remove", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("UserWidget", "Blocked", Q_NULLPTR));
         btn_blocknameNamesave->setText(QApplication::translate("UserWidget", "save", Q_NULLPTR));
         chk_BlockedNameAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
         chk_BlockedNameAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
+        btn_NameRemove->setText(QApplication::translate("UserWidget", "Remove", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("UserWidget", "Names", Q_NULLPTR));
         chk_BlockedCountryAutoBan->setText(QApplication::translate("UserWidget", "AutoBan", Q_NULLPTR));
         chk_BlockedCountryAutoKick->setText(QApplication::translate("UserWidget", "AutoKick", Q_NULLPTR));
+        btn_countryRemove->setText(QApplication::translate("UserWidget", "Remove", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab_4), QApplication::translate("UserWidget", "Country", Q_NULLPTR));
     } // retranslateUi
 
