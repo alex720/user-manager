@@ -31,7 +31,6 @@
 #include <queue>
 #include "help_functions.h"
 
-
 #ifdef _WIN32
 #define _strcpy(dest, destSize, src) strcpy_s(dest, destSize, src)
 #define snprintf sprintf_s
@@ -41,7 +40,7 @@
 
 
 
-#define PLUGIN_API_VERSION 22
+#define PLUGIN_API_VERSION 23
 
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
@@ -927,6 +926,8 @@ void getClientIdLink(uint64 serverConnectionHandlerID, anyID clientID, std::stri
 	std::string friendname = username;
 
 	replace(friendname, "%20", " ");
+	replace(friendname, "[", "\[");
+	replace(friendname, "]", "\]");
 
 	clientLink = "[URL=client://" + cClientID + "/" + clientUid +"~"+ friendname + "]" + username + "[/URL]";
 	return;;
@@ -1269,8 +1270,8 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 				Sleep(250);
 				ts3Functions.getClientVariableAsInt(serverConnectionHandlerID, clientID, CLIENT_TOTALCONNECTIONS, &TotalConnections);
 ;
-				log("totalConnections:");
-				log(TotalConnections);
+				//log("totalConnections:");
+				//log(TotalConnections);
 
 				if ((TotalConnections < MiniumConnection )&&(MiniumConnection != 0)) {
 					BlockedUser blockedUser;
@@ -1284,9 +1285,9 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 				}
 				
 				int res = regEx.indexIn(name);
-				log("result for regex with the name");
-				log(name);
-				log(res);
+				//log("result for regex with the name");
+				//log(name);
+				//log(res);
 				if (res != -1) {
 					BlockedUser blockedUser;
 					blockedUser.AutoBan = Datas->getAutoBan();
@@ -1319,6 +1320,16 @@ void ts3plugin_onClientMoveEvent(uint64 serverConnectionHandlerID, anyID clientI
 	if (mychannelID == newChannelID && newChannelID != NULL && clientID != myID) {  //If target is in the channel we want
 		UserWorker.push({ serverConnectionHandlerID, clientID, oldChannelID, newChannelID });
 	}
+}
+
+void ts3plugin_onClientMoveSubscriptionEvent(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID, int visibility)
+{
+
+	if (!visibility) return;
+
+
+
+	return;
 }
 
 int ts3plugin_onTextMessageEvent(uint64 serverConnectionHandlerID, anyID targetMode, anyID toID, anyID fromID, const char* fromName, const char* fromUniqueIdentifier, const char* message, int ffIgnored) {
@@ -1369,8 +1380,6 @@ void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
 	char *clientname = "";
 
 
-	
-
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &clientname);
 
 	ts3Functions.getChannelOfClient(serverConnectionHandlerID, clientID, &channelID);
@@ -1396,7 +1405,7 @@ void listAllBuddys(uint64 serverConnectionHandlerID) {
 	uint64 numberOfClients = 0;
 	
 	ts3Functions.requestServerVariables(serverConnectionHandlerID);
-	Sleep(1000);
+	Sleep(500);
 
 	ts3Functions.getServerVariableAsUInt64(serverConnectionHandlerID, VIRTUALSERVER_MAXCLIENTS, &numberOfClients);
 

@@ -11,7 +11,7 @@
 #include "ts3_functions.h"
 #include <vector>
 
-#include <qmessagebox.h>
+#include <QMessageBox>
 #include <QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkRequest>

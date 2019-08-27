@@ -1013,7 +1013,6 @@ void sqlw::loadGlobalLists() {
 	if (!((bu == 0) && (bo == 0))) {
 		shoudwork = true;
 	}
-
 }
 
 

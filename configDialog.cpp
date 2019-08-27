@@ -32,11 +32,9 @@ ConfigDialog::ConfigDialog(sqlw *UserManagerPoint, const struct TS3Functions fun
 		this->findChild<QSpinBox*>("speChannelGroupBan")->setEnabled(true);
 		this->findChild<QSpinBox*>("speChannelGroupOperator")->setEnabled(true);
 
-
 		this->findChild<QSpinBox*>("speChannelGroupAdmin")->setValue(UserManager->readChannelGroupID(uid, 1));
 		this->findChild<QSpinBox*>("speChannelGroupBan")->setValue(UserManager->readChannelGroupID(uid, 3));
 		this->findChild<QSpinBox*>("speChannelGroupOperator")->setValue(UserManager->readChannelGroupID(uid, 2));
-	
 	}
 	
 	initphase = false;
@@ -44,7 +42,6 @@ ConfigDialog::ConfigDialog(sqlw *UserManagerPoint, const struct TS3Functions fun
 }
 ConfigDialog::~ConfigDialog()
 {
-	
 	delete ui;
 }
 
