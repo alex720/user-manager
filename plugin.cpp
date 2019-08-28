@@ -1,4 +1,3 @@
-
 #define _CRT_SECURE_NO_WARNINGS
 #ifdef _WIN32
 #pragma warning (disable : 4100)  /* Disable Unreferenced parameter warning */
@@ -41,7 +40,7 @@
 
 
 #define PLUGIN_API_VERSION 23
-
+#define PlUGIN_VERSION "4.4.2"
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
 #define INFODATA_BUFSIZE 128
@@ -64,7 +63,7 @@ const char* ts3plugin_name() {
 
 /* Plugin version */
 const char* ts3plugin_version() {
-	return "4.4.2";
+	return PlUGIN_VERSION;
 }
 
 
