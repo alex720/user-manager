@@ -1369,7 +1369,6 @@ void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
 		return;
 	}
 
-	log((int)clientID);
 
 	std::string clientLink = "";
 	getClientIdLink(serverConnectionHandlerID,clientID, clientLink);

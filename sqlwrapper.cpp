@@ -1127,7 +1127,6 @@ void sqlw::buddys_import() {
 	DBCLOSE
 	std::vector<BuddyUser> userList;
 
-	log("test");
 	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
 	tsdb.setDatabaseName(QString(PathTsDB.c_str()));
 	if (!tsdb.open()) {
@@ -1208,7 +1207,7 @@ void sqlw::blocked_import() {
 		size_t pos2 = sBuffer.find("Friend=");
 		std::string Name = sBuffer.substr(9, pos2 - 10);
 		std::string cur = sBuffer.substr(pos + 4, 28);
-		if (!isBlocked(cur.c_str()).dummy_Return && !isBuddy(cur.c_str()).dummy_Return) {
+		if (!isBlocked(cur.c_str(), true).dummy_Return && !isBuddy(cur.c_str(), true).dummy_Return) {
 
 			BlockedUser cache = {};
 			cache.AutoBan = Datas->getAutoBan();
