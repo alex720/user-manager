@@ -13,7 +13,10 @@
 static struct TS3Functions ts3Functions;
 
 struct InfoObjectQueue {
-	uint64 serverConnectionHandlerID = 0 ;
+	explicit InfoObjectQueue(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID) :
+		serverConnectionHandlerID(serverConnectionHandlerID), clientID(clientID), oldChannelID(oldChannelID), newChannelID(newChannelID) {}
+
+	uint64 serverConnectionHandlerID = 0;
 	anyID clientID = 0;
 	uint64 oldChannelID = 0;
 	uint64 newChannelID = 0;

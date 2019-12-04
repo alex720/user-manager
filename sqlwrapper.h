@@ -52,8 +52,8 @@ public:
 	int readChannelGroupID(const QString &SUID, const int key);
 	
 	bool isForServerEnabled(const QString &SUID);
-	BuddyUser isBuddy(const std::string &UID);
-	BlockedUser isBlocked(const std::string &UID);
+	BuddyUser isBuddy(const std::string &UID, bool importmode = false);
+	BlockedUser isBlocked(const std::string &UID, bool importmode = false);
 	BlockedName isNameBlocked(const std::string &Name);
 	BlockedCountry isCountryBlocked(const std::string &countryTag);
 

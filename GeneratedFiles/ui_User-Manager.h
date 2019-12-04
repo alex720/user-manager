@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'User-Manager.ui'
 **
-** Created by: Qt User Interface Compiler version 5.12.2
+** Created by: Qt User Interface Compiler version 5.12.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/

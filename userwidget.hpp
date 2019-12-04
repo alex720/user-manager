@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include "ui_UserWidget.h"
 #include <QTWidgets/qwidget.h>
 #include <QTWidgets/QTableWidget>

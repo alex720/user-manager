@@ -207,7 +207,10 @@ void BuddyUserProc(uint64 serverConnectionHandlerID, anyID clientID, uint64 chan
 				int standertgroup;
 				ts3Functions.getServerVariableAsInt(serverConnectionHandlerID, VIRTUALSERVER_DEFAULT_CHANNEL_GROUP, &standertgroup);
 
-				if ((clientchannelGroup == standertgroup) && (NCTP > 0)) {
+				int clientTalkpower;
+				ts3Functions.getClientVariableAsInt(serverConnectionHandlerID, clientID, CLIENT_TALK_POWER, &clientTalkpower);
+
+				if ((clientchannelGroup == standertgroup) && (NCTP > clientTalkpower)) {
 
 					ts3Functions.requestClientSetIsTalker(serverConnectionHandlerID, clientID, 1, NULL);
 					if (Datas->getwantannoucments()) {
@@ -1317,7 +1320,7 @@ void ts3plugin_onClientMoveEvent(uint64 serverConnectionHandlerID, anyID clientI
 	ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
 
 	if (mychannelID == newChannelID && newChannelID != NULL && clientID != myID) {  //If target is in the channel we want
-		UserWorker.push({ serverConnectionHandlerID, clientID, oldChannelID, newChannelID });
+		UserWorker.push( InfoObjectQueue (serverConnectionHandlerID, clientID, oldChannelID, newChannelID) );
 	}
 }
 

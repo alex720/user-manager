@@ -438,7 +438,7 @@ void sqlw::removeTableForServer(const QString &SUID) {
 	ServerCaches.erase(ServerCaches.begin() + whereiam);
 }
 
-BuddyUser sqlw::isBuddy(const std::string &UID) {
+BuddyUser sqlw::isBuddy(const std::string &UID, bool importmode) {
 	for (auto it = stdBuddy.begin(); it != stdBuddy.end(); ++it)
 	{
 		if (it->compare(UID) == 0) {
@@ -462,7 +462,7 @@ BuddyUser sqlw::isBuddy(const std::string &UID) {
 			return cache;
 		}
 	}
-	if (Datas->getuseTSList() && initcomplete) {
+	if (Datas->getuseTSList() && initcomplete && !importmode) {
 		dbprotect.lock();
 			
 		QSqlDatabase TsDB = QSqlDatabase::addDatabase("QSQLITE");
@@ -570,7 +570,7 @@ void sqlw::UpdateCountry(BlockedCountry blockedCountry)
 	countryList.push_back(blockedCountry);
 }
 
-BlockedUser sqlw::isBlocked(const std::string &UID) {
+BlockedUser sqlw::isBlocked(const std::string &UID, bool importmode) {
 	for (auto it = stdBlocked.begin(); it != stdBlocked.end(); ++it)
 	{
 		if (it->compare(UID) == 0) {
@@ -592,7 +592,7 @@ BlockedUser sqlw::isBlocked(const std::string &UID) {
 		}
 	}
 
-	if (Datas->getuseTSList() && initcomplete) {
+	if (Datas->getuseTSList() && initcomplete && !importmode) {
 		dbprotect.lock();
 		QSqlDatabase TsDB = QSqlDatabase::addDatabase("QSQLITE");
 		TsDB.setDatabaseName(QString(PathTsDB.c_str()));
@@ -1125,14 +1125,26 @@ void sqlw::readFillServerObjectCache() {
 
 void sqlw::buddys_import() {
 	DBCLOSE
+	std::vector<BuddyUser> userList;
+
+	log("test");
 	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
 	tsdb.setDatabaseName(QString(PathTsDB.c_str()));
-	tsdb.open();
+	if (!tsdb.open()) {
 
-	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=0%'"));
-	DBOPEN
-	while (queryout.next()) {
+		QSqlError err = tsdb.lastError();
+		log(err.databaseText()); 
+		log(err.text()); 
+		log("Error occured with opening database"); 
+	}
 
+	QSqlQuery queryout(tsdb);
+	queryout.prepare("SELECT * FROM Contacts WHERE value LIKE '%Friend=0%'");
+	queryout.exec();
+
+	
+
+	while(queryout.next()){
 
 		QString buffer = queryout.value("value").toString(); //buffer = string of the "value" column
 
@@ -1144,7 +1156,7 @@ void sqlw::buddys_import() {
 		std::string Name = sBuffer.substr(9, pos2 - 10);
 
 		std::string cur = sBuffer.substr(pos + 4, 28);
-		if (!isBlocked(cur.c_str()).dummy_Return && !isBuddy(cur.c_str()).dummy_Return) {
+		if (!isBlocked(cur.c_str(), true).dummy_Return && !isBuddy(cur.c_str(), true).dummy_Return) {
 
 			BuddyUser cache = {};
 			cache.AntiChannelBan = Datas->getAntiChannelBan();
@@ -1153,24 +1165,37 @@ void sqlw::buddys_import() {
 			cache.SavedName = Name.c_str();
 			cache.UID = cur.c_str();
 
-			addBuddyList(cache);
+			userList.push_back(cache);
 		}
+
 	}
 
 	tsdb.close();
+
+	for (auto it : userList) {
+		addBuddyList(it);
+	}
+
 
 }
 
 void sqlw::blocked_import() {
 	DBCLOSE
-
+	std::vector<BlockedUser> userList;
 	QSqlDatabase tsdb = QSqlDatabase::addDatabase("QSQLITE");
 	tsdb.setDatabaseName(QString(PathTsDB.c_str()));
-	tsdb.open();
+	if (!tsdb.open()) {
 
-	QSqlQuery queryout = tsdb.exec(QString("SELECT * FROM Contacts WHERE value LIKE '%Friend=1%'"));
+		QSqlError err = UserDB->lastError();
+		log(err.databaseText());
+		log(err.text());
+		log("Error occured with opening database");
+	}
 
-	DBOPEN
+	QSqlQuery queryout(tsdb);
+	queryout.prepare("SELECT * FROM Contacts WHERE value LIKE '%Friend=1%'");
+	queryout.exec();
+
 
 	while (queryout.next()) {
 
@@ -1190,10 +1215,16 @@ void sqlw::blocked_import() {
 			cache.AutoKick = Datas->getAutoKick();
 			cache.UID = cur.c_str();
 			cache.SavedName = Name.c_str();
-			addBlockedList(cache);
+			userList.push_back(cache);
 		}
 	}
 	tsdb.close();
+
+	for (auto it : userList) {
+		addBlockedList(it);
+	}
+	
+
 }
 
 
