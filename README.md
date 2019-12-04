@@ -23,7 +23,7 @@
 9. Check the "Current Server" checkbox
 10. Enter the IDs of the groups in the channel groups window we opened earlier
 11. Check the Settings you wan't to enable/disable
-12. Click all 3 buttons on the bottom of the window (It can lag while importing contacts)
+12. Click all 3 buttons on the bottom of the window (It can lag while importing contacts)(importing currently not working)
 
 ### Usage
 - To block and ban a user from your channel rightclick on him and then go to "User Manager" -> "Set / remove client on the blocklist". Same to unblock a blocked user.
