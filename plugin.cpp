@@ -1415,21 +1415,25 @@ void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
 	uint64 channelID = 0;
 	char *channelName = "";
 	char *clientname = "";
+	char* UID ="";
 
 
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &clientname);
-
+	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &UID);
 	ts3Functions.getChannelOfClient(serverConnectionHandlerID, clientID, &channelID);
 	ts3Functions.getChannelVariableAsString(serverConnectionHandlerID, channelID, CHANNEL_NAME, &channelName);
 	
+	auto user = UserManager->isBuddy(UID);
 
+	std::string savedname = user.SavedName.toStdString();
 
 	std::string buffer = "";
 
 	buffer+= "Your Buddy: ";
 	buffer += clientLink;
-
-	buffer += " is in the channel:    ";
+	buffer += " [";
+	buffer += savedname;
+	buffer += "] is in the channel:    ";
 	buffer += channelName;
 
 	if (channelName != "") {
@@ -1763,6 +1767,7 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
 void checkForUpdates()
 {
 	const char* newVersionStringC = DownloadBytes("https://gist.githubusercontent.com/alex720/4969c31d8814aee97113bcd5753d8d60/raw/version.txt");
+	if (newVersionStringC == "") return;
 	std::string newVersionString = newVersionStringC;
 	replace(newVersionString, "", ".");
 	int newVersion = std::atoi(newVersionString.c_str());

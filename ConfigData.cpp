@@ -37,7 +37,7 @@ ConfigData::ConfigData(std::string iniconfigPath) : SettingsFile(iniconfigPath.c
 		settings.setValue("UseTSList", 0);
 	}
 	if (settings.value("channelAnnouncments", -1).toInt() == -1) {
-		settings.setValue("channelAnnouncments", 0);
+		settings.setValue("channelAnnouncments", 1);
 	}
 	if (settings.value("kickmessage", "").toString() == "") {
 		settings.setValue("kickmessage", "Geblockter User");
