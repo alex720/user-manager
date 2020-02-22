@@ -40,7 +40,7 @@
 
 
 #define PLUGIN_API_VERSION 23
-#define PlUGIN_VERSION "4.4.4"
+#define PlUGIN_VERSION "4.4.5"
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
 #define INFODATA_BUFSIZE 128
@@ -1352,6 +1352,7 @@ void ts3plugin_onClientMoveEvent(uint64 serverConnectionHandlerID, anyID clientI
 	if (myID == clientID) {
 		//if i changed channel last removed User should be cleared
 		IDsBannedShortly.clear();
+
 	}
 
 
