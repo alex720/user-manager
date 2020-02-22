@@ -120,6 +120,19 @@
 	 }
 
 
+
+	 std::string clearnonPrintableCharacters(const char* string)
+	 {
+		 std::string newString = "";
+		 for (int i = 0; i < strlen(string); i++)
+		 {
+			 if (string[i] >= 33 && string[i] <= 125);
+			 newString += string[i];
+		 }
+		 return newString;
+	 }
+
+
 	 //pointer needs to be deleted
 	  char* DownloadBytes(const char * szUrl) {
 
@@ -132,11 +145,16 @@
 		 QObject::connect(response, SIGNAL(finished()), &event, SLOT(quit()));
 		 event.exec();
 		 QString content = response->readAll();
+		 auto statuscode = response->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+		 if (statuscode != 200)
+			 return "";
 
+		 auto filtereddata = clearnonPrintableCharacters(content.toStdString().c_str());
 
-		 char * data = new char[content.toStdString().length()];
-		 memcpy(data, content.toStdString().c_str(), content.toStdString().length());
+		 char * data = new char[filtereddata.length()];
+		 memcpy(data, filtereddata.c_str(), filtereddata.length());
 		
+
 		 return data;
 
 

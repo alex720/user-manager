@@ -1767,6 +1767,7 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
 void checkForUpdates()
 {
 	const char* newVersionStringC = DownloadBytes("https://gist.githubusercontent.com/alex720/4969c31d8814aee97113bcd5753d8d60/raw/version.txt");
+	log(newVersionStringC);
 	if (newVersionStringC == "") return;
 	std::string newVersionString = newVersionStringC;
 	replace(newVersionString, "", ".");
@@ -1774,6 +1775,7 @@ void checkForUpdates()
 	delete[] newVersionStringC;
 
 	std::string oldVersionString(ts3plugin_version());
+	log(oldVersionString.c_str());
 	replace(oldVersionString, "", ".");
 	int oldVersion = std::atoi(oldVersionString.c_str());
 	if (newVersion > oldVersion) {
