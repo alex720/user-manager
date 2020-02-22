@@ -705,7 +705,7 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 		BlockedCountry blockedCountry = UserManager->isCountryBlocked(countryTag);
 
 		if (buddyUser.dummy_Return) {
-			infodata += "User is Buddy \n";
+			infodata += "[COLOR=#00c100]User is Buddy[/COLOR] \n";
 			userType = 1;
 		}
 
@@ -716,7 +716,7 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 
 		if (blockedUser.dummy_Return) {
 		
-			infodata += "UserID is blocked\n";		
+			infodata += "[COLOR=#ff0000]UserID is blocked[/COLOR]\n";		
 			userType = 2;
 
 		}
@@ -726,7 +726,7 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 	
 		
 		if (blockedName.dummy_Return) {
-			infodata += "Nickname is blocked\n";
+			infodata += "[COLOR=#ff0000]Nickname is blocked[/COLOR]\n";
 			userType = 3;
 		}
 
@@ -750,7 +750,7 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 		}
 
 		if (blockedCountry.dummy_Return) {
-			infodata += "Country is blocked\n";
+			infodata += "[COLOR=#ff0000]Country is blocked[/COLOR]\n";
 			userType = 3;
 		}
 
