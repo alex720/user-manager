@@ -42,6 +42,7 @@ struct BlockedUser {
 };
 
 struct BlockedName {
+	QString UID = "";
 	QString Name = "";
 	bool AutoBan = false;;
 	bool AutoKick = false;;
@@ -60,6 +61,7 @@ struct BlockedName {
 
 
 struct BlockedCountry {
+	QString UID = "";
 	QString CountryTag = "";
 	bool AutoBan = false;;
 	bool AutoKick = false;;

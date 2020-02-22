@@ -114,25 +114,38 @@ ConfigData *Datas;
 bool dbnotopen;
 
 anyID currentUser = 0;
+//cleared every time channel changed
+//stop kicking User if anyone have them on die buddy list
+std::vector <QString> IDsBannedShortly;
 
 template <typename T>
 void BannedUserProc(uint64 serverConnectionHandlerID, anyID clientID, uint64 channelID, T blockedUser) { // template for blockedUser and blockedName
 
 	if (blockedUser.AutoBan) {
+		
+		if (isValueInList(IDsBannedShortly, blockedUser.UID))
+		{
+			giveverification(serverConnectionHandlerID, 27, clientID);
+			return;
+		}
 
 		anyID myID;
 		int myCGID; // channelgroupID
 		ts3Functions.getClientID(serverConnectionHandlerID, &myID); //meine id
 		ts3Functions.getClientVariableAsInt(serverConnectionHandlerID, myID, 0x21, &myCGID);
 
+		
+
 		if ((myCGID == UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 1)) || (myCGID == UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 2))) {
+			//only add if not admin
+			if (!(myCGID == UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 1)))
+				IDsBannedShortly.push_back(blockedUser.UID);
 
 			int CCGID; // clientchannelgroupid
 			ts3Functions.getClientVariableAsInt(serverConnectionHandlerID, clientID, CLIENT_CHANNEL_GROUP_ID, &CCGID);
 			int standertgroup;
 			ts3Functions.getServerVariableAsInt(serverConnectionHandlerID, VIRTUALSERVER_DEFAULT_CHANNEL_GROUP, &standertgroup);
 			if (CCGID == standertgroup) {
-
 				ts3Functions.setchannelgroup(serverConnectionHandlerID, clientID, channelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 3));
 				uint64 myChannelID = 0;
 				uint64 clientChannelID = 0;
@@ -981,6 +994,8 @@ parameters:
 
 25 = Country wurde gebannt +var clientID gebraucht
 26 = Country wurde entbannt +var clientID gebraucht
+
+27 = User wird nicht gebannt weil ich ihn schon gebannt habe
 */
 void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0) {
 	
@@ -1166,6 +1181,15 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 		}
+			break;
+		case 27:
+		{
+			strcat(buffer, "You can't removed the blocked User: ");
+			strcat(buffer, name);
+			strcat(buffer, " out of the channel, because you banned him already in this channel and he probably got unbanned");
+			ts3Functions.printMessageToCurrentTab(buffer);
+			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
+		}
 		break;
 	default:
 		ts3Functions.printMessageToCurrentTab("internal Error");
@@ -1226,8 +1250,11 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 	Sleep(50);
 
 	if (isEnabledTS(serverConnectionHandlerID)) {
+		anyID myID;
 
+		ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 		
+
 			char* name="";
 			char* UID="";
 			char* countryTag="";
@@ -1251,12 +1278,15 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 
 			BlockedName blockedName = UserManager->isNameBlocked(name);
 			if (blockedName.dummy_Return) {
+				blockedName.UID = UID;
 				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedName);
 				return;
 			}
 
 			BlockedCountry blockedCountry = UserManager->isCountryBlocked(countryTag);
-			if (blockedCountry.dummy_Return) {
+			if (blockedCountry.dummy_Return) 
+			{
+				blockedCountry.UID = UID;
 				BannedUserProc(serverConnectionHandlerID, clientID, newChannelID, blockedCountry);
 				return;
 			}
@@ -1318,6 +1348,12 @@ void ts3plugin_onClientMoveEvent(uint64 serverConnectionHandlerID, anyID clientI
 
 	ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 	ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
+
+	if (myID == clientID) {
+		//if i changed channel last removed User should be cleared
+		IDsBannedShortly.clear();
+	}
+
 
 	if (mychannelID == newChannelID && newChannelID != NULL && clientID != myID) {  //If target is in the channel we want
 		UserWorker.push( InfoObjectQueue (serverConnectionHandlerID, clientID, oldChannelID, newChannelID) );
