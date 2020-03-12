@@ -12,7 +12,7 @@
 - Set a custom kick message
 
 ### Setup
-1. Download and install the [latest release](https://github.com/alex720/user-manager/releases/latest)
+1. Download and install the [latest release](https://github.com/alex720/user-manager/releases/latest) here. You need the User-Manager.ts3_plugin file
 2. If you're updating User Manager make sure Teamspeak is closed while trying to install
 3. Connect to the server you'd like User Manager to manage for you
 4. Open channel groups window by clicking on "Permissions" -> "Channel groups"
