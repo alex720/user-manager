@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Conactlist</string>
+   <string>Contactlist</string>
   </property>
   <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
@@ -109,7 +109,7 @@
           <widget class="QPushButton" name="btn_buddyRemove">
            <property name="maximumSize">
             <size>
-             <width>80</width>
+             <width>120</width>
              <height>16777215</height>
             </size>
            </property>
@@ -215,7 +215,7 @@
           <widget class="QPushButton" name="btn_blockedRemove">
            <property name="maximumSize">
             <size>
-             <width>80</width>
+             <width>120</width>
              <height>16777215</height>
             </size>
            </property>
@@ -323,7 +323,7 @@
           <widget class="QPushButton" name="btn_NameRemove">
            <property name="maximumSize">
             <size>
-             <width>80</width>
+             <width>120</width>
              <height>16777215</height>
             </size>
            </property>
@@ -412,7 +412,7 @@
          <widget class="QPushButton" name="btn_countryRemove">
           <property name="maximumSize">
            <size>
-            <width>80</width>
+            <width>120</width>
             <height>16777215</height>
            </size>
           </property>
