@@ -413,7 +413,7 @@ void flipflopBuddysUser(uint64 serverConnectionHandlerID,  anyID clientID) {
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &UID);
 
 	if (UserManager->isBlocked(UID).dummy_Return) {
-		ts3Functions.printMessageToCurrentTab("User is not buddyable because he is on the blocklist");
+		ts3Functions.printMessageToCurrentTab("You could not add this user to your buddys because he is blocked.");
 		return;
 	}
 
@@ -749,12 +749,12 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
 
 		switch (userType) {
 		case 1: 
-			infodata += "The SavedName of the User is: ";
+			infodata += "You saved the users name as: ";
 			infodata += buddyUser.SavedName.toStdString();
 			infodata += "\n";
 			break;
 		case 2:
-			infodata += "The SavedName of the User is: ";
+			infodata += "You saved the users name as: ";
 			infodata += blockedUser.SavedName.toStdString();
 			infodata += "\n";
 			break;
@@ -846,13 +846,13 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon) {
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, MENU_ID_GLOBAL_1, "Where are my Buddys ???", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, MENU_ID_GLOBAL_2, "Open configuration", "");
 	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_GLOBAL, MENU_ID_GLOBAL_3, "Open Contactlist", "");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_1, "Set / remove client on the blocklist", "");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_2, "Set / remove client name on the block list", "");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_5, "Set / Remove Client Buddy", "");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_7, "Set / Remove Country Blocked", "");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_3, "Set client in my channel on the Channel Ban group", "");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_4, "Set client in my channel on the Channel Guest group", "");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_6, "Find him in Contactlist", "");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_1, "Set or remove client from the block list", "");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_2, "Set or remove client name on the block list", "");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_5, "Set or remove client as buddy", "");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_7, "Set or remove country as blocked", "");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_3, "Set client in my channel to channel ban", "");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_4, "Set client in my channel to channel guest", "");
+	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CLIENT, MENU_ID_CLIENT_6, "Find client in contacts", "");
 	END_CREATE_MENUS;  /* Includes an assert checking if the number of menu items matched */
 
 					   /*
@@ -898,13 +898,13 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
 	* The keyword will be later passed to ts3plugin_onHotkeyEvent to identify which hotkey was triggered.
 	* The description is shown in the clients hotkey dialog. */
 	BEGIN_CREATE_HOTKEYS(7);  /* Create 3 hotkeys. Size must be correct for allocating memory. */
-	CREATE_HOTKEY("BlockUser", "Set / remove client on the blocklist");
-	CREATE_HOTKEY("BuddyUser", "Set / Remove Client Buddy");
-	CREATE_HOTKEY("BlockName", "Set / remove client name on the block list");
-	CREATE_HOTKEY("BlockCountry", "Set / Remove Country Blocked");
-	CREATE_HOTKEY("wanttoban", "Set client in my channel on the Channel Ban group");
-	CREATE_HOTKEY("wanttoguest", "Set client in my channel on the Channel Guest group"); 
-	CREATE_HOTKEY("wanttooperator", "Set client in my channel on the Channel Operator group");
+	CREATE_HOTKEY("BlockUser", "Set or remove client on the block list");
+	CREATE_HOTKEY("BuddyUser", "Set or remove client as buddy");
+	CREATE_HOTKEY("BlockName", "Set or remove client name on the block list");
+	CREATE_HOTKEY("BlockCountry", "Set or remove country as blocked");
+	CREATE_HOTKEY("wanttoban", "Set client in my channel to channel ban");
+	CREATE_HOTKEY("wanttoguest", "Set client in my channel to channel guest"); 
+	CREATE_HOTKEY("wanttooperator", "Set client in my channel to channel operator");
 	END_CREATE_HOTKEYS;
 
 	/* The client will call ts3plugin_freeMemory to release all allocated memory */
@@ -986,7 +986,7 @@ parameters:
 19 = Du hast die notifications deaktiviert
  
 20 = wird channel bann nun nicht mehr entzogen in diesem channel +var clientID gebraucht
-21 = Aktion nicht möglich da er nicht online ist
+21 = Aktion nicht mÃ¶glich da er nicht online ist
 
 22 = Automute beim blockieren der User wurde aktiviert
 23 = Automute beim blockieren der User wurde deaktiviert
@@ -1008,64 +1008,64 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 	switch(i)
 	{
 		case 1:
-			strcat(buffer, "You blocked: ");
+			strcat(buffer, "You blocked ");
 			strcat(buffer, name);
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
 		case 2:
-			strcat(buffer, "You set: ");
+			strcat(buffer, "You added ");
 			strcat(buffer, name);
-			strcat(buffer, " on the Buddylist");
+			strcat(buffer, " as a buddy.");
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
 		case 3:
-			strcat(buffer, "You have blocked the name: ");
+			strcat(buffer, "You have blocked the name ");
 			strcat(buffer, name);
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
 		case 4:
-			ts3Functions.printMessageToCurrentTab("You activated AutoTP");
+			ts3Functions.printMessageToCurrentTab("You enabled AutoTP");
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
 		case 5:
-			ts3Functions.printMessageToCurrentTab("You deactivated AutoTP");
+			ts3Functions.printMessageToCurrentTab("You disabled AutoTP");
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
 		case 6:
-			ts3Functions.printMessageToCurrentTab("You activated Autochannelban");
+			ts3Functions.printMessageToCurrentTab("You enabled Autochannelban");
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
 		case 7:
-			ts3Functions.printMessageToCurrentTab("You deactivated Autochannelban");
+			ts3Functions.printMessageToCurrentTab("You disabled Autochannelban");
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
 		case 8:
-			ts3Functions.printMessageToCurrentTab("You activated Autooperator");
+			ts3Functions.printMessageToCurrentTab("You enabled Autooperator");
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
 		case 9:
-			ts3Functions.printMessageToCurrentTab("You deactivated Autooperator");
+			ts3Functions.printMessageToCurrentTab("You disabled Autooperator");
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
 		case 10:
-			ts3Functions.printMessageToCurrentTab("You activated Antichannelban");
+			ts3Functions.printMessageToCurrentTab("You enabled Antichannelban");
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 			
 		case 11:
-			ts3Functions.printMessageToCurrentTab("You deactivated Antichannelban");
+			ts3Functions.printMessageToCurrentTab("You disabled Antichannelban");
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE );
 			break;
 
@@ -1077,96 +1077,96 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 				uint64 myChannelID;
 				ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 				ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &myChannelID);
-				strcat(buffer, "I removed the blocked User: ");
+				strcat(buffer, "I removed the blocked user ");
 				strcat(buffer, name);
-				strcat(buffer, " out of the channel");
+				strcat(buffer, " out of the channel.");
 				ts3Functions.requestSendChannelTextMsg(serverConnectionHandlerID, buffer, myChannelID, NULL);
 			}
 			else {
-				strcat(buffer, "You removed the blocked User: ");
+				strcat(buffer, "You removed the blocked user ");
 				strcat(buffer, name);
-				strcat(buffer, " out of the channel");
+				strcat(buffer, " out of the channel.");
 				ts3Functions.printMessageToCurrentTab(buffer);
 				memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			}
 			break;
 		case 13:
-			strcat(buffer, "You gave your Buddy: ");
+			strcat(buffer, "You gave your buddy ");
 			strcat(buffer, name);
-			strcat(buffer, " Talkpower");
+			strcat(buffer, " talkpower.");
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 		case 14:
-			strcat(buffer, "You gave your Buddy: ");
+			strcat(buffer, "You gave your buddy ");
 			strcat(buffer, name);
-			strcat(buffer, " Operator");
+			strcat(buffer, " operator.");
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 		case 15:
-			strcat(buffer, "You unblocked the User: ");
+			strcat(buffer, "You unblocked the user ");
 			strcat(buffer, name);
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 		case 16:
-			strcat(buffer, "You removed: ");
+			strcat(buffer, "You removed ");
 			strcat(buffer, name);
-			strcat(buffer, " out of you Buddylist");
+			strcat(buffer, " from your buddys.");
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 17:
-			strcat(buffer, "You unblocked the name: ");
+			strcat(buffer, "You unblocked the name ");
 			strcat(buffer, name);
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 18:
-			ts3Functions.printMessageToCurrentTab("You activated Notifications");
-			memcpy(lastmessage, "You activated Notifications", TS3_MAX_SIZE_TEXTMESSAGE);
+			ts3Functions.printMessageToCurrentTab("You enabled Notifications");
+			memcpy(lastmessage, "You enabled Notifications", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 19:
-			ts3Functions.printMessageToCurrentTab("You deactivated Notifications");
-			memcpy(lastmessage, "You deactivated Notifications", TS3_MAX_SIZE_TEXTMESSAGE);
+			ts3Functions.printMessageToCurrentTab("You disabled Notifications");
+			memcpy(lastmessage, "You disabled Notifications", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 20:
-			strcat(buffer, "Du entbannst den User: ");
+			strcat(buffer, "You could not unban the user ");
 			strcat(buffer, name);
-			strcat(buffer, " in diesem channel erstmal nicht mehr um die leute im channel nicht zu nerven");
+			strcat(buffer, " to prevent fucking up other people.");
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 21:
-			ts3Functions.printMessageToCurrentTab("Action impossible because User is not online");
-			memcpy(lastmessage, "Action impossible because User is not online", TS3_MAX_SIZE_TEXTMESSAGE);
+			ts3Functions.printMessageToCurrentTab("The action could not be performed because the user is offline.");
+			memcpy(lastmessage, "The action could not be performed because the user is offline.", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 
 		case 22:
-			ts3Functions.printMessageToCurrentTab("Action impossible because User is not online");
-			memcpy(lastmessage, "Action impossible because User is not online", TS3_MAX_SIZE_TEXTMESSAGE);
-			strcat(buffer, "Automute when blocking the user was activated");
+			ts3Functions.printMessageToCurrentTab("The action could not be performed because the user is offline.");
+			memcpy(lastmessage, "The action could not be performed because the user is offline.", TS3_MAX_SIZE_TEXTMESSAGE);
+			strcat(buffer, "Automute when blocking the user is now enabled.");
 			break;
 
 		case 23:
 			ts3Functions.printMessageToCurrentTab("Automute when blocking the user was deactivated");
-			memcpy(lastmessage, "Automute when blocking the user was deactivated", TS3_MAX_SIZE_TEXTMESSAGE);
+			memcpy(lastmessage, "Automute when blocking the user is now disabled.", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 		case 24:
-			ts3Functions.printMessageToCurrentTab("An internal error appered wait a second or restart teamspeak");
-			memcpy(lastmessage, "An internal error appered wait a second or restart teamspeak", TS3_MAX_SIZE_TEXTMESSAGE);
+			ts3Functions.printMessageToCurrentTab("An internal error appeared. Please wait or restart teamspeak.");
+			memcpy(lastmessage, "An internal error appeared. Please wait or restart teamspeak.", TS3_MAX_SIZE_TEXTMESSAGE);
 			break;
 		case 25:
 		{
 			char* countryTag = "";
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
-			strcat(buffer, "You blocked the CountryTag: ");
+			strcat(buffer, "You blocked the country tag: ");
 			strcat(buffer, countryTag);
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE); 
@@ -1176,7 +1176,7 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 		{
 			char* countryTag = "";
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
-			strcat(buffer, "You unblocked the CountryTag: ");
+			strcat(buffer, "You unblocked the country tag: ");
 			strcat(buffer, countryTag);
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
@@ -1184,9 +1184,9 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 			break;
 		case 27:
 		{
-			strcat(buffer, "You can't removed the blocked User: ");
+			strcat(buffer, "You can't remove the blocked user ");
 			strcat(buffer, name);
-			strcat(buffer, " out of the channel, because you banned him already in this channel and he probably got unbanned");
+			strcat(buffer, " because you banned him already in this channel and he probably got unbanned");
 			ts3Functions.printMessageToCurrentTab(buffer);
 			memcpy(lastmessage, buffer, TS3_MAX_SIZE_TEXTMESSAGE);
 		}
@@ -1513,7 +1513,7 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 	case PLUGIN_MENU_TYPE_GLOBAL:
 		switch (menuItemID) {
 		case MENU_ID_GLOBAL_1: {
-			// sucht alle buddys und listet sie im chat plus ihren gegenwärtigen channel auf;
+			// sucht alle buddys und listet sie im chat plus ihren gegenwÃ¤rtigen channel auf;
 		
 			
 			
@@ -1523,7 +1523,7 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 			break;
 		}
 		case MENU_ID_GLOBAL_2: {
-			// öffnet die konfiguration
+			// Ã¶ffnet die konfiguration
 
 			ConfigDialog* config = new ConfigDialog(UserManager, ts3Functions, Datas);
 			config->setAttribute(Qt::WA_DeleteOnClose);
@@ -1533,7 +1533,7 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 
 			break;
 		}case MENU_ID_GLOBAL_3: {
-			// öffnet die konfiguration
+			// Ã¶ffnet die konfiguration
 
 			UserWidget* userwidget = new UserWidget(UserManager);
 			userwidget->setAttribute(Qt::WA_DeleteOnClose);
@@ -1656,7 +1656,7 @@ void ts3plugin_onClientChannelGroupChangedEvent(uint64 serverConnectionHandlerID
 
 		if (channelGroupID == UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 3)) {
 
-			// prüfen ob user buddie ist, wenn ja bann entziehen
+			// prÃ¼fen ob user buddie ist, wenn ja bann entziehen
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &UID);
 
 			BuddyUser buddyUser = UserManager->isBuddy(UID);
@@ -1685,7 +1685,7 @@ void ts3plugin_onClientChannelGroupChangedEvent(uint64 serverConnectionHandlerID
 		}
 		if (rechtecheck(serverConnectionHandlerID,2)) {
 
-			// prüfen ob user buddie ist, wenn ja bann entziehen
+			// prÃ¼fen ob user buddie ist, wenn ja bann entziehen
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &UID);
 			BuddyUser buddyUser = UserManager->isBuddy(UID);
 			if (buddyUser.dummy_Return) {
