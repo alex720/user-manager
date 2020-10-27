@@ -30,6 +30,7 @@
 #include <queue>
 #include "help_functions.h"
 
+
 #ifdef _WIN32
 #define _strcpy(dest, destSize, src) strcpy_s(dest, destSize, src)
 #define snprintf sprintf_s
@@ -40,7 +41,7 @@
 
 
 #define PLUGIN_API_VERSION 23
-#define PlUGIN_VERSION "4.4.5"
+#define PlUGIN_VERSION "4.4.6"
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
 #define INFODATA_BUFSIZE 128
@@ -1000,7 +1001,10 @@ parameters:
 void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0) {
 	
 	char buffer[TS3_MAX_SIZE_TEXTMESSAGE] = "";
-	strcat(buffer,getTimeStamp().c_str());
+	if (i != 12)
+	{
+		strcat(buffer, getTimeStamp().c_str());
+	}
 	std::string buffername = "";
 	getClientIdLink(serverConnectionHandlerID,clientID, buffername);
 	const char* name = buffername.c_str();

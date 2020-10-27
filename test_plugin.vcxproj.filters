@@ -40,27 +40,6 @@
     <ClInclude Include="plugin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\teamspeak\clientlib_publicdefinitions.h">
-      <Filter>Header Files\teamspeak</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\teamspeak\public_definitions.h">
-      <Filter>Header Files\teamspeak</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\teamspeak\public_errors.h">
-      <Filter>Header Files\teamspeak</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\teamspeak\public_errors_rare.h">
-      <Filter>Header Files\teamspeak</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\teamspeak\public_rare_definitions.h">
-      <Filter>Header Files\teamspeak</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\teamlog\logtypes.h">
-      <Filter>Header Files\teamlog</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\plugin_definitions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_User-Manager.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -131,5 +110,11 @@
     <CustomBuild Include="User-Manager.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="package.ini" />
+    <None Include="Release.ps1">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
