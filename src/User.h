@@ -11,7 +11,7 @@ struct BuddyUser {
 	bool dummy_Return = false;
 
 	
-	bool compare(std::string toComp) {
+	bool compare(std::string toComp) const {
 		if (this->UID.compare(toComp.c_str())) return true;
 		return false;
 	}
@@ -30,7 +30,7 @@ struct BlockedUser {
 	bool dummy_Return = false;
 
 	
-	bool compare(std::string toComp) {
+	bool compare(std::string toComp) const {
 		if (this->UID.compare(toComp.c_str())) return true;
 		return false;
 	}
@@ -48,7 +48,7 @@ struct BlockedName {
 	bool AutoKick = false;;
 	bool dummy_Return = false;
 
-	bool compare(std::string toComp) {
+	bool compare(std::string toComp) const {
 		if (this->Name.compare(toComp.c_str())) return true;
 		return false;
 	}
@@ -67,7 +67,7 @@ struct BlockedCountry {
 	bool AutoKick = false;;
 	bool dummy_Return = false;
 
-	bool compare(std::string toComp) {
+	bool compare(std::string toComp) const {
 		if (this->CountryTag.compare(toComp.c_str())) return true;
 		return false;
 	}
