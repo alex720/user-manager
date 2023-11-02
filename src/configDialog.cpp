@@ -19,15 +19,12 @@ ConfigDialog::ConfigDialog(sqlw *UserManagerPoint, const struct TS3Functions fun
 
 	//get current current schid
 	uint64 schid = ts3Functions.getCurrentServerConnectionHandlerID();
-	char* serverName = (char*)alloca(1024);
+	char* serverName = strdup("");
 	ts3Functions.getServerVariableAsString(schid, VIRTUALSERVER_NAME, &serverName);
-	char* uid = (char*)alloca(1024);
+	char* uid = strdup("");
 	ts3Functions.getServerVariableAsString(schid,VIRTUALSERVER_UNIQUE_IDENTIFIER, &uid);
 	this->findChild<QLabel*>("L_NAME")->setText(QString(serverName));
 	this->findChild<QLabel*>("L_UID")->setText(QString(uid));
-
-	free(serverName);
-	free(uid);
 
 	if (UserManager->isForServerEnabled(uid)) {
 		this->findChild<QCheckBox*>("chkcurrent_server")->setChecked(true);

@@ -18,7 +18,6 @@
 #include <QtNetwork/QNetworkReply>
 #include <qeventloop.h>
 #include <QObject>
-#pragma comment(lib,"Qt5Network.lib")
 
 
 	void logInitTS3Funktion(const struct TS3Functions funcs);
