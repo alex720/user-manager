@@ -36,6 +36,14 @@
 #define _strcpy(dest, destSize, src) strcpy_s(dest, destSize, src)
 #define snprintf sprintf_s
 #else
+
+#include <unistd.h>
+void Sleep(int milliseconds) {
+    if (milliseconds >= 1000)
+        sleep(milliseconds / 1000);
+    usleep((milliseconds % 1000) * 1000);
+}
+
 #define _strcpy(dest, destSize, src) { strncpy(dest, src, destSize-1); (dest)[destSize-1] = '\0'; }
 #endif
 
@@ -542,16 +550,16 @@ int ts3plugin_init() {
 	ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE, pluginID);
 
 	strcat(iniconfigPath, configPath);
-	strcat(iniconfigPath,"plugins\\UserManager\\Userconfig.ini");
+	strcat(iniconfigPath,"plugins/UserManager/Userconfig.ini");
 
 	strcat(settingsDBpath, configPath);
 	strcat(settingsDBpath, "settings.db");
 
 	strcat(configPathUserDB, configPath);
-	strcat(configPathUserDB, "plugins\\UserManager\\UserManager.db");
+	strcat(configPathUserDB, "plugins/UserManager/UserManager.db");
 
 	strcat(logPath, configPath);
-	strcat(logPath, "plugins\\UserManager\\log.txt");
+	strcat(logPath, "plugins/UserManager/log.txt");
 
 	printf("PATHS FOR USER MANAGER\n");
 	printf(settingsDBpath);

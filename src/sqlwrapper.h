@@ -1,11 +1,10 @@
 #pragma once
-#include <QTCore/qsettings.h>
-#include <QTCore/QString>
-#include <QTSql/QSqlDatabase>
-#include <QTSql/QSqlQuery>
-#include <QTSql/QSqlerror>
+#include <QtCore/qsettings.h>
+#include <QtCore/QString>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 #include <list>
-#include <QtCore\qsettings.h>
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -46,7 +45,7 @@ public:
 	sqlw(const std::string Path, const std::string PathTsDB, ConfigData *Datas);
 	~sqlw();
 
-	void newTableForServer(const QString &SUID, const QString &name); // für jeden server wird eine neue Tabelle angelegt
+	void newTableForServer(const QString &SUID, const QString &name); // fï¿½r jeden server wird eine neue Tabelle angelegt
 	void removeTableForServer(const QString &SUID);
 	void updateChannelGroupID(const QString &SUID, const int key, const int newGroupID);
 	int readChannelGroupID(const QString &SUID, const int key);

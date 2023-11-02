@@ -2,6 +2,9 @@
 #include "help_functions.h"
 #pragma comment(lib, "wininet.lib")
 
+#ifdef __linux__
+#define sprintf_s sprintf
+#endif
 
 	std::string getTimeStamp()
 	{

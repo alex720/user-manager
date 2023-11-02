@@ -1,5 +1,10 @@
 #include "configDialog.h"
-#define _CRT_SECURE_NO_WARNINGS 
+#define _CRT_SECURE_NO_WARNINGS
+
+#ifdef __linux__
+#define strcat_s strcat
+#define sprintf_s sprintf
+#endif
 
 ConfigDialog::ConfigDialog(sqlw *UserManagerPoint, const struct TS3Functions funcs,ConfigData *datas,QWidget *parent): UserManager(UserManagerPoint),QDialog(parent),datas(datas), ui(new Ui::ConfigDialog)
 {
@@ -280,7 +285,7 @@ void ConfigDialog::on_btnSave_clicked() {
 
 		char buffer[TS3_MAX_SIZE_TEXTMESSAGE] = " ";
 
-		strcat_s(buffer,"neue gruppen werden für SUID:");
+		strcat_s(buffer,"neue gruppen werden fï¿½r SUID:");
 		strcat_s(buffer, uid);
 		strcat_s(buffer, " neu gesetzt\n");
 		log(buffer);

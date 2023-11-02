@@ -11,6 +11,7 @@
 *.userprefs
 
 # Build results
+cmake-build-*
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/

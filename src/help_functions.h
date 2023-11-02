@@ -7,7 +7,7 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qfileinfo.h>
 #include <thread>
-#include <QtNetwork\qtcpsocket.h>
+#include <QtNetwork/QTcpSocket>
 #include "ts3_functions.h"
 #include <vector>
 

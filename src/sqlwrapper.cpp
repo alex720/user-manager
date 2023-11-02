@@ -2,6 +2,10 @@
 #include "sqlwrapper.h"
 #define _CRT_SECURE_NO_WARNINGS 
 
+#ifdef __linux__
+#define sprintf_s(buf, ...) snprintf((buf), sizeof(buf), __VA_ARGS__)
+#endif
+
 #define DBCHECK2 if (!UserDB->isOpen() && !UserDB->isValid()){ \
 		QSqlError err = UserDB->lastError();\
 		log(err.databaseText());\
