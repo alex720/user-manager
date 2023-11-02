@@ -5,7 +5,7 @@
 #include <QTWidgets/QTableWidget>
 #include "sqlwrapper.h"
 #include <QtCore/QObject>
-#include <QTWidgets/qdesktopwidget.h>
+#include <QTWidgets/qwidget.h>
 #include "help_functions.h"
 #include <string>
 #include <QTWidgets/qlineedit.h>

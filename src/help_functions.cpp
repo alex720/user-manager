@@ -111,7 +111,7 @@
 		 };
 			 
 		 for (int i = 0; i < 4; i++) {
-			 for each(std::string it in listofstr) {
+			 for (std::string it : listofstr) {
 				 callmsg(it, it);
 				// std::thread msgthread(callmsg, it, it);
 				 //msgthread.detach();
@@ -147,7 +147,7 @@
 		 QString content = response->readAll();
 		 auto statuscode = response->attribute(QNetworkRequest::HttpStatusCodeAttribute);
 		 if (statuscode != 200)
-			 return "";
+			 return 0;
 
 		 auto filtereddata = clearnonPrintableCharacters(content.toStdString().c_str());
 

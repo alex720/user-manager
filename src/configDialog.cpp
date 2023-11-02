@@ -19,12 +19,15 @@ ConfigDialog::ConfigDialog(sqlw *UserManagerPoint, const struct TS3Functions fun
 
 	//get current current schid
 	uint64 schid = ts3Functions.getCurrentServerConnectionHandlerID();
-	char* serverName = "";
+	char* serverName = (char*)alloca(1024);
 	ts3Functions.getServerVariableAsString(schid, VIRTUALSERVER_NAME, &serverName);
-	char* uid = "";
+	char* uid = (char*)alloca(1024);
 	ts3Functions.getServerVariableAsString(schid,VIRTUALSERVER_UNIQUE_IDENTIFIER, &uid);
 	this->findChild<QLabel*>("L_NAME")->setText(QString(serverName));
 	this->findChild<QLabel*>("L_UID")->setText(QString(uid));
+
+	free(serverName);
+	free(uid);
 
 	if (UserManager->isForServerEnabled(uid)) {
 		this->findChild<QCheckBox*>("chkcurrent_server")->setChecked(true);
@@ -208,10 +211,13 @@ void ConfigDialog::on_chkcurrent_server_toggled(bool state) {
 	if (initphase) return;
 	log("chkcurrent_server_toggled");
 	uint64 schid = ts3Functions.getCurrentServerConnectionHandlerID();
-	char* serverName = "";
+	char* serverName = (char*)alloca(1024);
 	ts3Functions.getServerVariableAsString(schid, VIRTUALSERVER_NAME, &serverName);
-	char* uid = "";
+	char* uid = (char*)alloca(1024);
 	ts3Functions.getServerVariableAsString(schid, VIRTUALSERVER_UNIQUE_IDENTIFIER, &uid);
+	
+	free(serverName);
+	free(uid);
 
 	if (state == 0) {
 
@@ -262,7 +268,7 @@ void ConfigDialog::on_chkChannelNotifikations_stateChanged(int state)
 void ConfigDialog::on_btnSave_clicked() {
 	log("save btn clicked");
 	uint64 schid = ts3Functions.getCurrentServerConnectionHandlerID();
-	char* uid = "";
+	char* uid = strdup("");
 	ts3Functions.getServerVariableAsString(schid, VIRTUALSERVER_UNIQUE_IDENTIFIER, &uid);
 	bool state = this->findChild<QCheckBox*>("chkcurrent_server")->isChecked();
 	if (state) {

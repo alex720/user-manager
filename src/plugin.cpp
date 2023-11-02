@@ -8,11 +8,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "plugin_definitions.h"
 #include "teamspeak/public_errors.h"
 #include "teamspeak/public_errors_rare.h"
 #include "teamspeak/public_definitions.h"
 #include "teamspeak/public_rare_definitions.h"
-#include "teamspeak/clientlib_publicdefinitions.h"
 #include "ts3_functions.h"  
 #include "plugin.h"
 #include <string>
@@ -29,6 +29,7 @@
 #include "userwidget.hpp"
 #include <queue>
 #include "help_functions.h"
+#include <QRegExp>
 
 
 #ifdef _WIN32
@@ -38,10 +39,10 @@
 #define _strcpy(dest, destSize, src) { strncpy(dest, src, destSize-1); (dest)[destSize-1] = '\0'; }
 #endif
 
+static struct TS3Functions ts3Functions;
 
-
-#define PLUGIN_API_VERSION 23
-#define PlUGIN_VERSION "4.4.6"
+#define PLUGIN_API_VERSION 26
+#define PlUGIN_VERSION "4.5.0"
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
 #define INFODATA_BUFSIZE 128
@@ -50,6 +51,47 @@
 #define RETURNCODE_BUFSIZE 128
 
 static char* pluginID = NULL;
+
+
+anyID getClientIdByUniqueId(const char* cluid, uint64 serverConnectionHandlerID) {
+	anyID* clients;
+	anyID foundid = -1;
+
+	ts3Functions.getClientList(serverConnectionHandlerID, &clients);
+	char* uid;
+
+	for (int i = 0; clients[i]; ++i) {
+		if (ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clients[i], CLIENT_UNIQUE_IDENTIFIER, &uid) == ERROR_ok) {
+			if (!strcmp(cluid, uid))
+				foundid = clients[i];
+
+			ts3Functions.freeMemory(&uid);
+
+			if (foundid)
+				break;
+
+		}
+
+		ts3Functions.freeMemory(&clients);
+	}
+
+
+	return foundid;
+}
+
+void setchannelgroup(uint64 serverConnectionHandlerID, anyID clientID, uint64 ChannelID, int channelgroup) {
+
+
+
+	uint64 DBID;
+	ts3Functions.getClientVariableAsUInt64(serverConnectionHandlerID, clientID, 0x20, &DBID);
+	uint64 channelGroupIDs[] = { (uint64)channelgroup };//list of Group Ids you want to add to user
+	uint64 channelIDs[] = { ChannelID };//list of Channel Ids you want to add the users group into... thingy.. ya know what i mean
+	uint64 userIDs[] = { DBID };//list of users Ids blah //both ID lists have to have the same number of entries
+	static_assert(sizeof(channelGroupIDs) == sizeof(channelIDs), "Both ID lists have to be same size"); //throw compiler error if you do stuff wrong
+	ts3Functions.requestSetClientChannelGroup(serverConnectionHandlerID, channelGroupIDs, channelIDs, userIDs,
+		sizeof(channelGroupIDs) / sizeof(channelGroupIDs[0])/*returns count of IDs in the list above*/, NULL/*returnCode*/);
+}
 
 
 /*********************************** Required functions ************************************/
@@ -83,7 +125,7 @@ const char* ts3plugin_author() {
 /* Plugin description */
 const char* ts3plugin_description() {
 	/* If you want to use wchar_t, see ts3plugin_name() on how to use */
-	return "With this plugin you can put users and names on a blocklist, these users are filtered out of the channel. If a buddy himself is given channel ban, this will not be withdrawn car or if the channel admin has given this.";
+	return "With this plugin you can put users and names on a blocklist, these users are filtered out of the channel. If a buddy himself is given channel ban, this will not be withdrawn car or if the channel admin has given this. (4.5.0 update by Reichstaube/aequabit)";
 }
 
 /* Set TeamSpeak 3 callback functions */
@@ -119,6 +161,12 @@ anyID currentUser = 0;
 //stop kicking User if anyone have them on die buddy list
 std::vector <QString> IDsBannedShortly;
 
+std::string GetKickMessage() {
+	std::string buf = "AutoKick | ";
+	buf.append(Datas->getkickMessage());
+	return buf;
+}
+
 template <typename T>
 void BannedUserProc(uint64 serverConnectionHandlerID, anyID clientID, uint64 channelID, T blockedUser) { // template for blockedUser and blockedName
 
@@ -147,7 +195,7 @@ void BannedUserProc(uint64 serverConnectionHandlerID, anyID clientID, uint64 cha
 			int standertgroup;
 			ts3Functions.getServerVariableAsInt(serverConnectionHandlerID, VIRTUALSERVER_DEFAULT_CHANNEL_GROUP, &standertgroup);
 			if (CCGID == standertgroup) {
-				ts3Functions.setchannelgroup(serverConnectionHandlerID, clientID, channelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 3));
+				setchannelgroup(serverConnectionHandlerID, clientID, channelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 3));
 				uint64 myChannelID = 0;
 				uint64 clientChannelID = 0;
 				ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &myChannelID);
@@ -192,7 +240,7 @@ void BuddyUserProc(uint64 serverConnectionHandlerID, anyID clientID, uint64 chan
 
 			if (clientchannelGroup == standertgroup) {
 
-				ts3Functions.setchannelgroup(serverConnectionHandlerID, clientID, channelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 2));
+				setchannelgroup(serverConnectionHandlerID, clientID, channelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 2));
 				if (Datas->getwantannoucments()) {
 					giveverification(serverConnectionHandlerID, 14, clientID);
 				}
@@ -253,7 +301,7 @@ void flipflopUserBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 		return;
 	}
 
-	char* name = "";
+	char* name = strdup("");
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &name);
 
 
@@ -314,7 +362,7 @@ void flipflopUserNameBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 		return;
 	}
 
-	char* name = "";
+	char* name = strdup("");
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &name);
 
 	BlockedName blockedName = UserManager->isNameBlocked(name);
@@ -362,7 +410,7 @@ void flipflopCountryBanned(uint64 serverConnectionHandlerID, anyID clientID) {
 		return;
 	}
 
-	char* countryTag = "";
+	char* countryTag = strdup("");
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
 
 	BlockedCountry blockedCountry = UserManager->isCountryBlocked(countryTag);
@@ -410,7 +458,7 @@ void flipflopBuddysUser(uint64 serverConnectionHandlerID,  anyID clientID) {
 		return;
 	}
 
-	char* UID = "";
+	char* UID = strdup("");
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &UID);
 
 	if (UserManager->isBlocked(UID).dummy_Return) {
@@ -421,7 +469,7 @@ void flipflopBuddysUser(uint64 serverConnectionHandlerID,  anyID clientID) {
 	BuddyUser buddyUser = UserManager->isBuddy(UID);
 
 	if (!buddyUser.dummy_Return) {
-		char* name = "";
+		char* name = strdup("");
 		ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &name);
 
 		buddyUser.UID = UID;
@@ -491,7 +539,7 @@ int ts3plugin_init() {
 	ts3Functions.getAppPath(appPath, PATH_BUFSIZE);
 	ts3Functions.getResourcesPath(resourcesPath, PATH_BUFSIZE);
 	ts3Functions.getConfigPath(configPath, PATH_BUFSIZE);
-	ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE);
+	ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE, pluginID);
 
 	strcat(iniconfigPath, configPath);
 	strcat(iniconfigPath,"plugins\\UserManager\\Userconfig.ini");
@@ -693,10 +741,10 @@ const char* ts3plugin_infoTitle() {
 */
 void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum PluginItemType type, char** data) {
 	std::string infodata = "";
-	char* UID="";
-	char* name="";
+	char* UID= strdup("");
+	char* name= strdup("");
 	int userType = 0;  // 0 = nothing  |  1 = buddy | 2 = blocked | 3 = nameBlocked
-	char* countryTag ="";
+	char* countryTag = strdup("");
 
 	if (type == PLUGIN_CLIENT) {
 		currentUser = (anyID)id;
@@ -922,12 +970,12 @@ void ts3plugin_initHotkeys(struct PluginHotkey*** hotkeys) {
 void getClientIdLink(uint64 serverConnectionHandlerID, anyID clientID, std::string &clientLink) {
 	std::string cClientID = std::to_string(clientID);
 
-	char *clientUid ="";
-	char *username = "";
+	char *clientUid = strdup("");
+	char *username = strdup("");
 
 	if (clientID == 0) {
 		ts3Functions.getServerVariableAsString(serverConnectionHandlerID, VIRTUALSERVER_NAME, &username);
-		clientUid = "";
+		clientUid = strdup("");
 	}
 	else {
 		ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &clientUid);
@@ -1168,7 +1216,7 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 			break;
 		case 25:
 		{
-			char* countryTag = "";
+			char* countryTag = strdup("");
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
 			strcat(buffer, "You blocked the country tag: ");
 			strcat(buffer, countryTag);
@@ -1178,7 +1226,7 @@ void giveverification(uint64 serverConnectionHandlerID,int i,anyID clientID = 0)
 			break;
 		case 26:
 		{
-			char* countryTag = "";
+			char* countryTag = strdup("");
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_COUNTRY, &countryTag);
 			strcat(buffer, "You unblocked the country tag: ");
 			strcat(buffer, countryTag);
@@ -1225,11 +1273,15 @@ void ts3plugin_onUpdateChannelEditedEvent(uint64 serverConnectionHandlerID, uint
 void ts3plugin_onUpdateClientEvent(uint64 serverConnectionHandlerID, anyID clientID, anyID invokerID, const char* invokerName, const char* invokerUniqueIdentifier) {
 }
 
-std::string GetKickMessage() {
-	std::string buf = "AutoKick | ";
-	buf.append(Datas->getkickMessage());
-	return buf;
-}
+struct InfoObjectQueue {
+	explicit InfoObjectQueue(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldChannelID, uint64 newChannelID) :
+		serverConnectionHandlerID(serverConnectionHandlerID), clientID(clientID), oldChannelID(oldChannelID), newChannelID(newChannelID) {}
+
+	uint64 serverConnectionHandlerID = 0;
+	anyID clientID = 0;
+	uint64 oldChannelID = 0;
+	uint64 newChannelID = 0;
+};
 
 std::queue<InfoObjectQueue> UserWorker;
 
@@ -1259,9 +1311,9 @@ void moveeventwork(uint64 serverConnectionHandlerID, anyID clientID, uint64 oldC
 		ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 		
 
-			char* name="";
-			char* UID="";
-			char* countryTag="";
+			char* name= strdup("");
+			char* UID= strdup("");
+			char* countryTag= strdup("");
 
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &name);
 			ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_UNIQUE_IDENTIFIER, &UID);
@@ -1418,9 +1470,9 @@ void printNamePlusChannel(uint64 serverConnectionHandlerID, anyID clientID) {
 	if (clientLink == "") return;
 
 	uint64 channelID = 0;
-	char *channelName = "";
-	char *clientname = "";
-	char* UID ="";
+	char* channelName = strdup("");
+	char *clientname = strdup("");
+	char* UID = strdup("");
 
 
 	ts3Functions.getClientVariableAsString(serverConnectionHandlerID, clientID, CLIENT_NICKNAME, &clientname);
@@ -1582,7 +1634,7 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 
 			ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 			ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
-			ts3Functions.setchannelgroup(serverConnectionHandlerID, (anyID)selectedItemID, mychannelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID),3));
+			setchannelgroup(serverConnectionHandlerID, (anyID)selectedItemID, mychannelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID),3));
 			break;
 		}
 
@@ -1595,7 +1647,7 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 			ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
 			int standertgroup;
 			ts3Functions.getServerVariableAsInt(serverConnectionHandlerID, VIRTUALSERVER_DEFAULT_CHANNEL_GROUP, &standertgroup);
-			ts3Functions.setchannelgroup(serverConnectionHandlerID, (anyID)selectedItemID, mychannelID, standertgroup);
+			setchannelgroup(serverConnectionHandlerID, (anyID)selectedItemID, mychannelID, standertgroup);
 
 			break;
 		}
@@ -1673,13 +1725,13 @@ void ts3plugin_onClientChannelGroupChangedEvent(uint64 serverConnectionHandlerID
 						if (buddyUser.AntiChannelBan) {
 							if (rechtecheck(serverConnectionHandlerID, 1)) {
 
-								ts3Functions.setchannelgroup(serverConnectionHandlerID, clientID, mychannelid, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 2));
+								setchannelgroup(serverConnectionHandlerID, clientID, mychannelid, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 2));
 								return;
 							}
 							if (rechtecheck(serverConnectionHandlerID, 2)) {
 								int standertgroup;
 								ts3Functions.getServerVariableAsInt(serverConnectionHandlerID, VIRTUALSERVER_DEFAULT_CHANNEL_GROUP, &standertgroup);
-								ts3Functions.setchannelgroup(serverConnectionHandlerID, clientID, mychannelid, standertgroup);
+								setchannelgroup(serverConnectionHandlerID, clientID, mychannelid, standertgroup);
 								return;
 							}
 						}
@@ -1700,7 +1752,7 @@ void ts3plugin_onClientChannelGroupChangedEvent(uint64 serverConnectionHandlerID
 					if (invokerClientID != myID) {
 						if (channelGroupID == UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 3)) {
 							if (Datas->getAntiChannelBan()) {
-								ts3Functions.setchannelgroup(serverConnectionHandlerID, clientID, mychannelid, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 2));
+								setchannelgroup(serverConnectionHandlerID, clientID, mychannelid, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 2));
 								return;
 							}
 						}
@@ -1745,7 +1797,7 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
 		ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
 		int standertgroup;
 		ts3Functions.getServerVariableAsInt(serverConnectionHandlerID, VIRTUALSERVER_DEFAULT_CHANNEL_GROUP, &standertgroup);
-		ts3Functions.setchannelgroup(serverConnectionHandlerID, currentUser, mychannelID, standertgroup);
+		setchannelgroup(serverConnectionHandlerID, currentUser, mychannelID, standertgroup);
 	}
 	else if (!intToBool(strcmp(keyword, "wanttooperator"))) {
 		anyID myID;
@@ -1753,7 +1805,7 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
 
 		ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 		ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
-		ts3Functions.setchannelgroup(serverConnectionHandlerID, currentUser, mychannelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 2));
+		setchannelgroup(serverConnectionHandlerID, currentUser, mychannelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 2));
 	}
 	else if (!intToBool(strcmp(keyword, "wanttoban"))) {
 		anyID myID;
@@ -1761,7 +1813,7 @@ void ts3plugin_onHotkeyEvent(const char* keyword) {
 
 		ts3Functions.getClientID(serverConnectionHandlerID, &myID);
 		ts3Functions.getChannelOfClient(serverConnectionHandlerID, myID, &mychannelID);
-		ts3Functions.setchannelgroup(serverConnectionHandlerID, currentUser, mychannelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 3));
+		setchannelgroup(serverConnectionHandlerID, currentUser, mychannelID, UserManager->readChannelGroupID(getSUID(serverConnectionHandlerID), 3));
 	}
 
 	

@@ -16,7 +16,7 @@ struct BuddyUser {
 		return false;
 	}
 
-	bool operator==(BuddyUser vgl) {
+	bool operator==(const BuddyUser& vgl) {
 		if (UID == vgl.UID) return true;
 		return false;
 	}
@@ -35,7 +35,7 @@ struct BlockedUser {
 		return false;
 	}
 
-	bool operator==(BlockedUser vgl) {
+	bool operator==(const BlockedUser& vgl) {
 		if (UID == vgl.UID) return true;
 		return false;
 	}
@@ -53,7 +53,7 @@ struct BlockedName {
 		return false;
 	}
 
-	bool operator==(BlockedName vgl) {
+	bool operator==(const BlockedName& vgl) {
 		if (Name == vgl.Name) return true;
 		return false;
 	}
@@ -72,7 +72,7 @@ struct BlockedCountry {
 		return false;
 	}
 
-	bool operator==(BlockedCountry vgl) {
+	bool operator==(const BlockedCountry& vgl) {
 		if (CountryTag == vgl.CountryTag) return true;
 		return false;
 	}

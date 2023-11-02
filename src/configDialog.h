@@ -6,7 +6,7 @@
 #include <QtWidgets/QDialog>
 #include <iostream>
 #include <QtWidgets/qmessagebox.h>
-#include <QtWidgets/qdesktopwidget.h>
+#include <QtWidgets/qwidget.h>
 #include <QtCore/QObject>
 #include "help_functions.h"
 

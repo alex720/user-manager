@@ -67,10 +67,10 @@ public:
 	void addBuddyList(const BuddyUser);
 	void addCountryList(const BlockedCountry blockedCountry);
 
-	void removeNameList(const BlockedName);
-	void removeBlockedList(const BlockedUser);
-	void removeBuddyList(const BuddyUser);
-	void removeCountryList(const BlockedCountry blockedCountry);
+	void removeNameList(BlockedName);
+	void removeBlockedList(BlockedUser);
+	void removeBuddyList(BuddyUser);
+	void removeCountryList(BlockedCountry blockedCountry);
 
 	bool getshoudwork();
 

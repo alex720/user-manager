@@ -540,7 +540,7 @@ BlockedCountry sqlw::isCountryBlocked(const std::string &countryTag)
 
 void sqlw::updateBlocked(BlockedUser blockedUser)
 {
-	blockList.remove(blockedUser);
+	blockList.remove_if([&](const BlockedUser& other) { return blockedUser.compare(other.SavedName.toStdString()); });
 	updateBlockedInTabled(blockedUser);
 
 	blockList.push_back(blockedUser);
@@ -548,7 +548,7 @@ void sqlw::updateBlocked(BlockedUser blockedUser)
 
 void sqlw::updateBuddy(BuddyUser buddyUser)
 {
-	buddyList.remove(buddyUser);
+	buddyList.remove_if([&](const BuddyUser& other) { return buddyUser.compare(other.SavedName.toStdString()); });
 	updateBuddyInTabled(buddyUser);
 
 	buddyList.push_back(buddyUser);
@@ -556,7 +556,7 @@ void sqlw::updateBuddy(BuddyUser buddyUser)
 
 void sqlw::updateName(BlockedName blockedname)
 {
-	nameBlockList.remove(blockedname);
+	nameBlockList.remove_if([&](const BlockedName& other) { return blockedname.compare(other.Name.toStdString()); });
 	updateNameInTabled(blockedname);
 
 	nameBlockList.push_back(blockedname);
@@ -564,7 +564,7 @@ void sqlw::updateName(BlockedName blockedname)
 
 void sqlw::UpdateCountry(BlockedCountry blockedCountry)
 {
-	countryList.remove(blockedCountry);
+	countryList.remove_if([&](const BlockedCountry& other) { return blockedCountry.compare(other.CountryTag.toStdString()); });
 	updateBlockedCountryToTable(blockedCountry);
 
 	countryList.push_back(blockedCountry);
@@ -759,26 +759,26 @@ void sqlw::addCountryList(const BlockedCountry blockedCountry)
 
 void sqlw::removeNameList(const BlockedName blockedName) {
 	removeUserofTable(blockedName.Name, 1);
-	nameBlockList.remove(blockedName);
+	//nameBlockList.remove(blockedName);
 
 }
 
 void sqlw::removeBlockedList(const BlockedUser blockedUser) {
 
 	removeUserofTable(QString(blockedUser.UID), 0);
-	blockList.remove(blockedUser);
+	//blockList.remove(blockedUser);
 }
 
 void sqlw::removeBuddyList(const BuddyUser buddyUser) {
 
 	removeUserofTable(buddyUser.UID, 2);
-	buddyList.remove(buddyUser);
+	//buddyList.remove(buddyUser);
 }
 
 void sqlw::removeCountryList(const BlockedCountry blockedCountry)
 {
 	removeUserofTable(blockedCountry.CountryTag, 3);
-	countryList.remove(blockedCountry);
+	//countryList.remove(blockedCountry);
 }
 
 
@@ -975,8 +975,8 @@ void sqlw::loadGlobalLists() {
 	{
 
 	 char* blocked = DownloadBytes("https://gist.githubusercontent.com/alex720/3f13a69b05245c04a77b11532fbefc2a/raw/blocked.txt");
-		char *s = "";
-		s = strtok(blocked, ",");
+	 if (!blocked) return;
+		char *s = strtok(blocked, ",");
 
 		while (s != NULL) {
 			bo += 1;
@@ -990,8 +990,8 @@ void sqlw::loadGlobalLists() {
 	{
 
 		 char* buddy = DownloadBytes("https://gist.githubusercontent.com/alex720/8980858597c4984fe00f34fec07c6ef5/raw/buddy.txt");
-		char *b = "";
-		b = strtok(buddy, ",");
+		 if (!buddy) return;
+		char *b = strtok(buddy, ",");
 		while (b != NULL) {
 			bu += 1;
 			BuddyUser buddyUser = isBuddy(b);
