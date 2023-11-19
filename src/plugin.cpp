@@ -50,7 +50,7 @@ void Sleep(int milliseconds) {
 static struct TS3Functions ts3Functions;
 
 #define PLUGIN_API_VERSION 26
-#define PlUGIN_VERSION "4.5.0"
+#define PlUGIN_VERSION "4.5.1"
 #define PATH_BUFSIZE 512
 #define COMMAND_BUFSIZE 128
 #define INFODATA_BUFSIZE 128
@@ -133,7 +133,7 @@ const char* ts3plugin_author() {
 /* Plugin description */
 const char* ts3plugin_description() {
 	/* If you want to use wchar_t, see ts3plugin_name() on how to use */
-	return "With this plugin you can put users and names on a blocklist, these users are filtered out of the channel. If a buddy himself is given channel ban, this will not be withdrawn car or if the channel admin has given this. (4.5.0 update by Reichstaube/aequabit)";
+	return "With this plugin you can put users and names on a blocklist, these users are filtered out of the channel. If a buddy himself is given channel ban, this will not be withdrawn car or if the channel admin has given this. (4.5.x update by Reichstaube/aequabit)";
 }
 
 /* Set TeamSpeak 3 callback functions */
