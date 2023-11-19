@@ -763,32 +763,26 @@ void sqlw::addCountryList(const BlockedCountry blockedCountry)
 
 void sqlw::removeNameList(const BlockedName blockedName) {
 	removeUserofTable(blockedName.Name, 1);
-	//nameBlockList.remove(blockedName);
-	nameBlockList.remove_if([&](const BlockedName& other) { return blockedName.compare(other.Name.toStdString()); });
+	nameBlockList.remove(blockedName);
 }
 
 void sqlw::removeBlockedList(const BlockedUser blockedUser) {
 
 	removeUserofTable(QString(blockedUser.UID), 0);
-	//blockList.remove(blockedUser);
-	blockList.remove_if([&](const BlockedUser& other) { return blockedUser.compare(other.SavedName.toStdString()); });
+	blockList.remove(blockedUser);
 }
 
 void sqlw::removeBuddyList(const BuddyUser buddyUser) {
 
 	removeUserofTable(buddyUser.UID, 2);
-	//buddyList.remove(buddyUser);
-	buddyList.remove_if([&](const BuddyUser& other) { return buddyUser.compare(other.SavedName.toStdString()); });
+	buddyList.remove(buddyUser);
 }
 
 void sqlw::removeCountryList(const BlockedCountry blockedCountry)
 {
 	removeUserofTable(blockedCountry.CountryTag, 3);
-	//countryList.remove(blockedCountry);
-	countryList.remove_if([&](const BlockedCountry& other) { return blockedCountry.compare(other.CountryTag.toStdString()); });
+	countryList.remove(blockedCountry);
 }
-
-
 
 //
 //void sqlw::checkForOldDB() {
