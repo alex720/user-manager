@@ -56,20 +56,20 @@ public:
 	BlockedName isNameBlocked(const std::string &Name);
 	BlockedCountry isCountryBlocked(const std::string &countryTag);
 
-	void updateBlocked(BlockedUser blockedUser);
-	void updateBuddy(BuddyUser buddyUser);
-	void updateName(BlockedName blockedname);
-	void UpdateCountry(BlockedCountry blockedCountry);
+	void updateBlocked(const BlockedUser& blockedUser);
+	void updateBuddy(const BuddyUser& buddyUser);
+	void updateName(const BlockedName& blockedname);
+	void UpdateCountry(const BlockedCountry& blockedCountry);
 
-	void addNameList(const BlockedName);
-	void addBlockedList(const  BlockedUser);
-	void addBuddyList(const BuddyUser);
-	void addCountryList(const BlockedCountry blockedCountry);
+	void addNameList(const BlockedName& blockedName);
+	void addBlockedList(const BlockedUser& blockedUser);
+	void addBuddyList(const BuddyUser& buddyUser);
+	void addCountryList(const BlockedCountry& blockedCountry);
 
-	void removeNameList(BlockedName);
-	void removeBlockedList(BlockedUser);
-	void removeBuddyList(BuddyUser);
-	void removeCountryList(BlockedCountry blockedCountry);
+	void removeNameList(const BlockedName& blockedName);
+	void removeBlockedList(const BlockedUser& blockedUser);
+	void removeBuddyList(const BuddyUser& buddyUser);
+	void removeCountryList(const BlockedCountry& blockedCountry);
 
 	bool getshoudwork();
 

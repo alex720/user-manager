@@ -114,12 +114,12 @@
     <ClCompile Include="..\src\plugin.cpp" />
     <ClCompile Include="..\src\sqlwrapper.cpp" />
     <ClCompile Include="..\src\userwidget.cpp" />
-    <QtUic Include="..\ui\User-Manager.ui" />
+    <QtUic Include="..\src\User-Manager.ui" />
     <QtMoc Include="..\src\configDialog.h" />
     <ClCompile Include="..\src\ConfigData.cpp" />
     <ClCompile Include="..\src\configDialog.cpp" />
     <ClCompile Include="..\src\help_functions.cpp" />
-    <QtUic Include="..\ui\UserWidget.ui" />
+    <QtUic Include="..\src\UserWidget.ui" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\ConfigData.h" />

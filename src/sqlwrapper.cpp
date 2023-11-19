@@ -542,33 +542,33 @@ BlockedCountry sqlw::isCountryBlocked(const std::string &countryTag)
 	return cache;
 }
 
-void sqlw::updateBlocked(BlockedUser blockedUser)
+void sqlw::updateBlocked(const BlockedUser& blockedUser)
 {
-	blockList.remove_if([&](const BlockedUser& other) { return blockedUser.compare(other.SavedName.toStdString()); });
+	blockList.remove(blockedUser);
 	updateBlockedInTabled(blockedUser);
 
 	blockList.push_back(blockedUser);
 }
 
-void sqlw::updateBuddy(BuddyUser buddyUser)
+void sqlw::updateBuddy(const BuddyUser& buddyUser)
 {
-	buddyList.remove_if([&](const BuddyUser& other) { return buddyUser.compare(other.SavedName.toStdString()); });
+	buddyList.remove(buddyUser);
 	updateBuddyInTabled(buddyUser);
 
 	buddyList.push_back(buddyUser);
 }
 
-void sqlw::updateName(BlockedName blockedname)
+void sqlw::updateName(const BlockedName& blockedname)
 {
-	nameBlockList.remove_if([&](const BlockedName& other) { return blockedname.compare(other.Name.toStdString()); });
+	nameBlockList.remove(blockedname);
 	updateNameInTabled(blockedname);
 
 	nameBlockList.push_back(blockedname);
 }
 
-void sqlw::UpdateCountry(BlockedCountry blockedCountry)
+void sqlw::UpdateCountry(const BlockedCountry& blockedCountry)
 {
-	countryList.remove_if([&](const BlockedCountry& other) { return blockedCountry.compare(other.CountryTag.toStdString()); });
+	countryList.remove(blockedCountry);
 	updateBlockedCountryToTable(blockedCountry);
 
 	countryList.push_back(blockedCountry);
@@ -740,45 +740,45 @@ void sqlw::loadBlockCountryList()
 	DBCLOSE
 }
 
-void sqlw::addNameList(const BlockedName blockedName) {
+void sqlw::addNameList(const BlockedName& blockedName) {
 	addBlockedNameToTable(blockedName);
 	nameBlockList.push_back(blockedName);
 }
 
-void sqlw::addBlockedList(const BlockedUser blockedUser) {
+void sqlw::addBlockedList(const BlockedUser& blockedUser) {
 	addBlockedToTable(blockedUser);
 	blockList.push_back(blockedUser);
 }
 
-void sqlw::addBuddyList(const BuddyUser buddyUser) {
+void sqlw::addBuddyList(const BuddyUser& buddyUser) {
 	addBuddyToTable(buddyUser);
 	buddyList.push_back(buddyUser);
 }
 
-void sqlw::addCountryList(const BlockedCountry blockedCountry)
+void sqlw::addCountryList(const BlockedCountry& blockedCountry)
 {
 	addBlockedCountryToTable(blockedCountry);
 	countryList.push_back(blockedCountry);
 }
 
-void sqlw::removeNameList(const BlockedName blockedName) {
+void sqlw::removeNameList(const BlockedName& blockedName) {
 	removeUserofTable(blockedName.Name, 1);
 	nameBlockList.remove(blockedName);
 }
 
-void sqlw::removeBlockedList(const BlockedUser blockedUser) {
+void sqlw::removeBlockedList(const BlockedUser& blockedUser) {
 
 	removeUserofTable(QString(blockedUser.UID), 0);
 	blockList.remove(blockedUser);
 }
 
-void sqlw::removeBuddyList(const BuddyUser buddyUser) {
+void sqlw::removeBuddyList(const BuddyUser& buddyUser) {
 
 	removeUserofTable(buddyUser.UID, 2);
 	buddyList.remove(buddyUser);
 }
 
-void sqlw::removeCountryList(const BlockedCountry blockedCountry)
+void sqlw::removeCountryList(const BlockedCountry& blockedCountry)
 {
 	removeUserofTable(blockedCountry.CountryTag, 3);
 	countryList.remove(blockedCountry);
