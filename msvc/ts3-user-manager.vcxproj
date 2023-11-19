@@ -63,13 +63,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <IncludePath>$(ProjectDir)..\vendor\ts3client-pluginsdk-api26;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\build\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\temp\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(ProjectDir)..\obj\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_debug_win64</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <IncludePath>$(ProjectDir)..\vendor\ts3client-pluginsdk-api26;$(IncludePath)</IncludePath>
     <OutDir>$(ProjectDir)..\build\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)..\temp\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(ProjectDir)..\obj\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_win64</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
